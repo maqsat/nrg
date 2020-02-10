@@ -124,12 +124,12 @@ class UserActivated
                     if($next_status->pv <= $pv){
 
                         if(!$next_status->personal){
-                            $left_user_count = UserProgram::where('list','like','%,'.$item.','.$left_user->id.',%')->where('status','>=',$item_status->id)->count();
+                            $left_user_count = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status','>=',$item_status->id)->count();
                             $left_user_status = UserProgram::where('user_id',$left_user->id)->first();
                             if($left_user_status->status_id >= $item_status->id){
                                 $left_user_count++;
                             }
-                            $right_user_count = UserProgram::where('list','like','%,'.$item.','.$right_user->id.',%')->where('status','>=',$item_status->id)->count();
+                            $right_user_count = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status','>=',$item_status->id)->count();
                             $right_user_status = UserProgram::where('user_id',$left_user->id)->first();
                             if($right_user_status->status_id >= $item_status->id){
                                 $right_user_count++;
@@ -137,18 +137,20 @@ class UserActivated
                         }
                         else{
                             $left_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
-                                                ->where('list','like','%,'.$item.','.$left_user->id.',%')
+                                                ->where('list','like','%,'.$left_user->id.','.$item.',%')
                                                 ->where('users.inviter_id',$item)
                                                 ->count() + 1;
 
                             $right_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
-                                                ->where('list','like','%,'.$item.','.$right_user->id.',%')
+                                                ->where('list','like','%,'.$right_user->id.','.$item.',%')
                                                 ->where('users.inviter_id',$item)
                                                 ->count() + 1;
                         }
 
                         $all_count = $left_user_count+$right_user_count;
+
                         if($all_count  >= $next_status->condition){
+
                             Hierarchy::moveNextStatus($item,$next_status->id,$item_user_program->program_id);
                             $item_user_program = UserProgram::where('user_id',$item)->first();
                             $item_status = Status::find($item_user_program->status_id);

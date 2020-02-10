@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Activation;
 use App\Facades\Balance;
+use App\Models\Order;
 use App\Models\UserProgram;
 use DB;
+use App\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Notification;
@@ -20,17 +23,14 @@ class TestController extends Controller
 {
     public function tester()
     {
-        /*start set  matching_bonus  */
-        $inviter_list = Hierarchy::getInviterList(1,'').',';
-        $inviter_list = explode(',',trim($inviter_list,','));
+        $user  = User::find(16);
+        $order = Order::where('user_id',$user->id)
+            ->where('status',11)
+            ->where('type','register')
+            ->first();
 
-        $inviter_list = array_slice($inviter_list, 0, 3);
-
-        foreach ($inviter_list as $inviter_key => $inviter_item){
-
-            $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-            $list_inviter_status = Status::find($inviter_user_program->status_id);
-        }
+        $user->setAttribute('order', $order);
+        event(new Activation($user = $user));
     }
 
     public function changeStatusesPercentage()

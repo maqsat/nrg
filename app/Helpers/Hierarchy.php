@@ -80,6 +80,7 @@ class Hierarchy {
             else  $user = null;
 
         }else{
+
             $small_branch_position = $inviter->default_position;
 
             $position_user = User::where('sponsor_id',$inviter_id)
@@ -87,13 +88,17 @@ class Hierarchy {
                 ->where('users.status',1)
                 ->first();
 
-            if(!is_null($position_user))
+            if(!is_null($position_user)){
                 $user = UserProgram::where('user_programs.list','like','%,'.$position_user->id.','.$inviter_id.',%')->orderBy('created_at','desc')->first();
+
+                if(is_null($user))  $user = $position_user;
+            }
             else  $user = null;
         }
 
         if(!is_null($user)){
-            $position_user =  $user->id;
+
+            $position_user =  $user->user_id;
         }
         else $position_user =  $inviter_id;
 
