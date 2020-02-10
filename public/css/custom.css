@@ -1,0 +1,157 @@
+.actions a{
+    color: #fff !important;
+}
+
+.actions form{
+    display: inline;
+}
+
+.login_logo{
+    margin-top: 20px;
+}
+
+.navbar-brand .dark-logo{
+    width: 145px;
+}
+
+.card-outline-success .card-header, .card-outline-info .card-header{
+    color: #fff;
+    font-weight: 700;
+}
+
+.marketing img{
+    width: 100%;
+}
+
+.card-text{
+    margin-bottom: 0;
+}
+.images img{
+    width: 100px;
+}
+
+.text .card{
+    text-align: center;
+    padding: 10px;
+}
+
+.text .card-text{
+    text-align: justify;
+}
+.img-fluid{
+    height: 200px;
+    object-fit: contain;
+}
+
+.text .btn{
+    float: right;
+}
+
+.wizard-content .wizard>.actions>ul>li>a[href="#previous"] {
+    color: #54667a !important;
+}
+
+.progress_inner{
+    font-weight: 700;
+    padding-top: 5px;
+}
+
+.progress_status{
+    position: absolute;
+    text-align: center;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.progress_before{
+    position: absolute;
+    right: 30px;
+}
+
+.contact-list td {
+    vertical-align: middle;
+    padding: 5px 5px;
+}
+
+/*.login-register {
+    position: initial;
+}*/
+
+.register-padding{
+    padding: 5% 0;
+}
+
+.login-register  .checkbox{
+    padding-left: 8px;
+}
+input.error {
+    border: 1px solid red !important;
+}
+
+.pay_button{
+    flex: 1;
+}
+
+.input-group-btn .progress {
+    padding: 12px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.light-logo{
+    width: 100px;
+}
+
+
+.img-for-pay img{
+    height: 120px;
+    object-fit: contain;
+}
+
+.img-for-pay p{
+    font-size: 12px;
+}
+
+.checkbox input[type="checkbox"] {
+    left: 5px;
+    top: 5px;
+}
+
+.topbar .profile-pic {
+    height: 30px;
+}
+
+
+.profile-img{
+    width: 150px;
+    height: 150px;
+}
+
+.home-img{
+    width: 50px;
+    height: 50px;
+}
+
+.tree-img{
+    width: 69px;
+    height: 69px;
+}
+
+@media (max-width: 767px)
+{
+    .dark-logo {
+        display: none;
+    }
+
+    .light-logo {
+        display: block !important;
+    }
+
+    .mini-sidebar .top-navbar .navbar-header {
+        display: none;
+    }
+
+    .tree .col-sm-6{
+        width: 50%;
+    }
+}
