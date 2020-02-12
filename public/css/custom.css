@@ -145,6 +145,10 @@ input.error {
     color: #000000;
 }
 
+.login-register {
+    position: initial;
+}
+
 @media (max-width: 767px)
 {
     .dark-logo {
