@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\User;
 use App\Models\Package;
 use App\Models\Status;
 use App\Models\UserProgram;
@@ -32,20 +33,13 @@ class AdminController extends Controller
     }
 
 
-    public function travel(Request$request)
+    public function notCashBonuses(Request$request)
     {
-        $statuses = Status::where('travel_bonus',1)->get();
-        $ids = [];
-        foreach ($statuses as $status){
-            $ids[] = $status->id;
-        }
-
-        $user_program = UserProgram::whereIn('status_id',$ids)->get();
-
-        return  view('admin.travel', compact('user_program'));
+        $not_cash_bonuses = DB::table('not_cash_bonuses')->get();
+        return  view('admin.travel', compact('not_cash_bonuses'));
     }
 
-    public function travelAnswer($user_id, $status_id,$status)
+    public function notCashBonusesAnswer($user_id, $status_id,$status)
     {
         DB::table('user_travels')->insert([
                 'user_id' => $user_id,
@@ -54,6 +48,55 @@ class AdminController extends Controller
             ]);
 
         return redirect()->back();
+    }
+
+    public function progress(Request$request)
+    {
+        $from = '';
+        $to = '';
+        if(isset($request->from)){
+            $list = User::where('inviter_id','!=',0)
+                ->whereDate('created_at', '>=',$request->from)
+                ->groupBy('inviter_id')
+                ->select(['inviter_id', DB::raw('count(*) as count')])
+                ->orderBy('count','desc')
+                ->get();
+            $from = $request->from;
+            return view('profile.progress',compact('list','to','from'));
+        }
+
+        if(isset($request->to)){
+            $list = User::where('inviter_id','!=',0)
+                ->whereDate('created_at', '<=',$request->to)
+                ->groupBy('inviter_id')
+                ->select(['inviter_id', DB::raw('count(*) as count')])
+                ->orderBy('count','desc')
+                ->get();
+            $to = $request->to;
+            return view('profile.progress',compact('list','to','from'));
+        }
+
+        if(isset($request->from) && isset($request->to)){
+            $list = User::where('inviter_id','!=',0)
+                ->whereDate('created_at', '>=',$request->from)
+                ->whereDate('created_at', '<=',$request->to)
+                ->groupBy('inviter_id')
+                ->select(['inviter_id', DB::raw('count(*) as count')])
+                ->orderBy('count','desc')
+                ->get();
+            $from = $request->from;
+            $to = $request->to;
+            return view('profile.progress',compact('list','to','from'));
+        }
+
+        $list = User::where('inviter_id','!=',0)
+            ->groupBy('inviter_id')
+            ->select(['inviter_id', DB::raw('count(*) as count')])
+            ->orderBy('count','desc')
+            ->get();
+
+        return view('admin.progress',compact('list','to','from'));
+
     }
 
     public function programs()

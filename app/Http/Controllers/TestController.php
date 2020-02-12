@@ -23,14 +23,11 @@ class TestController extends Controller
 {
     public function tester()
     {
-        $user  = User::find(21);
-        $order = Order::where('user_id',$user->id)
-            ->where('status',11)
-            ->where('type','register')
-            ->first();
-
-        $user->setAttribute('order', $order);
-        event(new Activation($user = $user));
+        $left_pv = Hierarchy::pvCounter(7,1);
+        $right_pv = Hierarchy::pvCounter(7,2);
+        if($left_pv > $right_pv) $small_branch_position = 2;
+        else $small_branch_position = 1;
+        dd($small_branch_position);
     }
 
     public function changeStatusesPercentage()

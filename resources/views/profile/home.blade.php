@@ -7,21 +7,23 @@
         <!-- ============================================================== -->
         <div class="container-fluid">
 
-            @if(is_null($travel_status))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
-                    <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Happy Travel!</h3> За закрытие статусов, начиная с золота, Вы
-                    получаете путевку в экзотические страны мира, за счет компании!
-                </div>
-            @endif
+                @foreach($not_cash_bonuses as $item)
+                    @if($item->type == 'travel_bonus')
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                            <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Happy Travel!</h3> За закрытие статусов, начиная с золота, Вы
+                            получаете путевку в экзотические страны мира, за счет компании!
+                        </div>
+                    @endif
 
-            @if(is_null($travel_status))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
-                    <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Бонус признания!</h3> За достижение определенного статуса,
-                    компания премирует партнера вознаграждением: VIP подарок от компании
-                </div>
-            @endif
+                    @if($item->type == 'status_no_cash_bonus')
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                            <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Бонус признания!</h3> За достижение определенного статуса,
+                            компания премирует партнера вознаграждением: VIP подарок от компании
+                        </div>
+                    @endif
+                @endforeach
 
             <div class="row">
                 <!-- Column -->

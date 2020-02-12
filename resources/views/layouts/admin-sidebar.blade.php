@@ -62,7 +62,8 @@
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Дополнительно</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/progress">Лидеры</a></li>
-                        <li><a href="/travel">Happy Travel</a></li>
+                        <li><a href="/not_cash_bonuses">Happy Travel</a></li>
+                        <li><a href="/not_cash_bonuses">Бонус признания</a></li>
                     </ul>
                 </li>
                 {{--<li>

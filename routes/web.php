@@ -60,8 +60,8 @@ Route::get('/rang-history', 'UserController@rangHistory')->middleware("activatio
 Route::get('/activation/{user_id}', 'UserController@activation')->middleware('admin');
 Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware('admin');
 Route::get('/progress', 'AdminController@progress')->middleware("admin");
-Route::get('/travel', 'AdminController@travel')->middleware("admin");
-Route::get('/travel/{user_id}/{status_id}/{status}', 'AdminController@travelAnswer')->middleware("admin");
+Route::get('/not_cash_bonuses', 'AdminController@notCashBonuses')->middleware("admin");
+Route::get('/not_cash_bonuses/{user_id}/{status_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");
 
 /*
 ************************ Anything else ***********************

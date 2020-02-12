@@ -2,9 +2,10 @@
 
 namespace App\Listeners;
 
+use DB;
 use Auth;
-use App\Models\Order;
 use App\User;
+use App\Models\Order;
 use App\Models\Counter;
 use App\Models\Package;
 use App\Models\Status;
@@ -40,7 +41,6 @@ class UserActivated
      */
     public function handle(Activation $event)
     {
-
         /*start init and activate*/
         $id = $event->user->id;
         $package = Package::find($event->user->order->package_id);
@@ -58,8 +58,6 @@ class UserActivated
         /*set register sum */
         Balance::changeBalance(0,$package->cost,'register',$event->user->id,$event->user->program_id,$package->id,0);
         Balance::changeBalance($id,$package->cost*20/100,'cashback',$event->user->id,$program->id,$package->id,0);
-
-
 
         UserProgram::insert(
             [
@@ -106,13 +104,13 @@ class UserActivated
             }
 
 
+            Balance::setQV($item,$package->pv,$id,$package->id,$position);
             //start check small branch definition
             $left_pv = Hierarchy::pvCounter($item,1);
             $right_pv = Hierarchy::pvCounter($item,2);
             if($left_pv > $right_pv) $small_branch_position = 2;
             else $small_branch_position = 1;
             //end check small branch definition
-            Balance::setQV($item,$package->pv,$id,$package->id,$position);
 
 
             //start check next status conditions and move
@@ -165,6 +163,25 @@ class UserActivated
                             ]);
 
                             Balance::changeBalance($item,$item_status->status_bonus,'status_bonus',$id,$program->id,$package->id,$item_status->id);
+
+                            if ($next_status->travel_bonus){
+                                DB::table('not_cash_bonuses')->insert([
+                                    'user_id' => $item,
+                                    'type' => 'travel_bonus',
+                                    'status_id' => $next_status->id,
+                                    'status' => 0,
+                                ]);
+                            }
+
+                            if ($next_status->status_no_cash_bonus){
+                                DB::table('not_cash_bonuses')->insert([
+                                    'user_id' => $item,
+                                    'type' => 'status_no_cash_bonus',
+                                    'status_id' => $next_status->id,
+                                    'status' => 0,
+                                ]);
+                            }
+
                         }
                     }
                 }
@@ -174,6 +191,7 @@ class UserActivated
 
             /*start set  turnover_bonus  */
             if($small_branch_position == $position){
+
                 $sum = $package->pv*$item_status->turnover_bonus/100*env('COURSE');
                 Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id);
 

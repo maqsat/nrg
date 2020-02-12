@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use DB;
+use App\User;
 use PayPost;
 use Storage;
 use Validator;
@@ -73,10 +73,10 @@ class HomeController extends Controller
                 ->select(['statuses.*'])
                 ->first();
 
-            $travel_status = DB::table('user_travels')->where('user_id', $user->id)->where('status_id', $user_program->status_id)->first();
+            $not_cash_bonuses = DB::table('not_cash_bonuses')->where('user_id', $user->id)->get();
 
 
-            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','travel_status'));
+            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses'));
         }
         else{
             $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();
@@ -280,52 +280,4 @@ class HomeController extends Controller
         return view('profile.notifications', compact('all'));
     }
 
-    public function progress(Request$request)
-    {
-        $from = '';
-        $to = '';
-        if(isset($request->from)){
-            $list = User::where('inviter_id','!=',0)
-                ->whereDate('created_at', '>=',$request->from)
-                ->groupBy('inviter_id')
-                ->select(['inviter_id', DB::raw('count(*) as count')])
-                ->orderBy('count','desc')
-                ->get();
-            $from = $request->from;
-            return view('profile.progress',compact('list','to','from'));
-        }
-
-        if(isset($request->to)){
-            $list = User::where('inviter_id','!=',0)
-                ->whereDate('created_at', '<=',$request->to)
-                ->groupBy('inviter_id')
-                ->select(['inviter_id', DB::raw('count(*) as count')])
-                ->orderBy('count','desc')
-                ->get();
-            $to = $request->to;
-            return view('profile.progress',compact('list','to','from'));
-        }
-
-        if(isset($request->from) && isset($request->to)){
-            $list = User::where('inviter_id','!=',0)
-                ->whereDate('created_at', '>=',$request->from)
-                ->whereDate('created_at', '<=',$request->to)
-                ->groupBy('inviter_id')
-                ->select(['inviter_id', DB::raw('count(*) as count')])
-                ->orderBy('count','desc')
-                ->get();
-            $from = $request->from;
-            $to = $request->to;
-            return view('profile.progress',compact('list','to','from'));
-        }
-
-        $list = User::where('inviter_id','!=',0)
-            ->groupBy('inviter_id')
-            ->select(['inviter_id', DB::raw('count(*) as count')])
-            ->orderBy('count','desc')
-            ->get();
-
-        return view('profile.progress',compact('list','to','from'));
-
-    }
 }

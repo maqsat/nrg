@@ -34,26 +34,24 @@
                                         <th>ID #</th>
                                         <th>Пользователь</th>
                                         <th>Статус</th>
+                                        <th>Тип</th>
                                         <th>Действие</th>
                                     </tr>
                                     </thead>
                                     <tbody>
 
-                                    @foreach($user_program as $key => $item)
+                                    @foreach($not_cash_bonuses as $key => $item)
                                         <tr>
                                             <td>{{ $key+1 }}</td>
                                             <td>{{ \App\User::find($item->user_id)->name }}</td>
                                             <td>{{ \App\Models\Status::find($item->status_id)->title }}</td>
-                                            <?php
-                                                $status = \Illuminate\Support\Facades\DB::table('user_travels')->where('user_id',$item->user_id)->where('status_id',$item->status_id)->first();
-
-                                            ?>
+                                            <td>{{ $item->type }}</td>
                                             <td class="actions">
-                                            @if(is_null($status))
+                                            @if($item->status == 0)
                                                 <a href="/travel/{{ $item->user_id }}/{{ $item->status_id }}/1" class="btn  btn-xs btn-success"><i class="mdi mdi-check"></i> Отправить</a>
                                                 <a href="/travel/{{ $item->user_id }}/{{ $item->status_id }}/0" class="btn  btn-xs btn-danger"><i class="mdi mdi-close"></i> Отменить</a>
                                             @else
-                                                @if($status->status == 1)
+                                                @if($item->status == 1)
                                                         <button class="btn  btn-xs btn-info"><i class="mdi mdi-close"></i> Отправлен</button>
                                                 @else
                                                         <button class="btn  btn-xs btn-warning"><i class="mdi mdi-close"></i> Отменен</button>
