@@ -82,6 +82,7 @@ class UserActivated
 
 
         $sponsors_list = explode(',',trim($list,','));
+
         foreach ($sponsors_list as $key => $item){
 
             $item_user_program = UserProgram::where('user_id',$item)->first();
@@ -115,21 +116,23 @@ class UserActivated
 
 
             //start check next status conditions and move
-            $left_user = User::whereInviterId($item)->wherePosition(1)->whereStatus(1)->first();
-            $right_user = User::whereInviterId($item)->wherePosition(2)->whereStatus(1)->first();
+            $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
+            $right_user = User::whereSponsorId($item)->wherePosition(2)->whereStatus(1)->first();
             $pv = Hierarchy::pvCounterAll($item);
             $next_status = Status::find($item_status->order+1);
+
             if(!is_null($left_user) && !is_null($right_user)){
+
                 if(!is_null($next_status)){
                     if($next_status->pv <= $pv){
 
                         if(!$next_status->personal){
-                            $left_user_count = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status','>=',$item_status->id)->count();
+                            $left_user_count = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
                             $left_user_status = UserProgram::where('user_id',$left_user->id)->first();
                             if($left_user_status->status_id >= $item_status->id){
                                 $left_user_count++;
                             }
-                            $right_user_count = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status','>=',$item_status->id)->count();
+                            $right_user_count = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
                             $right_user_status = UserProgram::where('user_id',$left_user->id)->first();
                             if($right_user_status->status_id >= $item_status->id){
                                 $right_user_count++;

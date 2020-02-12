@@ -59,6 +59,9 @@ Route::get('/rang-history', 'UserController@rangHistory')->middleware("activatio
  */
 Route::get('/activation/{user_id}', 'UserController@activation')->middleware('admin');
 Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware('admin');
+Route::get('/progress', 'AdminController@progress')->middleware("admin");
+Route::get('/travel', 'AdminController@travel')->middleware("admin");
+Route::get('/travel/{user_id}/{status_id}/{status}', 'AdminController@travelAnswer')->middleware("admin");
 
 /*
 ************************ Anything else ***********************
@@ -68,7 +71,6 @@ Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware
 
 Route::get('/bot_activation', 'AutoActivationController@bot_activation');
 Route::get('/check_mentor', 'AutoActivationController@checkMentor');
-Route::get('/progress', 'HomeController@progress')->middleware("admin");
 
 Route::post('/updateProfile', 'HomeController@updateProfile')->name('updateProfile');
 Route::post('/updateAvatar', 'HomeController@updateAvatar')->name('updateAvatar');

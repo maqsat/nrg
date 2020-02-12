@@ -23,7 +23,7 @@ class TestController extends Controller
 {
     public function tester()
     {
-        $user  = User::find(16);
+        $user  = User::find(21);
         $order = Order::where('user_id',$user->id)
             ->where('status',11)
             ->where('type','register')

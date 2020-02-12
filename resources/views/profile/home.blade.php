@@ -6,6 +6,23 @@
         <!-- Container fluid  -->
         <!-- ============================================================== -->
         <div class="container-fluid">
+
+            @if(is_null($travel_status))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                    <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Happy Travel!</h3> За закрытие статусов, начиная с золота, Вы
+                    получаете путевку в экзотические страны мира, за счет компании!
+                </div>
+            @endif
+
+            @if(is_null($travel_status))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                    <h3 class="text-success"><i class="fa fa-check-circle"></i> Поздравляем, Бонус признания!</h3> За достижение определенного статуса,
+                    компания премирует партнера вознаграждением: VIP подарок от компании
+                </div>
+            @endif
+
             <div class="row">
                 <!-- Column -->
                 <div class="col-lg-12 col-md-12">
@@ -40,7 +57,6 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -59,7 +75,7 @@
                                 </a>
                             </div>
                             <div class="input-group m-t-15">
-                                <input  class="form-control form-control-line" id="post-shortlink" value="https://nrg-max.com/register?inviter_id={{ Auth::user()->id }}">
+                                <input  class="form-control form-control-line" id="post-shortlink" value="https://nrg.bgpro.kz/register?inviter_id={{ Auth::user()->id }}">
                                 <span class="input-group-btn">
                                     <button type="button" id="copy-button" data-clipboard-target="#post-shortlink" class="btn waves-effect waves-light btn-success">Копировать</button>
                                 </span>

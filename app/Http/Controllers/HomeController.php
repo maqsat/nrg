@@ -58,22 +58,25 @@ class HomeController extends Controller
                 return redirect('/home')->with('status', 'Тип размещение успешно изменено');
             }
 
-            $user_program = UserProgram::where('user_id',Auth::user()->id)->first();
-            $invite_list = User::whereInviterId(Auth::user()->id)->whereStatus(1)->get();
+            $user_program = UserProgram::where('user_id',$user->id)->first();
+            $invite_list = User::whereInviterId($user->id)->whereStatus(1)->get();
             $pv_counter_all = Hierarchy::pvCounterAll($user->id);
             $pv_counter_left = Hierarchy::pvCounter($user->id,1);
             $pv_counter_right = Hierarchy::pvCounter($user->id,2);
-            $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->count();
+            $list = UserProgram::where('list','like','%,'.$user->id.',%')->count();
             $package = Package::find($user_program->package_id);
-            $non_activate_count = User::whereSponsorId(Auth::user()->id)->whereStatus(0)->count();
-            $balance = Balance::getBalance(Auth::user()->id);
-            $out_balance = Balance::getBalanceOut(Auth::user()->id);
+            $non_activate_count = User::whereSponsorId($user->id)->whereStatus(0)->count();
+            $balance = Balance::getBalance($user->id);
+            $out_balance = Balance::getBalanceOut($user->id);
             $status = UserProgram::join('statuses','user_programs.status_id','=','statuses.id')
                 ->where('user_programs.user_id',$user->id)
                 ->select(['statuses.*'])
                 ->first();
 
-            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right'));
+            $travel_status = DB::table('user_travels')->where('user_id', $user->id)->where('status_id', $user_program->status_id)->first();
+
+
+            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','travel_status'));
         }
         else{
             $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();
@@ -324,13 +327,5 @@ class HomeController extends Controller
 
         return view('profile.progress',compact('list','to','from'));
 
-    }
-
-    public function programs()
-    {
-
-        $package = Package::where('status',1)->get();
-        $user_package = Package::find(Auth::user()->package_id);
-        return  view('profile.packages', compact('package','user_package'));
     }
 }

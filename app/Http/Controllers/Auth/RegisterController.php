@@ -84,6 +84,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $sponsor_data = Hierarchy::getSponsorId($data['inviter_id']);
+
         $sponsor_id = $sponsor_data[0];
         $position = $sponsor_data[1];
 

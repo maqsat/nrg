@@ -59,10 +59,11 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/progress" aria-expanded="false">
-                        <i class="mdi mdi-weight"></i>
-                        <span class="hide-menu">Прогресс</span>
-                    </a>
+                    <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Дополнительно</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="/progress">Лидеры</a></li>
+                        <li><a href="/travel">Happy Travel</a></li>
+                    </ul>
                 </li>
                 {{--<li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu">Курс</span></a>

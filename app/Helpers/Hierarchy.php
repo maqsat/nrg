@@ -75,9 +75,10 @@ class Hierarchy {
             if(!is_null($position_user)){
                 $user = UserProgram::where('user_programs.list','like','%,'.$position_user->id.','.$inviter_id.',%')->orderBy('created_at','desc')->first();
 
-                if(is_null($user))  $user = $position_user;
+                if(is_null($user))  $sponsor_id = $position_user->id;
+                else $sponsor_id = $user->user_id;
             }
-            else  $user = null;
+            else  $sponsor_id = $inviter_id;
 
         }else{
 
@@ -91,19 +92,15 @@ class Hierarchy {
             if(!is_null($position_user)){
                 $user = UserProgram::where('user_programs.list','like','%,'.$position_user->id.','.$inviter_id.',%')->orderBy('created_at','desc')->first();
 
-                if(is_null($user))  $user = $position_user;
+                if(is_null($user))  $sponsor_id = $position_user->id;
+                else $sponsor_id = $user->user_id;
             }
-            else  $user = null;
+            else  $sponsor_id = $inviter_id;
         }
 
-        if(!is_null($user)){
-
-            $position_user =  $user->user_id;
-        }
-        else $position_user =  $inviter_id;
 
         $data = [];
-        $data[] = $position_user;
+        $data[] = $sponsor_id;
         $data[] = $small_branch_position;
         return $data;
     }
@@ -179,6 +176,49 @@ class Hierarchy {
 
         return $render . '</ul>';
 
+    }
+
+    /**
+     * @param $id
+     */
+    public function setQSforManager($status)
+    {
+        $user_programs = UserProgram::where('created_at','>=',$status)->get();
+        dd();
+
+
+
+        foreach ($user_programs as $item){
+            $set_count = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->where('status_id',$status)->count();
+
+            if($set_count < 3){
+                $set_item = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->orderBy('created_at','desc')->first();
+
+                $date = Carbon::parse($set_item->created_at);
+                $now  = Carbon::now();
+                $diff = $date->floatDiffInMonths($now);
+
+                if($diff > 0){
+                    $user_created = User::find($item->user_id);
+                    $get_status = Notification::where('status_id',3)->where('user_id',$item->user_id)->first();
+                    //if(is_null($get_status)) dd($item);
+                    $date = Carbon::parse($user_created->created_at); //2019-07-12 04:39:39.0
+                    $now  = Carbon::parse($get_status->created_at); //2019-07-31 11:14:41.0
+                    $diff = $date->floatDiffInMonths($now);
+
+                    if($diff <= 2){
+                        $status_sum = Status::find($status);
+                        //echo $item->user_id." - $diff<br>";
+                        Balance::changeBalance($item->user_id,$status_sum->quickstart_bonus/3,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
+                    }
+                    else{
+                        //echo "-----------".$item->user_id." - $diff<br>";
+                        Balance::changeBalance($item->user_id,0,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
+                    }
+                }
+            }
+
+        }
     }
 
     /*************************** OLD METHODS ****************************/
@@ -435,43 +475,7 @@ class Hierarchy {
         return Counter::where('user_id',$user_id)->whereMonth('created_at',$month)->sum('sum');
     }
 
-    public function setQSforManager($status)
-    {
-        $user_programs = UserProgram::where('status_id','>=',$status)->get();
 
-
-        foreach ($user_programs as $item){
-            $set_count = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->where('status_id',$status)->count();
-
-            if($set_count < 3){
-                $set_item = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->orderBy('created_at','desc')->first();
-
-                $date = Carbon::parse($set_item->created_at);
-                $now  = Carbon::now();
-                $diff = $date->floatDiffInMonths($now);
-
-                if($diff > 0){
-                    $user_created = User::find($item->user_id);
-                    $get_status = Notification::where('status_id',3)->where('user_id',$item->user_id)->first();
-                    //if(is_null($get_status)) dd($item);
-                    $date = Carbon::parse($user_created->created_at); //2019-07-12 04:39:39.0
-                    $now  = Carbon::parse($get_status->created_at); //2019-07-31 11:14:41.0
-                    $diff = $date->floatDiffInMonths($now);
-
-                    if($diff <= 2){
-                        $status_sum = Status::find($status);
-                        //echo $item->user_id." - $diff<br>";
-                        Balance::changeBalance($item->user_id,$status_sum->quickstart_bonus/3,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
-                    }
-                    else{
-                        //echo "-----------".$item->user_id." - $diff<br>";
-                        Balance::changeBalance($item->user_id,0,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
-                    }
-                }
-            }
-
-        }
-    }
 
 
     public function activationCheck()

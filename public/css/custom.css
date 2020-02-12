@@ -137,6 +137,14 @@ input.error {
     height: 69px;
 }
 
+.data-tree .card {
+    min-height: 134px;
+}
+
+.data-tree a {
+    color: #000000;
+}
+
 @media (max-width: 767px)
 {
     .dark-logo {
