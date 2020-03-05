@@ -20,7 +20,17 @@
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/user?non_activate=1">Неактивированные</a></li>
                         <li><a href="/user">Все пользователи</a></li>
+                        <li><a href="/user/create">Добавить</a></li>
                         {{--<li><a href="/shopuser">Пользователи магазина</a></li>--}}
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Настройки</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="/package">Пакеты</a></li>
+                        <li><a href="/office">Офисы</a></li>
+                        <li><a href="#">Статусы</a></li>
+                        <li><a href="#">Виды бонусов</a></li>
                     </ul>
                 </li>
                 {{--<li>

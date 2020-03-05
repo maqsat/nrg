@@ -221,6 +221,20 @@ class Hierarchy {
         }
     }
 
+
+
+    public function followersList($user_id)
+    {
+        $count =  DB::table('user_programs')
+            ->where('list', 'like', '%,' . $user_id . ',%')
+            ->orWhere('list', 'like', '%,' . $user_id)
+            ->orWhere('list', 'like', $user_id . ',%')
+            ->orWhere('user_id', $user_id)
+            ->groupBy('user_id')
+            ->get();
+
+        return $count;
+    }
     /*************************** OLD METHODS ****************************/
 
     /**

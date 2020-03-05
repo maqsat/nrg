@@ -26,37 +26,37 @@ class PayController extends Controller
         return view('processing.types',compact('package'));
     }
 
-    public function payPrepare(Request $request)
-    {
-        $package_id = 0;
-        if(!is_null($request->package)){
-            $package = Package::find($request->package);
-            $cost = $package->cost + env('REGISTRATION_FEE');
-            $package_id  = $package->id;
+        public function payPrepare(Request $request)
+        {
+            $package_id = 0;
+            if(!is_null($request->package)){
+                $package = Package::find($request->package);
+                $cost = $package->cost + env('REGISTRATION_FEE');
+                $package_id  = $package->id;
+            }
+            else $cost = env('REGISTRATION_FEE');
+
+            $order =  Order::updateOrCreate(
+                [
+                    'type' => 'register',
+                    'status' => 0,
+                    'payment' => $request->type,
+                    'uuid' => 0,
+                    'user_id' => Auth::user()->id,
+                ],
+                ['amount' => $cost, 'package_id' => $package_id]
+            );
+
+
+            if($request->type == "manual"){
+                return view('processing.manual', compact('order', 'cost'));
+            }
+            if($request->type == "paypost"){}
+            if($request->type == "robokassa"){}
+            if($request->type == "payeer"){}
+            if($request->type == "paybox"){}
+            if($request->type == "indigo"){}
         }
-        else $cost = env('REGISTRATION_FEE');
-
-        $order =  Order::updateOrCreate(
-            [
-                'type' => 'register',
-                'status' => 0,
-                'payment' => $request->type,
-                'uuid' => 0,
-                'user_id' => Auth::user()->id,
-            ],
-            ['amount' => $cost, 'package_id' => $package_id]
-        );
-
-
-        if($request->type == "manual"){
-            return view('processing.manual', compact('order', 'cost'));
-        }
-        if($request->type == "paypost"){}
-        if($request->type == "robokassa"){}
-        if($request->type == "payeer"){}
-        if($request->type == "paybox"){}
-        if($request->type == "indigo"){}
-    }
 
     public function payProcessing(Request $request, $id)
     {

@@ -149,6 +149,15 @@ input.error {
     position: initial;
 }
 
+.user_create .form-group {
+    margin-bottom: 5px;
+}
+
+.user_create input[type=date]{
+    flex-direction: unset;
+}
+
+
 @media (max-width: 767px)
 {
     .dark-logo {

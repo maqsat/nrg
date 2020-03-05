@@ -33,7 +33,9 @@
                         @endif
                     @endif
 
+
                     @if(is_null($orders) or $orders->status == 12)
+                            @if(!isset($fk))
                         @if(is_null($orders) or $orders->status != 12)<div class="alert alert-danger">
                             <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> Примечание!</h3> Вам необходимо оплатить регистрационный сбор и выбрать пакет. У вас есть 24 часа чтобы активировать кабинет, по истечению срока ваш кабинет удалится.
                         </div>@endif
@@ -53,6 +55,7 @@
                                 </div>
                             </div>
                         </div>
+                            @endif
                         <div class="card">
                             <div class="card-block">
                                 <div class="row pricing-plan">
@@ -68,7 +71,7 @@
                                                     <div class="price-table-content">
                                                         <div class="price-row"><i class="fa fa-product-hunt"></i> {{ $item->pv }} PV</div>
                                                         <div class="price-row"><i class="fa fa-money"></i> {{ $item->income }}</div>
-                                                        <div class="price-row"><i class="fa fa-star"></i> {{ $item->rank }}</div>
+                                                        <div class="price-row"><i class="fa fa-star"></i> {{ $item->statusName->title }}</div>
                                                         <div class="price-row"><i class="fa fa-shopping-basket"></i> {{ $item->goods }}</div>
                                                         <div class="price-row">
                                                             <a href="/pay-types?package={{ $item->id }}">

@@ -280,4 +280,11 @@ class HomeController extends Controller
         return view('profile.notifications', compact('all'));
     }
 
+    public function programs()
+    {
+        $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();
+        $fk = 0;
+        return view('profile.non-activated', compact('orders','fk'));
+    }
+
 }

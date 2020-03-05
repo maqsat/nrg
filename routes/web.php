@@ -62,7 +62,13 @@ Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware
 Route::get('/progress', 'AdminController@progress')->middleware("admin");
 Route::get('/not_cash_bonuses', 'AdminController@notCashBonuses')->middleware("admin");
 Route::get('/not_cash_bonuses/{user_id}/{status_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");
+Route::get('/sponsor_users', 'UserController@sponsor_users')->middleware("admin");
+Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware("admin");
+Route::get('/user_offices', 'UserController@user_offices')->middleware("admin");
 
+
+Route::resource('package', 'PackageController')->middleware("admin");
+Route::resource('office', 'OfficeController')->middleware("admin");
 /*
 ************************ Anything else ***********************
  */

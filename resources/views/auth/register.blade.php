@@ -2,7 +2,7 @@
 @push('styles')
 @endpush
 @section('content')
-    <section id="wrapper" class="login-register register-padding"  style="background-image:url(/monster_admin/assets/images/background/login-register.jpg);">
+    <section id="wrapper" class="login-register register-padding"  style="background-image:url(/nrg/bg.jpg);">
         <div class="row">
             <div class="col-10 offset-1">
                 <div class="card">
@@ -19,6 +19,17 @@
                                     <section>
                                         <div class="row">
                                             <div class="col-md-5  offset-1">
+                                                <input type="hidden" name="program_id" id="program_id" value="1">
+                                                <div class="form-group">
+                                                    <?php
+                                                    if(isset($_GET['inviter_id'])) $user = \App\User::find($_GET['inviter_id']);
+                                                    else $user = \App\User::find(1)
+                                                    ?>
+                                                    <label for="inviter_id">Ваш менеджер:</label>{{--{{ app('request')->input('inviter_id') }}--}}
+                                                    <input type="text" class="form-control required" value="{{ $user->name }} - {{ $user->number }}" disabled>
+                                                    <input type="hidden" class="form-control required" id="inviter_id" name="inviter_id" value="{{ $user->id }}">
+                                                    <div class="error-message"></div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="name">ФИО :</label>
                                                     <input type="text" class="form-control required" id="name" name="name">
@@ -34,6 +45,8 @@
                                                     <input type="email" class="form-control required"  id="email" name="email">
                                                     <div class="error-message"></div>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-5">
                                                 <div class="form-group">
                                                     <div class="form-group">
                                                         <label for="package_id">Выберите пол:</label>
@@ -45,8 +58,6 @@
                                                         <div class="error-message"></div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label for="birthday">День рождение :</label>
                                                     <input type="date" class="form-control required" id="birthday" name="birthday">
@@ -70,18 +81,6 @@
                                     <section>
                                         <div class="row">
                                             <div class="col-md-8  offset-md-2">
-                                                <input type="hidden" name="program_id" id="program_id" value="1">
-                                                <div class="form-group">
-                                                    <?php
-                                                    if(isset($_GET['inviter_id'])) $user = \App\User::find($_GET['inviter_id']);
-                                                    else $user = \App\User::find(1)
-                                                    ?>
-                                                    <label for="inviter_id">Ваш менеджер:</label>{{--{{ app('request')->input('inviter_id') }}--}}
-                                                    <input type="text" class="form-control required" value="{{ $user->name }} - {{ $user->number }}" disabled>
-                                                    <input type="hidden" class="form-control required" id="inviter_id" name="inviter_id" value="{{ $user->id }}">
-                                                    <div class="error-message"></div>
-                                                </div>
-
                                                 <div class="form-group">
                                                     <label for="position">Ваш офис :</label>
                                                     <select class="custom-select form-control required" id="city_id" name="city_id">
@@ -195,7 +194,7 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
 
-                    var params = 'name='+document.getElementById('name').value+'&number='+document.getElementById('number').value+'&email='+document.getElementById('email').value+'&gender='+document.getElementById("gender").selectedIndex+'&birthday='+document.getElementById('birthday').value+'&password='+document.getElementById('password').value+'&password_confirmation='+document.getElementById('password_confirmation').value+'&step='+currentIndex;
+                    var params = 'name='+document.getElementById('name').value+'&program_id='+document.getElementById('program_id').value+'&inviter_id='+document.getElementById('inviter_id').value+'&number='+document.getElementById('number').value+'&email='+document.getElementById('email').value+'&gender='+document.getElementById("gender").selectedIndex+'&birthday='+document.getElementById('birthday').value+'&password='+document.getElementById('password').value+'&password_confirmation='+document.getElementById('password_confirmation').value+'&step='+currentIndex;
 
                     console.log(params);
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
@@ -224,7 +223,7 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
 
-                    var params = 'program_id='+document.getElementById('program_id').value+'&inviter_id='+document.getElementById('inviter_id').value+'&terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&step='+currentIndex;
+                    var params = 'terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&step='+currentIndex;
                     console.log(params);
 
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));

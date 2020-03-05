@@ -16,11 +16,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $fillable = [
-        'auth_token', 'id','name','email','nickname','password','sponsor_id','inviter_id','program_id','login','iin',
-        'number','card','bank','birthday','country_id','city_id','address', 'status', 'position','post_index',
-        'package_id','type','order'
-    ];
+    protected $guarded = [];
 
 
     /**
@@ -92,6 +88,17 @@ class User extends Authenticatable implements JWTSubject
     public function status()
     {
         return $this->hasOne('App\Models\Status','status_id');
+    }
+
+    /**
+     * Set the user's first name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setOrderAttribute($value)
+    {
+        $this->attributes['order'] = $value;
     }
 
 }

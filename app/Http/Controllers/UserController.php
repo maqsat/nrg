@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Hierarchy;
+use App\Models\Office;
 use App\Models\Order;
+use App\Models\Package;
 use DB;
 use App\User;
 use Carbon\Carbon;
@@ -348,7 +351,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $users = \App\User::whereStatus(1)->get();
+        return view('user.create', compact('users'));
     }
 
     /**
@@ -359,7 +363,66 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'          => 'required',
+            'number'        => 'required',
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'gender'        => 'required',
+            'birthday'      => 'required',
+            'country_id'    => 'required',
+            'address'       => 'required',
+            'password'      => [ 'required', 'string', 'min:6'],
+            'created_at'    => 'required',
+            'city_id'       => 'required',
+            'inviter_id'    => ['required', "sponsor_in_program:1", 'exists:users,id'],
+            'sponsor_id'    => 'required',
+            'position'      => 'required',
+            'package_id'    => 'required',
+            'office_id'    => 'required',
+        ]);
+
+        $user = User::create([
+            'name'          => $request->name,
+            'number'        => $request->number,
+            'email'         => $request->email,
+            'gender'        => $request->gender,
+            'birthday'      => $request->birthday,
+            'address'       => $request->address,
+            'password'      => bcrypt($request->password),
+            'created_at'    => $request->created_at,
+            'country_id'    => $request->country_id,
+            'city_id'       => $request->city_id,
+            'inviter_id'    => $request->inviter_id,
+            'sponsor_id'    => $request->sponsor_id,
+            'position'      => $request->position,
+            'package_id'    => $request->package_id,
+            'status_id'     =>  $request->status_id,
+            'office_id'     =>  $request->office_id,
+            'program_id'     =>  1,
+        ]);
+
+
+        if($request->package_id != 0){
+            $package = Package::find($request->package_id);
+            $cost = $package->cost + env('REGISTRATION_FEE');
+            $package_id  = $package->id;
+        }
+        else $cost = env('REGISTRATION_FEE');
+
+        $order =  Order::updateOrCreate(
+            [
+                'type' => 'register',
+                'status' => 0,
+                'payment' => 'manual',
+                'uuid' => 0,
+                'user_id' => $user->id,
+            ],
+            ['amount' => $cost, 'package_id' => $request->package_id]
+        );
+
+        event(new Activation($user = $user));
+
+        return redirect('/user');
     }
 
     /**
@@ -472,15 +535,6 @@ class UserController extends Controller
     {
         $user  = User::find($user_id);
 
-        $order = Order::where('user_id',$user_id)
-            ->where('status',11)
-            ->where('type','register')
-            ->first();
-
-        $user->setAttribute('order', $order);
-
-        //if($user->status == 1) return "<h2>Пользователь уже активирован!</h2>";
-
         event(new Activation($user = $user));
 
         return "<h2>Пользователь успешно активирован!</h2>";
@@ -559,24 +613,26 @@ class UserController extends Controller
 
         if($request->step == 0){
             $validator = Validator::make($request->all(), [
+                'program_id'    => ['required','integer', 'exists:programs,id'],
                 'name'          => ['required', 'string', 'max:255'],
                 'number'        => ['required','min:7'],
                 'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'      => ['required', 'string', 'min:6', 'confirmed'],
                 'gender'           => ['required', Rule::notIn([0])],//,'size:12'
                 'birthday'      => ['required'],
-            ]);
+                'inviter_id'    => ['required', 'string', 'max:255',"sponsor_in_program:$program_id", 'exists:users,id'],
+                ],[
+                    'required' => 'Пожалуйста, заполните это поле.',
+                    'inviter_id.exists' => 'Такого инвайтера не существует.',
+                ]);
         }
 
         if($request->step == 1){
             $validator = Validator::make($request->all(), [
-                'program_id'    => ['required','integer', 'exists:programs,id'],
-                'inviter_id'    => ['required', 'string', 'max:255',"sponsor_in_program:$program_id", 'exists:users,id'],
                 'city_id'       => ['required', Rule::notIn([0])],
                 'terms'         => ['required','accepted'],
             ],[
-                'required' => 'Пожалуйста, заполните это поле.',
-                'inviter_id.exists' => 'Такого инвайтера не существует.',
+                'required' => 'Пожалуйста, заполните это поле.'
             ]);
         }
 
@@ -629,5 +685,66 @@ class UserController extends Controller
             echo  "<h4>$item->id => Пользователь успешно активирован!</h4>";
         }
 
+    }
+
+    public function sponsor_users(Request $request)
+    {
+        $request->validate([
+            'inviter_id' => 'required', 'integer'
+        ]);
+
+        $sponsor_users = Hierarchy::followersList($request->inviter_id);
+        $text = '';
+
+        foreach ($sponsor_users  as $item){
+
+            $left_user = User::whereSponsorId($item->user_id)->wherePosition(1)->whereStatus(1)->first();
+            $right_user = User::whereSponsorId($item->user_id)->wherePosition(2)->whereStatus(1)->first();
+
+            if(is_null($left_user) or is_null($right_user)){
+                $name = User::find($item->user_id)->name;
+                $tmt_text = '<option value='.$item->user_id.'>'.$name.'</option>';
+                $text .= $tmt_text;
+            }
+
+        }
+
+        return $text;
+    }
+
+    public function sponsor_positions(Request $request)
+    {
+        $request->validate([
+            'sponsor_id' => 'required', 'integer'
+        ]);
+
+        $text = '';
+        $left_user = User::whereSponsorId($request->sponsor_id)->wherePosition(1)->whereStatus(1)->first();
+        $right_user = User::whereSponsorId($request->sponsor_id)->wherePosition(2)->whereStatus(1)->first();
+
+        if(is_null($left_user))   $text .= '<option value=1>Слева</option>';
+        if(is_null($right_user))   $text .= '<option value=2>Справа</option>';
+
+
+        return $text;
+    }
+
+    public function user_offices(Request $request)
+    {
+        $request->validate([
+            'city_id' => 'required', 'integer'
+        ]);
+
+        $text = '';
+
+        $offices = Office::where('city_id',$request->city_id)->get();
+
+        foreach ($offices  as $item){
+            $tmt_text = '<option value='.$item->id.'>'.$item->title.'</option>';
+            $text .= $tmt_text;
+        }
+
+
+        return $text;
     }
 }

@@ -37,7 +37,7 @@
                                         <th colspan="2">Информация</th>
                                         <th>Пакет</th>
                                         <th>Статус</th>
-                                        <th>Товарооборот PV</th>
+                                        <th>Товарооборот</th>
                                         <th>Баланс</th>
                                     </tr>
                                     </thead>
@@ -48,7 +48,7 @@
                                             <h6>{{ $user->name }}</h6><small class="text-muted">{{ $user->email }}</small></td>
                                         <td>{{ $package->title }}(${{ $package->cost }})</td>
                                         <td>{{ $status->title }}</td>
-                                        <td>{{ $pv_counter_all }}</td>
+                                        <td>{{ $pv_counter_all }}  PV</td>
                                         <td>${{ $balance }}</td>
                                     </tr>
                                     </tbody>
