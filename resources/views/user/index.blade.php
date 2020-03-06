@@ -87,7 +87,7 @@
 
                                             @endif
                                             <td class="actions">
-                                                @if(!is_null($user_program))
+                                                @if(!is_null($user_program) && $user_program->status_id != 0)
                                                     {{ \App\Models\Status::whereId($user_program->status_id)->first()->title }}
                                                 @endif
                                             </td>

@@ -111,61 +111,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--second tab-->
-                            <div class="tab-pane" id="profile" role="tabpanel">
-                                <div class="card-block">
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.program') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ \App\Models\Program::find(Auth::user()->program_id)->title }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12"> <strong>{{ __('app.login') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->login }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.sponsor') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->sponsor }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12"> <strong>{{ __('app.name') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->name }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.iin') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->iin }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12"> <strong>{{ __('app.number') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->number }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.card') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->card }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12"> <strong>{{ __('app.email') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->email }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.birthday') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->birthday }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12"> <strong>{{ __('app.address') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ Auth::user()->address }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12 b-r"> <strong>{{ __('app.city') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ \App\Models\City::find(Auth::user()->country_id)->title }}</p>
-                                        </div>
-                                        <div class="col-md-6 col-xs-1"> <strong>{{ __('app.country') }}</strong>
-                                            <br>
-                                            <p class="text-muted">{{ \App\Models\Country::find(Auth::user()->country_id)->title }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="tab-pane" id="settings" role="tabpanel">
                                 <div class="card-block">
                                     <form action="/updateProfile" method="POST" class="form-horizontal form-material">

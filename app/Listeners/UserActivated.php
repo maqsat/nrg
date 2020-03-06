@@ -54,13 +54,13 @@ class UserActivated
             $package_cost = env('REGISTRATION_FEE');
         }
         else{
-            $package = Package::find($event->user->order->package_id);
+            $package = Package::find($event->user->package_id);
             $package_id = $package->id;
             $status_id = $package->rank;
             $package_cost = $package->cost + env('REGISTRATION_FEE');
         }
 
-        if(!is_null($event->user->status_id)){
+        if(!is_null($event->user->status_id) && $event->user->status_id != 0){
             $status_id = $event->user->status_id;
         }
 
