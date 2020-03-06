@@ -23,8 +23,8 @@ class TestController extends Controller
 {
     public function tester()
     {
-        $left_pv = Hierarchy::pvCounter(7,1);
-        $right_pv = Hierarchy::pvCounter(7,2);
+        $left_pv = Hierarchy::pvCounter(1,1);
+        $right_pv = Hierarchy::pvCounter(1,2);
         if($left_pv > $right_pv) $small_branch_position = 2;
         else $small_branch_position = 1;
         dd($small_branch_position);

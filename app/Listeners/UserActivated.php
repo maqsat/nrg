@@ -121,14 +121,14 @@ class UserActivated
                         if(!is_null($current_user_second) && strpos($list, ','.$current_user_second->id.',') !== false) $position = 2;
                     }
 
-                    Balance::setQV($item,$package->pv,$id,$package->id,$position);
+
                     //start check small branch definition
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
                     if($left_pv > $right_pv) $small_branch_position = 2;
                     else $small_branch_position = 1;
                     //end check small branch definition
-
+                    Balance::setQV($item,$package->pv,$id,$package->id,$position);
 
                     //start check next status conditions and move
                     $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
