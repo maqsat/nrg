@@ -231,7 +231,6 @@ class HomeController extends Controller
             'country_id'    => 'required',
             'city_id'       => 'required',
             'address'       => 'required',
-            'password'      => [ 'required', 'string', 'min:6'],
             'card'          => 'required',
             'bank'          => 'required',
         ]);
