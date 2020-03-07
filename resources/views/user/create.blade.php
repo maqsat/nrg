@@ -122,10 +122,16 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        <label class="m-t-10">Закреплен за(показывается только свободные позиции)</label>
+                                        <div class="input-group">
+                                            <select class="form-control form-control-line" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)"></select>
+                                        </div>
                                         <label class="m-t-10">Позиция размещение</label>
                                         <div class="input-group">
                                              <select class="form-control form-control-line" name="position" id="sponsor_positions"></select>
                                         </div>
+                                    </div>
+                                    <div class="col-md-6">
                                         <label  class="m-t-10" for="position">Пакет:</label>
                                         <div class="input-group">
                                             <select class="custom-select form-control required" id="package_id" name="package_id">
@@ -135,16 +141,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="m-t-10">Закреплен за(показывается только свободные позиции)</label>
-                                        <div class="input-group">
-                                            <select class="form-control form-control-line" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)"></select>
-                                        </div>
-                                        <label  class="m-t-10" for="position">Офис:</label>
-                                        <div class="input-group">
-                                            <select class="form-control form-control-line" name="office_id" id="user_offices"></select>
-                                        </div>
                                         <label  class="m-t-10" for="position">Статус:</label>
                                         <div class="input-group">
                                             <select class="custom-select form-control required" id="status_id" name="status_id">
@@ -153,6 +149,10 @@
                                                     <option value="{{ $item->id }}">{{ $item->title }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <label  class="m-t-10" for="position">Офис:</label>
+                                        <div class="input-group">
+                                            <select class="form-control form-control-line" name="office_id" id="user_offices"></select>
                                         </div>
                                     </div>
                                 </div>

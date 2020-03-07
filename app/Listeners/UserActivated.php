@@ -122,10 +122,12 @@ class UserActivated
                     }
 
 
+
                     //start check small branch definition
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
                     if($left_pv > $right_pv) $small_branch_position = 2;
+                    elseif($left_pv == $right_pv) $small_branch_position = 0;
                     else $small_branch_position = 1;
                     //end check small branch definition
                     Balance::setQV($item,$package->pv,$id,$package->id,$position);
