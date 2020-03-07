@@ -56,14 +56,14 @@ class Balance {
     public function getWeekBalance($user_id)
     {
         //dd(Carbon::now()->startOfWeek());
-        $sum = Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','auto_bonus'])->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
+        $sum = Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','matching_bonus','auto_bonus'])->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
         return round($sum, 2);
     }
 
 
     public function getIncomeBalance($user_id)
     {
-        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','auto_bonus'])->sum('sum');
+        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','matching_bonus','auto_bonus'])->sum('sum');
         return round($sum, 2);
     }
 
