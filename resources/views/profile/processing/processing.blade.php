@@ -96,7 +96,6 @@
                                 </thead>
                                 <tbody>
                                 @foreach($list as $item)
-                                    @if($item->sum > 0)
                                         <tr>
                                             <td class="text-center">{{ $item->id }}</td>
                                             <td>
@@ -128,7 +127,6 @@
                                             <td class="txt-oflo">{{ $item->created_at }}</td>
                                             <td class="txt-oflo">@if(!is_null(\App\Models\Status::find($item->status_id))){{ \App\Models\Status::find($item->status_id)->title }}@endif</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                                 </tbody>
                             </table>

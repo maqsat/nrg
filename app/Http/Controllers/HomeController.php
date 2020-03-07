@@ -106,10 +106,8 @@ class HomeController extends Controller
         }
 
 
-        $list = Processing::whereUserId(Auth::user()->id)->where('status','!=','in_score')->orderBy('created_at','desc')->paginate(100);
+        $list = Processing::whereUserId(Auth::user()->id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
 
-
-        $user_list = User::whereInviterId(Auth::user()->id)->get();
 
         return view('profile.processing.processing', compact('list', 'balance', 'all', 'out','week','activation'));
     }

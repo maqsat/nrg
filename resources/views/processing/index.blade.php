@@ -183,7 +183,6 @@
                                     </thead>
                                     <tbody>
                                     @foreach($list as $item)
-                                        @if($item->sum > 0)
                                         <tr>
                                             <td class="text-center">{{ $item->id }}</td>
                                             <td>
@@ -232,7 +231,6 @@
                                             <td class="txt-oflo">{{ date('d-m-Y', strtotime($item->created_at)) }}</td>
                                             <td class="txt-oflo">{{ \App\Models\Program::find($item->program_id)->title }}</td>
                                         </tr>
-                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>
