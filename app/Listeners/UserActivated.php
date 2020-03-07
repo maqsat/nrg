@@ -127,7 +127,6 @@ class UserActivated
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
                     if($left_pv > $right_pv) $small_branch_position = 2;
-                    elseif($left_pv == $right_pv) $small_branch_position = 0;
                     else $small_branch_position = 1;
                     //end check small branch definition
 
