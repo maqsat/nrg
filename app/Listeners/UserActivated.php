@@ -211,33 +211,30 @@ class UserActivated
                     /*start set  turnover_bonus  */
                     $credited_pv = Processing::where('status','turnover_bonus')->where('user_id',$item)->sum('pv');
 
-                    if($small_branch_position != 0){
+                    if($small_branch_position == 1){
+                        $to_enrollment_pv = $left_pv - $credited_pv;
+                    }
+                    else
+                        $to_enrollment_pv = $right_pv - $credited_pv;
 
-                        if($small_branch_position == 1){
-                            $to_enrollment_pv = $left_pv - $credited_pv;
-                        }
-                        else
-                            $to_enrollment_pv = $right_pv - $credited_pv;
+                    $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
+                    Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv);
 
-                        $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
-                        Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv);
+                    /*start set  matching_bonus  */
+                    $inviter_list = Hierarchy::getInviterList($item,'').',';
+                    $inviter_list = explode(',',trim($inviter_list,','));
+                    $inviter_list = array_slice($inviter_list, 0, 3);
 
-                        /*start set  matching_bonus  */
-                        $inviter_list = Hierarchy::getInviterList($item,'').',';
-                        $inviter_list = explode(',',trim($inviter_list,','));
-                        $inviter_list = array_slice($inviter_list, 0, 3);
-
-                        foreach ($inviter_list as $inviter_key => $inviter_item){
-                            if($inviter_item != ''){
-                                $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-                                $list_inviter_status = Status::find($inviter_user_program->status_id);
-                                if($list_inviter_status->depth_line <= $inviter_key+1){
-                                    Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
-                                }
+                    foreach ($inviter_list as $inviter_key => $inviter_item){
+                        if($inviter_item != ''){
+                            $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                            $list_inviter_status = Status::find($inviter_user_program->status_id);
+                            if($list_inviter_status->depth_line <= $inviter_key+1){
+                                Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
                             }
                         }
-                        /*end  set  matching_bonus  */
                     }
+                    /*end  set  matching_bonus  */
                     /*end set  turnover_bonus  */
                 }
             }
