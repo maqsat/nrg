@@ -96,37 +96,39 @@
                                 </thead>
                                 <tbody>
                                 @foreach($list as $item)
-                                    <tr>
-                                        <td class="text-center">{{ $item->id }}</td>
-                                        <td>
-                                            @if($item->status == 'invite_bonus')
-                                                Реферальный бонус
-                                            @elseif($item->status == 'cashback')
-                                                Кэшбек
-                                            @elseif($item->status == 'turnover_bonus')
-                                                Бонус за бинар
-                                            @elseif($item->status == 'status_bonus')
-                                                Бонус признания
-                                            @elseif($item->status == 'quickstart_bonus')
-                                                Быстрый старт
-                                            @elseif($item->status == 'matching_bonus')
-                                                Матчинг бонус
-                                            @elseif($item->status == 'request')
-                                                Запрос на списание вернул ошибку
-                                            @elseif($item->status == 'out')
-                                                Выведено
-                                            @else
-                                                Не определено
-                                            @endif
-                                        </td>
-                                        <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
-                                        <td><span class="text-success">{{ $item->pv}} PV</span></td>
-                                        <td class="txt-oflo">@if($item->in_user != 0) {{ \App\User::find($item->in_user)->name }} @endif</td>
-                                        <td class="txt-oflo">@if($item->in_user != 0) {{ \App\Models\Package::find($item->package_id)->title }} @endif</td>
-                                        <td>{{ $item->card_number }}</td>
-                                        <td class="txt-oflo">{{ $item->created_at }}</td>
-                                        <td class="txt-oflo">@if(!is_null(\App\Models\Status::find($item->status_id))){{ \App\Models\Status::find($item->status_id)->title }}@endif</td>
-                                    </tr>
+                                    @if($item->sum > 0)
+                                        <tr>
+                                            <td class="text-center">{{ $item->id }}</td>
+                                            <td>
+                                                @if($item->status == 'invite_bonus')
+                                                    Реферальный бонус
+                                                @elseif($item->status == 'cashback')
+                                                    Кэшбек
+                                                @elseif($item->status == 'turnover_bonus')
+                                                    Бонус за бинар
+                                                @elseif($item->status == 'status_bonus')
+                                                    Бонус признания
+                                                @elseif($item->status == 'quickstart_bonus')
+                                                    Быстрый старт
+                                                @elseif($item->status == 'matching_bonus')
+                                                    Матчинг бонус
+                                                @elseif($item->status == 'request')
+                                                    Запрос на списание вернул ошибку
+                                                @elseif($item->status == 'out')
+                                                    Выведено
+                                                @else
+                                                    Не определено
+                                                @endif
+                                            </td>
+                                            <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
+                                            <td><span class="text-success">{{ $item->pv}} PV</span></td>
+                                            <td class="txt-oflo">@if($item->in_user != 0) {{ \App\User::find($item->in_user)->name }} @endif</td>
+                                            <td class="txt-oflo">@if($item->in_user != 0) {{ \App\Models\Package::find($item->package_id)->title }} @endif</td>
+                                            <td>{{ $item->card_number }}</td>
+                                            <td class="txt-oflo">{{ $item->created_at }}</td>
+                                            <td class="txt-oflo">@if(!is_null(\App\Models\Status::find($item->status_id))){{ \App\Models\Status::find($item->status_id)->title }}@endif</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                                 </tbody>
                             </table>
