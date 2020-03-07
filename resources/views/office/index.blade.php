@@ -42,7 +42,8 @@
                                     <td> {{ $key + 1 }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ \App\Models\City::find($item->city_id)->title }}</td>
-                                    <td>{{ \App\User::where('is_office_lider',$item->id)->first()->name }}</td>
+                                    <?php $lider = \App\User::where('is_office_lider',$item->id)->first();?>
+                                    <td>@if(!is_null($lider)) {{ $lider->name }} @endif</td>
                                     <td class="actions">
                                         <a href="/office/{{ $item->id }}/edit" class="btn btn-success"><i class="mdi mdi-grease-pencil"></i></a>
                                     </td>

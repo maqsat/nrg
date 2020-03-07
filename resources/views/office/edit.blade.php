@@ -63,6 +63,7 @@
                                     <div class="col-md-12">
                                         <input type="hidden" name="old_user_id" value="{{ $user_id }}">
                                         <select class="form-control form-control-line" name="user_id">
+                                            <option>Выберите</option>
                                             @foreach($users as $item)
                                                 <option value="{{ $item->id }}"  @if($user_id == $item->id) selected @endif>{{ $item->name }}</option>
                                             @endforeach

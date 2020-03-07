@@ -222,7 +222,22 @@ class HomeController extends Controller
     public function updateProfile(Request$request)
     {
 
-            $user = User::find(Auth::user()->id);
+        $request->validate([
+            'name'          => 'required',
+            'number'        => 'required',
+            'email'         => ['required', 'string', 'email', 'max:255'],
+            'gender'        => 'required',
+            'birthday'      => 'required',
+            'country_id'    => 'required',
+            'city_id'       => 'required',
+            'address'       => 'required',
+            'password'      => [ 'required', 'string', 'min:6'],
+            'card'          => 'required',
+            'bank'          => 'required',
+        ]);
+
+
+        $user = User::find(Auth::user()->id);
 
             if ($request->card !== $user->card) {
                 DB::table('user_changes')->insert([
@@ -233,10 +248,10 @@ class HomeController extends Controller
                 ]);
             }
 
-            if ($request->login !== $user->login) {
+            if ($request->email !== $user->email) {
                 DB::table('user_changes')->insert([
-                    'new' => $request->login,
-                    'old' => $user->login,
+                    'new' => $request->email,
+                    'old' => $user->email,
                     'type' => 2,
                     'user_id' => Auth::user()->id,
                 ]);
@@ -251,7 +266,6 @@ class HomeController extends Controller
             User::whereId(Auth::user()->id)->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'iin' => $request->iin,
                 'number' => $request->number,
                 'birthday' => $request->birthday,
                 'country_id' => $request->country_id,
@@ -259,7 +273,10 @@ class HomeController extends Controller
                 'address' => $request->address,
                 'password' => $password,//change
                 'card' => $request->card,//hostory
+                'gender'        =>  $request->gender,
+                'bank'          =>  $request->bank,
             ]);
+
 
 
             return redirect()->back()->with('status', 'Успешно изменено');

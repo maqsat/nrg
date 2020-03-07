@@ -49,20 +49,7 @@
                             </center>
                         </div>
                         <div>
-                            <hr> </div>
-                        <div class="card-block">
-                            <small class="text-muted">Email</small>
-                            <h6>{{ Auth::user()->email }}</h6>
-                            <small class="text-muted p-t-10 db">Телефон</small>
-                            <h6>{{ Auth::user()->number }}</h6>
-                            <small class="text-muted p-t-10 db">Адрес</small>
-                            <h6>{{ Auth::user()->address }}, {{ \App\Models\City::whereId(Auth::user()->city_id)->first()->title }}</h6>
-                            <small class="text-muted p-t-10 db">Номер карты</small>
-                            <h6>{{ Auth::user()->card }}</h6>
-                            <small class="text-muted p-t-10 db">Поделиться</small>
-                            <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
-                            <script src="//yastatic.net/share2/share.js"></script>
-                            <div class="ya-share2" data-services="vkontakte,facebook,moimir,twitter,whatsapp,skype,telegram" data-url="https://en-rise.com/" data-title="Продукция компании ENRISE наполняет тело силой и бодростью!" data-size="m"></div>
+
                         </div>
                     </div>
                 </div>
@@ -70,75 +57,18 @@
                 <!-- Column -->
                 <div class="col-lg-8 col-xlg-9 col-md-7">
                     <div class="card">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs profile-tab" role="tablist">
-                            <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Последние событии</a> </li>
-                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Данные</a> </li>
-                            <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Настройки</a> </li>
-                        </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active" id="home" role="tabpanel">
+                            <div class="tab-pane active" id="settings" role="tabpanel">
                                 <div class="card-block">
-                                    <div class="profiletimeline">
-                                        @forelse($feed as $item)
-                                        <div class="sl-item">
-                                            <div class="sl-left"> <img src="/monster_admin/assets/images/users/1.jpg" alt="user" class="img-circle" /> </div>
-                                            <div class="sl-right">
-                                                <div>
-                                                    <a href="#" class="link">{{ $item->name }}</a>
-                                                    <span class="sl-date">{{ \Carbon\Carbon::createFromTimeStamp(strtotime($item->created_at))->diffForHumans() }}</span>
-                                                    <p>Зарегистрировась(-ся) в прогрумму <b>{{ \App\Models\Program::find($item->program_id)->title }}</b></p>
-                                                    <div class="like-comm"><a href="javascript:void(0)" class="link m-r-10"><i class="fa fa-heart text-danger"></i> 1 Like</a> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        @empty
-                                            <div class="sl-item">
-                                                <div class="sl-left"> <img src="/monster_admin/assets/images/users/1.jpg" alt="user" class="img-circle" /> </div>
-                                                <div class="sl-right">
-                                                    <div>
-                                                        <a href="#" class="link">{{ Auth::user()->name }}</a>
-                                                        <span class="sl-date">{{ \Carbon\Carbon::createFromTimeStamp(strtotime(Auth::user()->created_at))->diffForHumans() }}</span>
-                                                        <p>Вы зарегистрировались в прогрумму <b>{{ \App\Models\Program::find(Auth::user()->program_id)->title }}</b></p>
-                                                        <div class="like-comm"><a href="javascript:void(0)" class="link m-r-10"><i class="fa fa-heart text-danger"></i> 1 Like</a> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        @endforelse
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="settings" role="tabpanel">
-                                <div class="card-block">
-                                    <form action="/updateProfile" method="POST" class="form-horizontal form-material">
+                                    <form action="/updateProfile" method="POST" class="form-horizontal">
                                         {{ csrf_field() }}
-                                        <div class="form-group">
-                                            <label class="col-md-12">{{ __('app.login') }}</label>
-                                            <div class="col-md-12">
-                                                <input type="text" value="{{ Auth::user()->login }}" name="login" class="form-control form-control-line">
-                                                @if ($errors->has('login'))
-                                                    <span class="help-block"><small>{{ $errors->first('login') }}</small></span>
-                                                @endif
-                                            </div>
-                                        </div>
                                         <div class="form-group">
                                             <label class="col-md-12">{{ __('app.name') }}</label>
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->name }}" name="name" class="form-control form-control-line">
                                                 @if ($errors->has('name'))
                                                     <span class="help-block"><small>{{ $errors->first('name') }}</small></span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">{{ __('app.iin') }}</label>
-                                            <div class="col-md-12">
-                                                <input type="text" value="{{ Auth::user()->iin }}" name="iin" class="form-control form-control-line">
-                                                @if ($errors->has('iin'))
-                                                    <span class="help-block"><small>{{ $errors->first('iin') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -152,21 +82,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">{{ __('app.card') }}</label>
-                                            <div class="col-md-12">
-                                                <input type="text" value="{{ Auth::user()->card }}" name="card" class="form-control form-control-line">
-                                                @if ($errors->has('card'))
-                                                    <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="col-md-12">{{ __('app.email') }}</label>
                                             <div class="col-md-12">
                                                 <input type="email" value="{{ Auth::user()->email }}" name="email" class="form-control form-control-line">
                                                 @if ($errors->has('email'))
                                                     <span class="help-block"><small>{{ $errors->first('email') }}</small></span>
                                                 @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="package_id"  class="col-md-12">Выберите пол:</label>
+                                            <div class="col-md-12">
+                                                <select class="custom-select form-control required" id="gender" name="gender">
+                                                    <option>Не указан</option>
+                                                    <option value="1"  @if(old('gender',Auth::user()->gender) == 1) selected @endif>Мужской</option>
+                                                    <option value="2"  @if(old('gender',Auth::user()->gender) == 2) selected @endif>Женский</option>
+                                                </select>
+                                                <div class="error-message"></div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -204,6 +136,24 @@
                                                 <input type="text" value="{{ Auth::user()->address }}" name="address" class="form-control form-control-line">
                                                 @if ($errors->has('address'))
                                                     <span class="help-block"><small>{{ $errors->first('address') }}</small></span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">{{ __('app.bank') }}</label>
+                                            <div class="col-md-12">
+                                                <input type="text" value="{{ Auth::user()->bank }}" name="bank" class="form-control form-control-line">
+                                                @if ($errors->has('bank'))
+                                                    <span class="help-block"><small>{{ $errors->first('bank') }}</small></span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">{{ __('app.card') }}</label>
+                                            <div class="col-md-12">
+                                                <input type="text" value="{{ Auth::user()->card }}" name="card" class="form-control form-control-line">
+                                                @if ($errors->has('card'))
+                                                    <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>

@@ -467,18 +467,38 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name'          => 'required',
+            'number'        => 'required',
+            'email'         => ['required', 'string', 'email', 'max:255'],
+            'gender'        => 'required',
+            'birthday'      => 'required',
+            'country_id'    => 'required',
+            'city_id'       => 'required',
+            'address'       => 'required',
+            'card'          => 'required',
+            'bank'          => 'required',
+        ]);
+
         $user = User::find($id);
 
-
-        if ( $request->name !== $user->name){
+        if ($request->card !== $user->card) {
             DB::table('user_changes')->insert([
-                'new'        => $request->name,
-                'old'        => $user->name,
-                'type'       => 2,
-                'user_id'    => $id,
+                'new' => $request->card,
+                'old' => $user->card,
+                'type' => 1,
+                'user_id' => $id,
             ]);
         }
 
+        if ($request->email !== $user->email) {
+            DB::table('user_changes')->insert([
+                'new' => $request->email,
+                'old' => $user->email,
+                'type' => 2,
+                'user_id' => $id,
+            ]);
+        }
         if ( $request->password !== null & $request->password !== "" ){
             $password = bcrypt($request->password);
         }
@@ -489,7 +509,6 @@ class UserController extends Controller
         User::whereId($id)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'iin' => $request->iin,
             'number' => $request->number,
             'birthday' => $request->birthday,
             'country_id' => $request->country_id,
@@ -497,6 +516,8 @@ class UserController extends Controller
             'address' => $request->address,
             'password' => $password,//change
             'card' => $request->card,//hostory
+            'gender'        =>  $request->gender,
+            'bank'          =>  $request->bank,
         ]);
 
         return redirect()->back()->with('status', 'Успешно изменено');

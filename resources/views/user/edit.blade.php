@@ -39,29 +39,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">{{ __('app.iin') }}</label>
-                                    <div class="col-md-12">
-                                        <input type="text" value="{{ $user->iin }}" name="iin" class="form-control form-control-line">
-                                        @if ($errors->has('iin'))
-                                            <span class="help-block"><small>{{ $errors->first('iin') }}</small></span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-md-12">{{ __('app.number') }}</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ $user->number }}" name="number" class="form-control form-control-line">
                                         @if ($errors->has('number'))
                                             <span class="help-block"><small>{{ $errors->first('number') }}</small></span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-12">{{ __('app.card') }}</label>
-                                    <div class="col-md-12">
-                                        <input type="text" value="{{ $user->card }}" name="card" class="form-control form-control-line">
-                                        @if ($errors->has('card'))
-                                            <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
@@ -72,6 +54,17 @@
                                         @if ($errors->has('email'))
                                             <span class="help-block"><small>{{ $errors->first('email') }}</small></span>
                                         @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="package_id"  class="col-md-12">Выберите пол:</label>
+                                    <div class="col-md-12">
+                                        <select class="custom-select form-control required" id="gender" name="gender">
+                                            <option>Не указан</option>
+                                            <option value="1"  @if(old('gender',$user->gender) == 1) selected @endif>Мужской</option>
+                                            <option value="2"  @if(old('gender',$user->gender) == 2) selected @endif>Женский</option>
+                                        </select>
+                                        <div class="error-message"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -112,6 +105,26 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-md-12">{{ __('app.bank') }}</label>
+                                    <div class="col-md-12">
+                                        <input type="text" value="{{ Auth::user()->bank }}" name="bank" class="form-control form-control-line">
+                                        @if ($errors->has('bank'))
+                                            <span class="help-block"><small>{{ $errors->first('bank') }}</small></span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-12">{{ __('app.card') }}</label>
+                                    <div class="col-md-12">
+                                        <input type="text" value="{{ $user->card }}" name="card" class="form-control form-control-line">
+                                        @if ($errors->has('card'))
+                                            <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
+                                        @endif
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.password') }}</label>
                                     <div class="col-md-12">

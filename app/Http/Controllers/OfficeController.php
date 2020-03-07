@@ -83,7 +83,12 @@ class OfficeController extends Controller
      */
     public function edit(Office $office)
     {
-        $user_id = User::where('is_office_lider',$office->id)->first()->id;
+        $lider = User::where('is_office_lider',$office->id)->first();
+        if(!is_null($lider)){
+            $user_id = $lider->id;
+        }
+        else    $user_id = 0;
+
         $users = User::whereStatus(1)->get();
         return view('office.edit',compact('office','user_id','users'));
     }

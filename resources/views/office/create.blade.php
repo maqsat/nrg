@@ -61,6 +61,7 @@
                                     <label class="col-md-12">Топ лидер</label>
                                     <div class="col-md-12">
                                         <select class="form-control form-control-line" name="user_id">
+                                            <option>Выберите</option>
                                             @foreach($users as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
