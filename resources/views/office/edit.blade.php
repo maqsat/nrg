@@ -34,7 +34,7 @@
                                     <div class="col-md-12">
                                         <input type="text" value="{{ old('title',$office->title) }}" name="title" class="form-control form-control-line">
                                         @if ($errors->has('title'))
-                                            <span class="help-block"><small>{{ $errors->first('title') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('title') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                     <div class="col-md-12">
                                         <input type="text" value="{{ old('address',$office->address) }}" name="address" class="form-control form-control-line">
                                         @if ($errors->has('address'))
-                                            <span class="help-block"><small>{{ $errors->first('address') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('address') }}</small></span>
                                         @endif
                                     </div>
                                 </div>

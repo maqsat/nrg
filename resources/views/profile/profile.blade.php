@@ -68,7 +68,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->name }}" name="name" class="form-control form-control-line">
                                                 @if ($errors->has('name'))
-                                                    <span class="help-block"><small>{{ $errors->first('name') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('name') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -77,7 +77,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->number }}" name="number" class="form-control form-control-line">
                                                 @if ($errors->has('number'))
-                                                    <span class="help-block"><small>{{ $errors->first('number') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('number') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                             <div class="col-md-12">
                                                 <input type="email" value="{{ Auth::user()->email }}" name="email" class="form-control form-control-line">
                                                 @if ($errors->has('email'))
-                                                    <span class="help-block"><small>{{ $errors->first('email') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('email') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -106,7 +106,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->birthday }}" name="birthday" class="form-control form-control-line">
                                                 @if ($errors->has('birthday'))
-                                                    <span class="help-block"><small>{{ $errors->first('birthday') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('birthday') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -135,7 +135,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->address }}" name="address" class="form-control form-control-line">
                                                 @if ($errors->has('address'))
-                                                    <span class="help-block"><small>{{ $errors->first('address') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('address') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -144,7 +144,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->bank }}" name="bank" class="form-control form-control-line">
                                                 @if ($errors->has('bank'))
-                                                    <span class="help-block"><small>{{ $errors->first('bank') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('bank') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -153,7 +153,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="{{ Auth::user()->card }}" name="card" class="form-control form-control-line">
                                                 @if ($errors->has('card'))
-                                                    <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('card') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
@@ -162,7 +162,7 @@
                                             <div class="col-md-12">
                                                 <input type="text" value="" name="password" class="form-control form-control-line">
                                                 @if ($errors->has('password'))
-                                                    <span class="help-block"><small>{{ $errors->first('password') }}</small></span>
+                                                    <span class="text-danger"><small>{{ $errors->first('password') }}</small></span>
                                                 @endif
                                             </div>
                                         </div>
