@@ -100,23 +100,23 @@
                                         <td class="text-center">{{ $item->id }}</td>
                                         <td>
                                             @if($item->status == 'invite_bonus')
-                                                <span class="label label-rouded label-warning">Реферальный бонус</span>
+                                                Реферальный бонус
                                             @elseif($item->status == 'cashback')
-                                                <span class="label label-rouded label-info">Кэшбек</span>
+                                                Кэшбек
                                             @elseif($item->status == 'turnover_bonus')
-                                                <span class="label label-rouded label-info">Бонус за бинар</span>
+                                                Бонус за бинар
                                             @elseif($item->status == 'status_bonus')
-                                                <span class="label label-rouded label-warning">Бонус признания</span>
+                                                Бонус признания
                                             @elseif($item->status == 'quickstart_bonus')
-                                                <span class="label label-rouded label-warning">Быстрый старт</span>
+                                                Быстрый старт
                                             @elseif($item->status == 'matching_bonus')
-                                                <span class="label label-rouded label-warning">Матчинг бонус</span>
+                                                Матчинг бонус
                                             @elseif($item->status == 'request')
-                                                <span class="label label-rouded label-danger">Запрос на списание вернул ошибку</span>
+                                                Запрос на списание вернул ошибку
                                             @elseif($item->status == 'out')
-                                                <span class="label label-rouded label-success">Выведено</span>
+                                                Выведено
                                             @else
-                                                <span class="label label-rouded label-primary">Не определено</span>
+                                                Не определено
                                             @endif
                                         </td>
                                         <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
