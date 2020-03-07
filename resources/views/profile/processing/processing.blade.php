@@ -86,6 +86,7 @@
                                     <th>ID #</th>
                                     <th>Статус</th>
                                     <th>Сумма</th>
+                                    <th>PV</th>
                                     <th>От кого</th>
                                     <th>Пакет дистрибютора</th>
                                     <th>Номер карты</th>
@@ -119,6 +120,7 @@
                                             @endif
                                         </td>
                                         <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
+                                        <td><span class="text-success">{{ $item->pv}} PV</span></td>
                                         <td class="txt-oflo">@if($item->in_user != 0) {{ \App\User::find($item->in_user)->name }} @endif</td>
                                         <td class="txt-oflo">@if($item->in_user != 0) {{ \App\Models\Package::find($item->package_id)->title }} @endif</td>
                                         <td>{{ $item->card_number }}</td>

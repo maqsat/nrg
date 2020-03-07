@@ -82,13 +82,18 @@
                                         <div class="row">
                                             <div class="col-md-8  offset-md-2">
                                                 <div class="form-group">
-                                                    <label for="position">Ваш офис :</label>
-                                                    <select class="custom-select form-control required" id="city_id" name="city_id">
+                                                    <label for="position">Ваш город:</label>
+                                                    <select class="custom-select form-control required" id="city_id" name="city_id"   onchange="getOffices(this)">
                                                         <option>Выберите офис</option>
                                                         @foreach(\App\Models\City::where('status',1)->get() as $item)
                                                             <option value="{{ $item->id }}"  @if(old('city_id') == $item->id) selected @endif>{{ $item->title }}</option>
                                                         @endforeach
                                                     </select>
+                                                    <div class="error-message"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="position">Офис:</label>
+                                                    <select class="form-control form-control-line" name="office_id" id="user_offices"></select>
                                                     <div class="error-message"></div>
                                                 </div>
                                                 <div class="form-group">
@@ -352,5 +357,31 @@
                 }
             }
         })
+
+
+        function getOffices(city_id) {
+            $.ajax({
+                type: "GET",
+                url: "/user_offices",
+                data: 'city_id='+city_id.value,
+                success: function (data) {
+                    console.log('Submission was successful.');
+                    console.log(data);
+
+                    $('#user_offices')
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append(data)
+                        .val('whatever')
+                    ;
+
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                },
+            });
+        }
     </script>
 @endpush

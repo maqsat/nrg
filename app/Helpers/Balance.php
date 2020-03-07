@@ -14,7 +14,7 @@ use App\Models\Processing;
 
 class Balance {
 
-    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id)
+    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0)
     {
         Processing::insert(
             [
@@ -25,6 +25,7 @@ class Balance {
                 'program_id' => $program_id,
                 'package_id' => $package_id,
                 'status_id' => $status_id,
+                'pv' => $pv,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]
         );
@@ -106,7 +107,7 @@ class Balance {
         $sum = Processing::whereStatus('out')->sum('sum');
         return round($sum, 2);
     }
-    
+
     public function getBalanceWithOut($user_id)
     {
         $sum = Processing::whereUserId($user_id)->whereStatus('in')->sum('sum') + Processing::whereUserId($user_id)->whereStatus('bonus')->sum('sum') + Processing::whereUserId($user_id)->whereStatus('percentage')->sum('sum')  + Processing::where('in_user',$user_id)->whereStatus('transfered_in')->sum('sum') - Processing::whereUserId($user_id)->whereStatus('out')->sum('sum')  - Processing::whereUserId($user_id)->whereStatus('transfered')->sum('sum')  - Processing::whereUserId($user_id)->whereStatus('request')->sum('sum') - Processing::whereUserId($user_id)->whereStatus('transfer')->sum('sum');

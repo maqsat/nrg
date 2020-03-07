@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Processing;
 use DB;
 use Auth;
 use App\User;
@@ -121,8 +122,7 @@ class UserActivated
                         if(!is_null($current_user_second) && strpos($list, ','.$current_user_second->id.',') !== false) $position = 2;
                     }
 
-
-
+                    Balance::setQV($item,$package->pv,$id,$package->id,$position);
                     //start check small branch definition
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
@@ -130,7 +130,7 @@ class UserActivated
                     elseif($left_pv == $right_pv) $small_branch_position = 0;
                     else $small_branch_position = 1;
                     //end check small branch definition
-                    Balance::setQV($item,$package->pv,$id,$package->id,$position);
+
 
                     //start check next status conditions and move
                     $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
@@ -209,10 +209,18 @@ class UserActivated
 
 
                     /*start set  turnover_bonus  */
-                    if($small_branch_position == $position){
+                    $credited_pv = Processing::where('status','turnover_bonus')->where('user_id',$item)->sum('pv');
 
-                        $sum = $package->pv*$item_status->turnover_bonus/100*env('COURSE');
-                        Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id);
+                    if($small_branch_position != 0){
+
+                        if($small_branch_position == 1){
+                            $to_enrollment_pv = $left_pv - $credited_pv;
+                        }
+                        else
+                            $to_enrollment_pv = $right_pv - $credited_pv;
+
+                        $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
+                        Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv);
 
                         /*start set  matching_bonus  */
                         $inviter_list = Hierarchy::getInviterList($item,'').',';
