@@ -222,10 +222,12 @@ class HomeController extends Controller
     public function updateProfile(Request$request)
     {
 
+        $id = Auth::user()->id;
+
         $request->validate([
             'name'          => 'required',
             'number'        => 'required',
-            'email'         => ['required', 'string', 'email', 'max:255'],
+            'email'         => ['required', 'string', 'email', 'max:255',"unique:users,email,$id"],
             'gender'        => 'required',
             'birthday'      => 'required',
             'country_id'    => 'required',
