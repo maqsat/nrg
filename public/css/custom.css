@@ -156,7 +156,9 @@ input.error {
 .user_create input[type=date]{
     flex-direction: unset;
 }
-
+.settings .form-group{
+    margin-bottom: 5px;
+}
 
 @media (max-width: 767px)
 {

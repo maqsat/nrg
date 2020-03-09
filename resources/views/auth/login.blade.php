@@ -11,7 +11,7 @@
 
                         <div class="form-group m-t-40">
                             <div class="col-xs-12">
-                                <input class="form-control" type="text" name="email" required="" placeholder="{{ __('app.sign in login') }}">
+                                <input id="login" type="text" name="login" class="form-control" value="{{ old('number') ?: old('email') }}" required autofocus placeholder="{{ __('app.sign in login') }}">
                             </div>
                         </div>
                         <div class="form-group">

@@ -25,7 +25,7 @@ return [
     'Sign Up' => 'Зарегистрироваться',
     'Have an account?' => 'Уже есть аккаунт?',
     'Sign In into register' => 'Войдите',
-    'sign in login' => 'Логин',
+    'sign in login' => 'Email или номер телефона',
     'remember me' => 'Запомнить',
     'forgot pwd?' => 'Забыли пароль?',
     'log in' => 'Войти',

@@ -60,7 +60,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="birthday">День рождение :</label>
-                                                    <input type="date" class="form-control required" id="birthday" name="birthday">
+                                                    <input type="text" class="form-control required" id="birthday" name="birthday">
                                                     <div class="error-message"></div>
                                                 </div>
                                                 <div class="form-group">
@@ -81,6 +81,16 @@
                                     <section>
                                         <div class="row">
                                             <div class="col-md-8  offset-md-2">
+                                                <div class="form-group">
+                                                    <label for="country_id">Страна :</label>
+                                                    <select class="custom-select form-control  required" id="country_id" name="country_id">
+                                                        <option></option>
+                                                        @foreach(\App\Models\Country::all() as $item)
+                                                            <option value="{{ $item->id }}"  @if(old('country_id') == $item->id) selected @endif>{{ $item->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="error-message"></div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="position">Ваш город:</label>
                                                     <select class="custom-select form-control required" id="city_id" name="city_id"   onchange="getOffices(this)">
@@ -113,16 +123,6 @@
                                     <section>
                                         <div class="row">
                                             <div class="col-md-8  offset-2">
-                                                <div class="form-group">
-                                                    <label for="country_id">Страна :</label>
-                                                    <select class="custom-select form-control  required" id="country_id" name="country_id">
-                                                        <option></option>
-                                                        @foreach(\App\Models\Country::all() as $item)
-                                                            <option value="{{ $item->id }}"  @if(old('country_id') == $item->id) selected @endif>{{ $item->title }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <div class="error-message"></div>
-                                                </div>
                                                 <div class="form-group">
                                                     <label for="city_id">Город :</label>
                                                     <select class="custom-select form-control required" id="city_id" name="city_id">
@@ -228,7 +228,7 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
 
-                    var params = 'terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&step='+currentIndex;
+                    var params = 'terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&office_id='+document.getElementById("user_offices").selectedIndex+'&country_id='+document.getElementById("country_id").selectedIndex+'&step='+currentIndex;
                     console.log(params);
 
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
@@ -320,7 +320,8 @@
                         inviter_id: document.getElementById('inviter_id').value,
                         terms: document.getElementById('terms').value,
                         city_id: document.getElementById('city_id').value,
-                        /*country_id: document.getElementById('country_id').value,*/
+                        office_id: document.getElementById('user_offices').value,
+                        country_id: document.getElementById('country_id').value,
                         /*address: document.getElementById('address').value,*/
                         /*post_index: document.getElementById('post_index').value,*/
                         /*package_id: document.getElementById('package_id').value*/

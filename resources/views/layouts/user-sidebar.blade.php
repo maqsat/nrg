@@ -49,7 +49,7 @@
                         </a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/user_processing">{{ __('app.processing') }}</a></li>
-                            <li><a href="/user_processing?weeks=1">По неделям</a></li>
+                            {{--<li><a href="/user_processing?weeks=1">По неделям</a></li>--}}
                             {{--<li><a href="/rang-history">История ранга</a></li>--}}
                         </ul>
                     </li>
@@ -69,7 +69,7 @@
                     <li>
                         <a href="/programs" aria-expanded="false">
                             <i class="mdi mdi-package"></i>
-                            <span class="hide-menu">Апгрейт</span>
+                            <span class="hide-menu">Апгрейд</span>
                         </a>
                     </li>
                     {{--<li>

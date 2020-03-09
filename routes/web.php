@@ -64,7 +64,7 @@ Route::get('/not_cash_bonuses', 'AdminController@notCashBonuses')->middleware("a
 Route::get('/not_cash_bonuses/{user_id}/{status_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");
 Route::get('/sponsor_users', 'UserController@sponsor_users')->middleware("admin");
 Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware("admin");
-Route::get('/user_offices', 'UserController@user_offices')->middleware("admin");
+Route::get('/user_offices', 'UserController@user_offices');
 
 
 Route::resource('package', 'PackageController')->middleware("admin");

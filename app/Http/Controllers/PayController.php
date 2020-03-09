@@ -47,6 +47,7 @@ class PayController extends Controller
                 ['amount' => $cost, 'package_id' => $package_id]
             );
 
+            User::find(Auth::user()->id)->update(['package_id' => $package_id]);
 
             if($request->type == "manual"){
                 return view('processing.manual', compact('order', 'cost'));

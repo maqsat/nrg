@@ -42,7 +42,6 @@ class UserActivated
      */
     public function handle(Activation $event)
     {
-
         /*start init and activate*/
         $id = $event->user->id;
         $inviter = User::find($event->user->inviter_id);
@@ -241,7 +240,7 @@ class UserActivated
             /*start set  invite_bonus  */
             $inviter_program = UserProgram::where('user_id',$event->user->inviter_id)->first();
             $inviter_status = Status::find($inviter_program->status_id);
-            Balance::changeBalance($inviter->id,$package->pv*$inviter_status->invite_bonus/100*env('COURSE'),'invite_bonus',$id,$program->id,$package->id,$inviter_status->id);
+            Balance::changeBalance($inviter->id,$package->pv*$inviter_status->invite_bonus/100*env('COURSE'),'invite_bonus',$id,$program->id,$package->id,$inviter_status->id,$package->pv);
             /*end set  invite_bonus  */
         }
 

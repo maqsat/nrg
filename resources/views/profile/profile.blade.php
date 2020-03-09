@@ -59,7 +59,7 @@
                     <div class="card">
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active" id="settings" role="tabpanel">
+                            <div class="tab-pane active settings" id="settings" role="tabpanel">
                                 <div class="card-block">
                                     <form action="/updateProfile" method="POST" class="form-horizontal">
                                         {{ csrf_field() }}

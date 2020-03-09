@@ -46,7 +46,7 @@
                                         <td><span class="round"><img src="{{Auth::user()->photo}}" alt="user" width="50" class="home-img" /></span></td>
                                         <td>
                                             <h6>{{ $user->name }}</h6><small class="text-muted">{{ $user->email }}</small></td>
-                                        <td>{{ $package->title }}(${{ $package->cost }})</td>
+                                        <td>@if(!is_null($package)){{ $package->title }}(${{ $package->cost }})@else Без пакета @endif</td>
                                         <td>{{ $status->title }}</td>
                                         <td>{{ $pv_counter_all }}  PV</td>
                                         <td>${{ $balance }}</td>
@@ -59,6 +59,7 @@
                 </div>
             </div>
 
+            @if(!is_null($package))
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -91,6 +92,40 @@
                     </div>
                 </div>
             </div>
+            @else
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <h4 class="card-title">Вы зарегистрировались без пакета.</h4>
+                                <div class="card">
+                                    <div class="card-block">
+                                        <p>Бизнес в компании начинается с простой регистрации.
+                                            Регистрация -это открытие своего личного кабинета в системе, в котором партнер получает
+                                            доступ к своим данным о состоянии своей структуры и всех начисленных бонусов.
+                                            При регистрации, партнеру необходимо приобрести пакет
+                                            маркетинговых инструментов, который дает быстрый старт в бизнесе. Стоимость пакета
+                                            <b>{{ env('REGISTRATION_FEE') }}$</b> и оплачивается раз в год.</p>
+
+                                        <h5 class="ma">В эту сумму входят:</h5>
+                                            <p>
+                                                -  обучающие тренинги по рекрутингу новых партнеров<br>
+                                                -  пособие по работе с командой<br>
+                                                -  рекламные материалы для печати<br>
+                                                -  профессиональная IT-поддержка<br>
+                                                -  обучающие тренинги по продажам от действующих практиков<br>
+                                                -  мотивационные семинары по личностному росту и семейному счастью<br>
+                                                -  уникальная авторская автоворонка<br>
+                                            </p>
+                                        <a href="/programs" class="btn btn-success">Перейти на апгрейд</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
 
             <div class="row">
                 <!-- Column -->

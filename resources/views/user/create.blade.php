@@ -134,17 +134,20 @@
                                     <div class="col-md-6">
                                         <label  class="m-t-10" for="position">Пакет:</label>
                                         <div class="input-group">
-                                            <select class="custom-select form-control required" id="package_id" name="package_id">
+                                            <select class="custom-select form-control required" id="package_id" name="package_id" onchange="getStatus(this)">
                                                 <option value="0">Только регистрация - ${{ env('REGISTRATION_FEE') }} / 0 PV</option>
                                                 @foreach(\App\Models\Package::where('status',1)->get() as $item)
                                                     <option value="{{ $item->id }}">{{ $item->title }} - ${{ $item->cost+env('REGISTRATION_FEE') }} / {{ $item->pv  }} PV</option>
                                                 @endforeach
                                             </select>
+                                            <input type="hidden" value="1" id="#status0">
+                                            @foreach(\App\Models\Package::where('status',1)->get() as $item)
+                                                <input type="hidden" value="{{ $item->rank }}" id="#status{{$item->id}}">
+                                            @endforeach
                                         </div>
                                         <label  class="m-t-10" for="position">Статус:</label>
                                         <div class="input-group">
                                             <select class="custom-select form-control required" id="status_id" name="status_id">
-                                                <option>Выберите статус</option>
                                                 @foreach(\App\Models\Status::all() as $item)
                                                     <option value="{{ $item->id }}">{{ $item->title }}</option>
                                                 @endforeach
@@ -274,6 +277,12 @@
             });
         }
 
+        function getStatus(status) {
+            text = '#status'+status.value;
+            status_id = document.getElementById(text).value;
+            console.log(status_id);
+            $("#status_id").val(status_id);
+        }
     </script>
 @endpush
 

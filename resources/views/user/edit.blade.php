@@ -32,27 +32,27 @@
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.name') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ $user->name }}" name="name" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('name',$user->name) }}" name="name" class="form-control form-control-line">
                                         @if ($errors->has('name'))
-                                            <span class="help-block"><small>{{ $errors->first('name') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('name') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.number') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ $user->number }}" name="number" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('number',$user->number) }}" name="number" class="form-control form-control-line">
                                         @if ($errors->has('number'))
-                                            <span class="help-block"><small>{{ $errors->first('number') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('number') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.email') }}</label>
                                     <div class="col-md-12">
-                                        <input type="email" value="{{ $user->email }}" name="email" class="form-control form-control-line">
+                                        <input type="email" value="{{ old('email',$user->email) }}" name="email" class="form-control form-control-line">
                                         @if ($errors->has('email'))
-                                            <span class="help-block"><small>{{ $errors->first('email') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('email') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
@@ -70,9 +70,9 @@
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.birthday') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ $user->birthday }}" name="birthday" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('birthday',$user->birthday) }}" name="birthday" class="form-control form-control-line">
                                         @if ($errors->has('birthday'))
-                                            <span class="help-block"><small>{{ $errors->first('birthday') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('birthday') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                     <div class="col-sm-12">
                                         <select class="form-control form-control-line" name="country_id">
                                             @foreach(\App\Models\Country::all() as $item)
-                                                <option value="{{ $item->id }}"  @if($user->countre_id == $item->id) selected @endif>{{ $item->title }}</option>
+                                                <option value="{{ $item->id }}"  @if(old('gender',$user->countre_id)  == $item->id) selected @endif>{{ $item->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -91,7 +91,7 @@
                                     <div class="col-sm-12">
                                         <select class="form-control form-control-line" name="city_id" >
                                             @foreach(\App\Models\City::all() as $item)
-                                                <option value="{{ $item->id }}"  @if($user->city_id == $item->id) selected @endif>{{ $item->title }}</option>
+                                                <option value="{{ $item->id }}"  @if(old('gender',$user->city_id) == $item->id) selected @endif>{{ $item->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -99,27 +99,27 @@
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.address') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ $user->address }}" name="address" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('address',$user->address) }}" name="address" class="form-control form-control-line">
                                         @if ($errors->has('address'))
-                                            <span class="help-block"><small>{{ $errors->first('address') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('address') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.bank') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ Auth::user()->bank }}" name="bank" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('bank',$user->bank) }}{{ $user->bank }}" name="bank" class="form-control form-control-line">
                                         @if ($errors->has('bank'))
-                                            <span class="help-block"><small>{{ $errors->first('bank') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('bank') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">{{ __('app.card') }}</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ $user->card }}" name="card" class="form-control form-control-line">
+                                        <input type="text" value="{{ old('card',$user->card) }}" name="card" class="form-control form-control-line">
                                         @if ($errors->has('card'))
-                                            <span class="help-block"><small>{{ $errors->first('card') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('card') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                     <div class="col-md-12">
                                         <input type="text" value="" name="password" class="form-control form-control-line">
                                         @if ($errors->has('password'))
-                                            <span class="help-block"><small>{{ $errors->first('password') }}</small></span>
+                                            <span class="text-danger"><small>{{ $errors->first('password') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
