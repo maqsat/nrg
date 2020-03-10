@@ -121,7 +121,7 @@ class UserActivated
                         if(!is_null($current_user_second) && strpos($list, ','.$current_user_second->id.',') !== false) $position = 2;
                     }
 
-                    Balance::setQV($item,$package->pv,$id,$package->id,$position);
+                    Balance::setQV($item,$package->pv,$id,$package->id,$position,$item_status->id);
                     //start check small branch definition
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
@@ -133,7 +133,7 @@ class UserActivated
                     //start check next status conditions and move
                     $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
                     $right_user = User::whereSponsorId($item)->wherePosition(2)->whereStatus(1)->first();
-                    $pv = Hierarchy::pvCounterAll($item);
+                    $pv = Hierarchy::pvCounterAllForStatus($item);
                     $next_status = Status::find($item_status->order+1);
 
                     if(!is_null($left_user) && !is_null($right_user)){
@@ -142,13 +142,27 @@ class UserActivated
                             if($next_status->pv <= $pv){
 
                                 if(!$next_status->personal){
-                                    $left_user_count = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    $left_user_list = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->get();
+                                    $left_user_count = 0;
+                                    foreach ($left_user_list as $left_user_item){
+                                        $left_user_item_user = User::find($left_user_item->user_id);
+                                        $left_user_item_sponsor = User::find($left_user_item_user->sponsor_id);
+                                        $left_user_item_count = UserProgram::where('user_id',$left_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
+                                        $left_user_count = $left_user_count + $left_user_item_count;
+                                    }
                                     $left_user_status = UserProgram::where('user_id',$left_user->id)->first();
                                     if($left_user_status->status_id >= $item_status->id){
                                         $left_user_count++;
                                     }
-                                    $right_user_count = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
-                                    $right_user_status = UserProgram::where('user_id',$left_user->id)->first();
+                                    $right_user_list = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    $right_user_count = 0;
+                                    foreach ($right_user_list as  $right_user_item){
+                                         $right_user_item_user = User::find( $right_user_item->user_id);
+                                         $right_user_item_sponsor = User::find($right_user_item_user->sponsor_id);
+                                         $right_user_item_count = UserProgram::where('user_id', $right_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
+                                         $right_user_count =  $right_user_count +  $right_user_item_count;
+                                    }
+                                    $right_user_status = UserProgram::where('user_id',$right_user->id)->first();
                                     if($right_user_status->status_id >= $item_status->id){
                                         $right_user_count++;
                                     }
@@ -208,6 +222,8 @@ class UserActivated
 
                     /*start set  turnover_bonus  */
                     $credited_pv = Processing::where('status','turnover_bonus')->where('user_id',$item)->sum('pv');
+                    $credited_sum = Processing::where('status','turnover_bonus')->where('user_id',$item)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
+
 
                     if($small_branch_position == 1){
                         $to_enrollment_pv = $left_pv - $credited_pv;
@@ -216,23 +232,36 @@ class UserActivated
                         $to_enrollment_pv = $right_pv - $credited_pv;
 
                     $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
-                    Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv);
 
-                    /*start set  matching_bonus  */
-                    $inviter_list = Hierarchy::getInviterList($item,'').',';
-                    $inviter_list = explode(',',trim($inviter_list,','));
-                    $inviter_list = array_slice($inviter_list, 0, 3);
+                    if($credited_sum < $item_status->week_sum_limit){
+                        $temp_sum = 0;
+                        if($credited_sum + $sum >  $item_status->week_sum_limit){
+                            $temp_sum = $item_status->week_sum_limit-$credited_sum;
+                            $temp_sum = $sum - $temp_sum;
+                            $sum = $sum - $temp_sum;
+                        }
+                        Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$temp_sum);
 
-                    foreach ($inviter_list as $inviter_key => $inviter_item){
-                        if($inviter_item != ''){
-                            $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-                            $list_inviter_status = Status::find($inviter_user_program->status_id);
-                            if($list_inviter_status->depth_line <= $inviter_key+1){
-                                Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
+                        /*start set  matching_bonus  */
+                        $inviter_list = Hierarchy::getInviterList($item,'').',';
+                        $inviter_list = explode(',',trim($inviter_list,','));
+                        $inviter_list = array_slice($inviter_list, 0, 3);
+
+                        foreach ($inviter_list as $inviter_key => $inviter_item){
+                            if($inviter_item != ''){
+                                $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                                $list_inviter_status = Status::find($inviter_user_program->status_id);
+                                if($list_inviter_status->depth_line <= $inviter_key+1){
+                                    Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
+                                }
                             }
                         }
+                        /*end  set  matching_bonus  */
                     }
-                    /*end  set  matching_bonus  */
+                    else {
+                        Balance::changeBalance($item,0,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$sum);
+                    }
+
                     /*end set  turnover_bonus  */
                 }
             }

@@ -138,11 +138,16 @@ input.error {
 }
 
 .data-tree .card {
-    min-height: 134px;
+    min-height: 115px;
 }
 
 .data-tree a {
     color: #000000;
+}
+
+.data-tree h3 {
+    line-height: 20px;
+    font-size: 16px;
 }
 
 .login-register {
@@ -158,6 +163,15 @@ input.error {
 }
 .settings .form-group{
     margin-bottom: 5px;
+}
+
+.data-tree address{
+    font-size: 11px;
+}
+
+.data-tree .card {
+    margin-bottom: 15px;
+    padding: 10px 5px;
 }
 
 @media (max-width: 767px)

@@ -14,6 +14,7 @@
                     <h3 class="text-themecolor m-b-0 m-t-0">Пакеты</h3>
                 </div>
                 <div class="col-md-6 col-4 align-self-center">
+                    <a class="btn pull-right hidden-sm-down btn-success text-white" href="/package/create"><i class="mdi mdi-plus-circle"></i> Create</a>
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -32,7 +33,8 @@
                                     <th>#</th>
                                     <th>Заголовок</th>
                                     <th>Цена</th>
-                                    <th>PV</th>
+                                    <th>Балл</th>
+                                    <th>Статус</th>
                                     <th>Действие</th>
                                 </tr>
                                 </thead>
@@ -41,7 +43,8 @@
                                     <td> {{ $key + 1 }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>${{ $item->cost }}</td>
-                                    <td>{{ $item->pv }}</td>
+                                    <td>{{ $item->pv }} PV</td>
+                                    <td>@if($item->status == 1) Активный @else Не активный @endif</td>
                                     <td class="actions">
                                         <a href="/package/{{ $item->id }}/edit" class="btn btn-success"><i class="mdi mdi-grease-pencil"></i></a>
                                     </td>

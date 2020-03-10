@@ -14,7 +14,7 @@ use App\Models\Processing;
 
 class Balance {
 
-    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0)
+    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0,$limited_sum = 0)
     {
         Processing::insert(
             [
@@ -26,12 +26,13 @@ class Balance {
                 'package_id' => $package_id,
                 'status_id' => $status_id,
                 'pv' => $pv,
+                'limited_sum' => $limited_sum,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]
         );
     }
 
-    public function setQV($user_id,$sum,$in_user,$package_id,$position)
+    public function setQV($user_id,$sum,$in_user,$package_id,$position,$status_id)
     {
         Counter::insert(
             [
@@ -40,6 +41,7 @@ class Balance {
                 'inner_user_id' => $in_user,
                 'package_id' => $package_id,
                 'position' => $position,
+                'status_id' => $status_id,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 //'created_at' => '2019-07-13 07:55:45',
             ]

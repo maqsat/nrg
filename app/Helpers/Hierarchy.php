@@ -28,6 +28,17 @@ class Hierarchy {
     public function pvCounter($user_id,$position)
     {
         return Counter::where('user_id',$user_id)->where('position',$position)->sum('sum');
+
+    }
+
+    /**
+     * @param $user_id
+     * @param $position
+     * @return Counter
+     */
+    public function pvWeekCounter($user_id,$position)
+    {
+        return Counter::where('user_id',$user_id)->where('position',$position)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
     }
 
     /**
@@ -37,6 +48,16 @@ class Hierarchy {
     public function pvCounterAll($user_id)
     {
         return Counter::where('user_id',$user_id)->sum('sum');
+    }
+
+    /**
+     * @param $user_id
+     * @return Counter
+     */
+    public function pvCounterAllForStatus($user_id)
+    {
+        $user_program = UserProgram::where('user_id',$user_id)->first();
+        return Counter::where('user_id',$user_id)->where('status_id',$user_program->status_id)->sum('sum');
     }
 
     /**
@@ -221,8 +242,6 @@ class Hierarchy {
         }
     }
 
-
-
     public function followersList($user_id)
     {
         $count =  DB::table('user_programs')
@@ -235,6 +254,22 @@ class Hierarchy {
 
         return $count;
     }
+
+    public function userCount($user_id,$position)
+    {
+        $position_user = User::whereSponsorId($user_id)->wherePosition($position)->whereStatus(1)->first();
+
+        if(!is_null($position_user)){
+            return UserProgram::join('users','user_programs.user_id','=','users.id')
+                    ->where('list','like','%,'.$position_user->id.','.$user_id.',%')
+                    ->where('users.inviter_id',$user_id)
+                    ->count() + 1;
+        }
+
+        return 0;
+
+    }
+
     /*************************** OLD METHODS ****************************/
 
     /**

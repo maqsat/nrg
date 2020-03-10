@@ -25,7 +25,7 @@ class PackageController extends Controller
      */
     public function create()
     {
-        //
+        return view('package.create');
     }
 
     /**
@@ -36,7 +36,27 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "title"     => 'required',
+            "cost"      => 'required',
+            "pv"        => 'required',
+            "goods"     => 'required',
+            "income"    => 'required',
+            "rank"      => 'required',
+            "status"    => 'required',
+        ]);
+
+        Package::create([
+            "title"     => $request->title,
+            "cost"      => $request->cost,
+            "pv"        => $request->pv,
+            "goods"     => $request->goods,
+            "income"    => $request->income,
+            "rank"      => $request->rank,
+            "status"    => $request->status,
+        ]);
+
+        return redirect('/office')->with('status', 'Успешно изменено');
     }
 
     /**
@@ -71,7 +91,27 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "title"     => 'required',
+            "cost"      => 'required',
+            "pv"        => 'required',
+            "goods"     => 'required',
+            "income"    => 'required',
+            "rank"      => 'required',
+            "status"    => 'required',
+        ]);
+
+        Package::whereId($id)->update([
+            "title"     => $request->title,
+            "cost"      => $request->cost,
+            "pv"        => $request->pv,
+            "goods"     => $request->goods,
+            "income"    => $request->income,
+            "rank"      => $request->rank,
+            "status"    => $request->status,
+        ]);
+
+        return redirect()->back()->with('status', 'Успешно изменено');
     }
 
     /**

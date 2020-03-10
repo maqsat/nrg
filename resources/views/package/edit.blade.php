@@ -26,7 +26,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-block">
-                            <form action="{{url('user', [$package->id])}}" method="POST" class="form-horizontal form-material">
+                            <form action="{{url('package', [$package->id])}}" method="POST" class="form-horizontal form-material">
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
                                 <div class="form-group">
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">cost</label>
+                                    <label class="col-md-12">Цена</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ $package->cost }}" name="cost" class="form-control form-control-line">
                                         @if ($errors->has('cost'))
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">pv</label>
+                                    <label class="col-md-12">Балл(PV)</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ $package->pv }}" name="pv" class="form-control form-control-line">
                                         @if ($errors->has('pv'))
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">goods</label>
+                                    <label class="col-md-12">Товары</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ $package->goods }}" name="goods" class="form-control form-control-line">
                                         @if ($errors->has('goods'))
@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">income</label>
+                                    <label class="col-md-12">Виды дохода</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ $package->income }}" name="income" class="form-control form-control-line">
                                         @if ($errors->has('income'))
@@ -75,20 +75,29 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label  class="col-md-12" for="position">Статус:</label>
+                                    <label  class="col-md-12" for="position">Дается статус:</label>
                                     <div class="col-md-12">
-                                        <select class="custom-select form-control required" id="status_id" name="status_id">
-                                            <option>Выберите статус</option>
+                                        <select class="custom-select form-control required" id="rank" name="rank">
                                             @foreach(\App\Models\Status::all() as $item)
-                                                <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                <option value="{{ $item->id }}" @if(old('rank',$package->rank) == $item->id) selected @endif>{{ $item->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="error-message"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label  class="col-md-12" for="position">Активный:</label>
+                                    <div class="col-md-12">
+                                        <select class="custom-select form-control required" id="status" name="status">
+                                            <option>Не указан</option>
+                                            <option value="0"  @if(old('status',$package->status) == 0) selected @endif>Нет</option>
+                                            <option value="1"  @if(old('status',$package->status) == 1) selected @endif>Да</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-success" type="submit">Update Profile</button>
+                                        <button class="btn btn-success" type="submit">Update</button>
                                     </div>
                                 </div>
                             </form>
