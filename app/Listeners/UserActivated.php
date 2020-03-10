@@ -42,11 +42,21 @@ class UserActivated
      */
     public function handle(Activation $event)
     {
-        /*start init and activate*/
         $id = $event->user->id;
+        $program = Program::find($event->user->program_id);
+        $this_user = User::find($id);
+        if(is_null($this_user)) dd("Пользователь не найден");
+
+        $check_user_program = UserProgram::where('program_id', $program->id)
+            ->where('user_id',$id)
+            ->count();
+        if($check_user_program != 0) dd("Пользователь уже активирован");
+
+
+        /*start init and activate*/
         $inviter = User::find($event->user->inviter_id);
         $sponsor = User::find($event->user->sponsor_id);
-        $program = Program::find($event->user->program_id);
+
 
         if ($event->user->package_id == 0){
             $package_id = 0;
@@ -154,7 +164,7 @@ class UserActivated
                                     if($left_user_status->status_id >= $item_status->id){
                                         $left_user_count++;
                                     }
-                                    $right_user_list = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    $right_user_list = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->get();
                                     $right_user_count = 0;
                                     foreach ($right_user_list as  $right_user_item){
                                          $right_user_item_user = User::find( $right_user_item->user_id);

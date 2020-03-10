@@ -63,6 +63,22 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-block timer">
+                            <h5>Бонус быстрого старта, до следующего списание осталось:</h5>
+                            <ul>
+                                <li><span id="days"></span>День</li>
+                                <li><span id="hours"></span>Час</li>
+                                <li><span id="minutes"></span>Минут</li>
+                                <li><span id="seconds"></span>Секунд</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
                         <div class="card-block">
                             <h4 class="card-title">Реферальная ссылка</h4>
                             <h6 class="card-subtitle">Партнеры будут распологаться в структуре по выбранному <code>типу размещение</code></h6>
@@ -249,6 +265,30 @@
         (function(){
             new Clipboard('#copy-button');
         })();
+
+        const second = 1000,
+            minute = second * 60,
+            hour = minute * 60,
+            day = hour * 24;
+
+        let countDown = new Date('{{$quickstart_date}}').getTime(),
+            x = setInterval(function() {
+
+                let now = new Date().getTime(),
+                    distance = countDown - now;
+
+                document.getElementById('days').innerText = Math.floor(distance / (day)),
+                    document.getElementById('hours').innerText = Math.floor((distance % (day)) / (hour)),
+                    document.getElementById('minutes').innerText = Math.floor((distance % (hour)) / (minute)),
+                    document.getElementById('seconds').innerText = Math.floor((distance % (minute)) / second);
+
+                //do something later when date is reached
+                //if (distance < 0) {
+                //  clearInterval(x);
+                //  'IT'S MY BIRTHDAY!;
+                //}
+
+            }, second)
     </script>
 
 @endpush

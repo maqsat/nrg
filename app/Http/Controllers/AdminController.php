@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Office;
 use DB;
 use App\User;
 use App\Models\Package;
@@ -39,15 +40,29 @@ class AdminController extends Controller
         return  view('admin.travel', compact('not_cash_bonuses'));
     }
 
-    public function notCashBonusesAnswer($user_id, $status_id,$status)
+    public function notCashBonusesAnswer($not_cash_bonuses_id, $status)
     {
-        DB::table('user_travels')->insert([
-                'user_id' => $user_id,
-                'status_id' => $status_id,
-                'status' => $status,
-            ]);
+        $bonus_status = DB::table('not_cash_bonuses')
+            ->where('id', $not_cash_bonuses_id)
+            ->update(['status' => $status]);
 
         return redirect()->back();
+    }
+
+    public function offices_bonus()
+    {
+        $offices = Office::all();
+
+        foreach ($offices as $item){
+            $users = User::where('office_id',$item->id)->where('status',1)->get();
+            $ids = [];
+            foreach ($users as $item){
+                $ids[] = $item->id;
+            }
+
+
+        }
+
     }
 
     public function progress(Request$request)

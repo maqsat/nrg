@@ -61,7 +61,8 @@ Route::get('/activation/{user_id}', 'UserController@activation')->middleware('ad
 Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware('admin');
 Route::get('/progress', 'AdminController@progress')->middleware("admin");
 Route::get('/not_cash_bonuses', 'AdminController@notCashBonuses')->middleware("admin");
-Route::get('/not_cash_bonuses/{user_id}/{status_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");
+Route::get('/not_cash_bonuses/{not_cash_bonuses_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");
+Route::get('offices_bonus', 'AdminController@offices_bonus')->middleware("admin");
 Route::get('/sponsor_users', 'UserController@sponsor_users')->middleware("admin");
 Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware("admin");
 Route::get('/user_offices', 'UserController@user_offices');
@@ -86,6 +87,8 @@ Route::get('/transfer/{status}/{processing_id}', 'ProcessingController@transferA
 Route::get('/admin', 'AdminController@index')->name('admin');
 
 Route::resource('user', 'UserController')->middleware("admin");
+Route::get('user/{id}/transfer','UserController@transfer');
+
 Route::get('shopuser', 'UserController@getshopusers')->middleware("admin");
 Route::get('clientswithoutphone', 'ClientController@getclientswithoutphone')->middleware("admin");
 Route::resource('client', 'ClientController')->middleware("admin");

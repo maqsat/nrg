@@ -73,10 +73,19 @@ class HomeController extends Controller
                 ->select(['statuses.*'])
                 ->first();
 
-            $not_cash_bonuses = DB::table('not_cash_bonuses')->where('user_id', $user->id)->get();
+            $not_cash_bonuses = DB::table('not_cash_bonuses')->where('user_id', $user->id)->where('status',0)->get();
+
+            $registered_week_day = $user_program->created_at->weekday();
+            $today_week_day =  Carbon::now()->weekday();
+            if($today_week_day < $today_week_day){
+                $quickstart_date = Carbon::now()->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
+            }
+            else{
+                $quickstart_date = Carbon::now()->addDays(7)->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
+            }
 
 
-            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses'));
+            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses','quickstart_date'));
         }
         else{
             $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();

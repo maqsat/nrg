@@ -38,6 +38,6 @@ class Quickstart extends Command
      */
     public function handle()
     {
-        Hierarchy::setQSforManager();
+        Hierarchy::setQS();
     }
 }

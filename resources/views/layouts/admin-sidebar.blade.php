@@ -74,6 +74,7 @@
                         <li><a href="/progress">Лидеры</a></li>
                         <li><a href="/not_cash_bonuses">Happy Travel</a></li>
                         <li><a href="/not_cash_bonuses">Бонус признания</a></li>
+                        <li><a href="/offices_bonus">Бонус развития офисов</a></li>
                     </ul>
                 </li>
                 {{--<li>

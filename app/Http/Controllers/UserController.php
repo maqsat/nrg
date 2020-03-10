@@ -493,7 +493,17 @@ class UserController extends Controller
         return view('profile.rang-history',compact('list','userProgram'));
     }
 
-    /*NEw methods*/
+    public function transfer($id)
+    {
+        $users = \App\User::whereStatus(1)->get();
+        $user = User::find($id);
+        return view('user.transfer',compact('id','users','user'));
+    }
+
+    /*
+     *
+     *
+     * NEw methods*/
     private function getToken($email, $password)
     {
         $token = null;

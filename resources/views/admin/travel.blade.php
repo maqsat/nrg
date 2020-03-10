@@ -48,8 +48,8 @@
                                             <td>{{ $item->type }}</td>
                                             <td class="actions">
                                             @if($item->status == 0)
-                                                <a href="/travel/{{ $item->user_id }}/{{ $item->status_id }}/1" class="btn  btn-xs btn-success"><i class="mdi mdi-check"></i> Отправить</a>
-                                                <a href="/travel/{{ $item->user_id }}/{{ $item->status_id }}/0" class="btn  btn-xs btn-danger"><i class="mdi mdi-close"></i> Отменить</a>
+                                                <a href="/not_cash_bonuses/{{ $item->id }}/1" class="btn  btn-xs btn-success"><i class="mdi mdi-check"></i> Отправить</a>
+                                                <a href="/not_cash_bonuses/{{ $item->id }}/0" class="btn  btn-xs btn-danger"><i class="mdi mdi-close"></i> Отменить</a>
                                             @else
                                                 @if($item->status == 1)
                                                         <button class="btn  btn-xs btn-info"><i class="mdi mdi-close"></i> Отправлен</button>

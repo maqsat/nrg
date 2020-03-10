@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Order;
+use App\Models\Package;
 use DB;
 use Auth;
 use App\User;
@@ -19,6 +20,8 @@ use App\Models\UserSubscriber;
 
 class Hierarchy {
 
+
+    public $sponsor_id;
 
     /**
      * @param $user_id
@@ -79,51 +82,37 @@ class Hierarchy {
      */
     public function getSponsorId($inviter_id)
     {
-        $inviter = User::find($inviter_id);
+        $sponsor_user = User::find($inviter_id);
 
-        if($inviter->default_position == 0){
-
+        if($sponsor_user->default_position == 0){
             $left_pv = $this->pvCounter($inviter_id,1);
             $right_pv = $this->pvCounter($inviter_id,2);
-            if($left_pv > $right_pv) $small_branch_position = 2;
-            else $small_branch_position = 1;
-
-            $position_user = User::where('sponsor_id',$inviter_id)
-                ->where('position',$small_branch_position)
-                ->where('users.status',1)
-                ->first();
-
-            if(!is_null($position_user)){
-                $user = UserProgram::where('user_programs.list','like','%,'.$position_user->id.','.$inviter_id.',%')->orderBy('created_at','desc')->first();
-
-                if(is_null($user))  $sponsor_id = $position_user->id;
-                else $sponsor_id = $user->user_id;
-            }
-            else  $sponsor_id = $inviter_id;
-
-        }else{
-
-            $small_branch_position = $inviter->default_position;
-
-            $position_user = User::where('sponsor_id',$inviter_id)
-                ->where('position',$small_branch_position)
-                ->where('users.status',1)
-                ->first();
-
-            if(!is_null($position_user)){
-                $user = UserProgram::where('user_programs.list','like','%,'.$position_user->id.','.$inviter_id.',%')->orderBy('created_at','desc')->first();
-
-                if(is_null($user))  $sponsor_id = $position_user->id;
-                else $sponsor_id = $user->user_id;
-            }
-            else  $sponsor_id = $inviter_id;
+            if($left_pv > $right_pv) $branch_position = 2;
+            else $branch_position = 1;
+        }
+        else{
+            $branch_position = $sponsor_user->default_position;
         }
 
+        $this->getSponsorIdRecursion($inviter_id,$branch_position);
 
         $data = [];
-        $data[] = $sponsor_id;
-        $data[] = $small_branch_position;
+        $data[] = $this->sponsor_id;
+        $data[] = $branch_position;
         return $data;
+    }
+
+    public function getSponsorIdRecursion($inviter_id,$branch_position)
+    {
+        $position_user = User::where('sponsor_id',$inviter_id)
+            ->where('position',$branch_position)
+            ->where('users.status',1)
+            ->first();
+
+        if(!is_null($position_user)){
+            $this->getSponsorIdRecursion($position_user->id,$branch_position);
+        }
+        else  $this->sponsor_id = $inviter_id;
     }
 
     /**
@@ -202,42 +191,31 @@ class Hierarchy {
     /**
      * @param $id
      */
-    public function setQSforManager($status)
+    public function setQS()
     {
-        $user_programs = UserProgram::where('created_at','>=',$status)->get();
-        dd();
-
-
+        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),date('N')-1)->get();
 
         foreach ($user_programs as $item){
-            $set_count = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->where('status_id',$status)->count();
 
-            if($set_count < 3){
-                $set_item = Processing::where('status','quickstart_bonus')->where('user_id',$item->user_id)->orderBy('created_at','desc')->first();
+            $users = User::join('user_programs','users.id','=','user_programs.user_id')
+                ->where('users.inviter_id',$item->user_id)
+                ->where('users.status',1)
+                ->whereBetween('user_programs.created_at', [Carbon::now()->subDay(7), Carbon::now()])
+                ->get();
 
-                $date = Carbon::parse($set_item->created_at);
-                $now  = Carbon::now();
-                $diff = $date->floatDiffInMonths($now);
+            if(count($users) >= 2){
 
-                if($diff > 0){
-                    $user_created = User::find($item->user_id);
-                    $get_status = Notification::where('status_id',3)->where('user_id',$item->user_id)->first();
-                    //if(is_null($get_status)) dd($item);
-                    $date = Carbon::parse($user_created->created_at); //2019-07-12 04:39:39.0
-                    $now  = Carbon::parse($get_status->created_at); //2019-07-31 11:14:41.0
-                    $diff = $date->floatDiffInMonths($now);
+                foreach ($users as $innerItem){
+                    if($item->package_id != 0){
+                        $package = Package::find($innerItem->package_id);
+                        $sum = $package->pv*20/100*env('COURSE');
 
-                    if($diff <= 2){
-                        $status_sum = Status::find($status);
-                        //echo $item->user_id." - $diff<br>";
-                        Balance::changeBalance($item->user_id,$status_sum->quickstart_bonus/3,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
+                        Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->id,1,$package->id,$item->status_id,$package->pv);
                     }
-                    else{
-                        //echo "-----------".$item->user_id." - $diff<br>";
-                        Balance::changeBalance($item->user_id,0,'quickstart_bonus',1,$item->program_id,$item->package_id,$status);
-                    }
+
                 }
             }
+
 
         }
     }
