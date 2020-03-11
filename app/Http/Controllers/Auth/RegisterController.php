@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\UserProgram;
 use App\User;
 use App\Facades\Hierarchy;
 use App\Http\Controllers\Controller;
@@ -89,7 +88,7 @@ class RegisterController extends Controller
         $sponsor_id = $sponsor_data[0];
         $position = $sponsor_data[1];
 
-        $checker = UserProgram::where('sponsor_id',$sponsor_id)->where('position',$position)->count();
+        $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position)->count();
         if($checker > 0) return  redirect()->back();
 
         return User::create([
@@ -104,6 +103,8 @@ class RegisterController extends Controller
             'city_id' => $data['city_id'],
             'sponsor_id' => $sponsor_id,
             'position' => $position,
+            'country_id'    => $data['country_id'],
+            'office_id'     =>  $data['office_id'],
 
             //'country_id' => $data['country_id'],
             //'address' => $data['address'],

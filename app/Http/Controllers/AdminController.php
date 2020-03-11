@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Counter;
 use App\Models\Office;
+use App\Models\Processing;
 use DB;
 use App\User;
 use App\Models\Package;
@@ -52,17 +54,21 @@ class AdminController extends Controller
     public function offices_bonus()
     {
         $offices = Office::all();
+        $data = [];
 
-        foreach ($offices as $item){
+        foreach ($offices as $key => $item){
+            $data[$key][] = $item;
             $users = User::where('office_id',$item->id)->where('status',1)->get();
             $ids = [];
             foreach ($users as $item){
                 $ids[] = $item->id;
+
+                $sum = Counter::whereIn('user_id',[$ids])->sum('sum');
             }
-
-
+            $data[$key][] = $sum;
         }
 
+        return view('admin.offices',compact('data'));
     }
 
     public function progress(Request$request)

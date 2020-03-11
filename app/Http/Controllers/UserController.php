@@ -101,6 +101,9 @@ class UserController extends Controller
             'office_id'    => 'required',
         ]);
 
+        $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+        if($checker > 0) return  redirect()->back();
+
         $user = User::create([
             'name'          => $request->name,
             'number'        => $request->number,
