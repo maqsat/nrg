@@ -70,6 +70,8 @@ Route::get('/user_offices', 'UserController@user_offices');
 
 Route::resource('package', 'PackageController')->middleware("admin");
 Route::resource('office', 'OfficeController')->middleware("admin");
+Route::resource('city', 'CityController')->middleware("admin");
+Route::resource('country', 'CountryController')->middleware("admin");
 /*
 ************************ Anything else ***********************
  */

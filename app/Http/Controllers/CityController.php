@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\City;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class CityController extends Controller
     {
         $this->middleware('admin');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +25,8 @@ class CityController extends Controller
      */
     public function index()
     {
-        //
+        $cities = City::all();
+        return view('city.index',compact('cities'));
     }
 
     /**
@@ -34,7 +36,8 @@ class CityController extends Controller
      */
     public function create()
     {
-        //
+        $countries = Country::all();
+        return view('city.create',compact('countries'));
     }
 
     /**
@@ -45,7 +48,19 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'            => 'required',
+            'country_id'          => 'required',
+        ]);
+
+
+        City::create([
+            'title'                 => $request->title,
+            'country_id'            => $request->country_id
+        ]);
+
+
+        return redirect('/city');
     }
 
     /**
@@ -67,7 +82,8 @@ class CityController extends Controller
      */
     public function edit(City $city)
     {
-        //
+        $countries = Country::all();
+        return view('city.edit',compact('countries','city'));
     }
 
     /**
@@ -79,7 +95,20 @@ class CityController extends Controller
      */
     public function update(Request $request, City $city)
     {
-        //
+        $request->validate([
+            'title'            => 'required',
+            'country_id'          => 'required',
+        ]);
+
+
+        $city->update([
+            'title'                 => $request->title,
+            'country_id'            => $request->country_id
+        ]);
+
+
+        return redirect('/city');
+
     }
 
     /**

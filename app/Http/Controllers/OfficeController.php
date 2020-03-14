@@ -142,9 +142,6 @@ class OfficeController extends Controller
             return redirect('/office');
         }
 
-
-
-
     }
 
     /**

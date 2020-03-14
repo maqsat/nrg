@@ -137,7 +137,7 @@
                                             <select class="custom-select form-control required" id="package_id" name="package_id" onchange="getStatus(this)">
                                                 <option value="0">Только регистрация - ${{ env('REGISTRATION_FEE') }} / 0 PV</option>
                                                 @foreach(\App\Models\Package::where('status',1)->get() as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }} - ${{ $item->cost+env('REGISTRATION_FEE') }} / {{ $item->pv  }} PV</option>
+                                                    <option value="{{ $item->id }}">{{ $item->title }} - ${{ $item->cost }}+${{ env('REGISTRATION_FEE') }}(${{ $item->cost+env('REGISTRATION_FEE') }}) / {{ $item->pv  }} PV</option>
                                                 @endforeach
                                             </select>
                                             <input type="hidden" value="1" id="#status0">

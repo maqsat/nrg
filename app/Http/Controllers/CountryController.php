@@ -16,7 +16,7 @@ class CountryController extends Controller
     {
         $this->middleware('admin');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +24,8 @@ class CountryController extends Controller
      */
     public function index()
     {
-        //
+        $countries = Country::all();
+        return view('country.index',compact('countries'));
     }
 
     /**
@@ -34,7 +35,7 @@ class CountryController extends Controller
      */
     public function create()
     {
-        //
+        return view('country.create');
     }
 
     /**
@@ -45,7 +46,15 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'            => 'required',
+        ]);
+
+        Country::create([
+            'title'            => $request->title
+        ]);
+
+        return redirect('/country');
     }
 
     /**
@@ -67,7 +76,7 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        //
+        return view('country.edit',compact('country'));
     }
 
     /**
@@ -79,7 +88,15 @@ class CountryController extends Controller
      */
     public function update(Request $request, Country $country)
     {
-        //
+        $request->validate([
+            'title'            => 'required',
+        ]);
+
+        $country->title = $request->title;
+        $country->save();
+
+        return redirect('/country');
+
     }
 
     /**

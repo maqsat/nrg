@@ -29,6 +29,8 @@
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/package">Пакеты</a></li>
                         <li><a href="/office">Офисы</a></li>
+                        <li><a href="/city">Города</a></li>
+                        <li><a href="/country">Страны</a></li>
                         <li><a href="#">Статусы</a></li>
                         <li><a href="#">Виды бонусов</a></li>
                     </ul>
