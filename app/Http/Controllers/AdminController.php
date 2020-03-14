@@ -55,6 +55,7 @@ class AdminController extends Controller
     {
         $offices = Office::all();
         $data = [];
+        $sum = 0;
 
         foreach ($offices as $key => $item){
             $data[$key][] = $item;

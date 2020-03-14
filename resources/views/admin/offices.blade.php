@@ -46,7 +46,8 @@
                                             <td><span class="text-success">{{ $item[0]->title }}</span></td>
                                             <td><span class="text-success">{{ $item[1] }} PV</span></td>
                                             <td class="text-center">${{ $item[1]*0.1*env('COURSE') }}</td>
-                                            <td><span class="text-success">{{ \App\User::whereOfficeId($item[0]->id)->first()->name  }}</span></td>
+                                            <?php $res =  \App\User::whereOfficeId($item[0]->id)->first(); ?>
+                                            <td><span class="text-success">@if(!is_null($res)){{ $res->name  }}@else Нет @endif</span></td>
                                         </tr>
                                     @endforeach
                                     </tbody>
