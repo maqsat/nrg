@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Validator::extend('sponsor_in_program', function ($attribute, $value, $parameters, $validator) {
-            $count = User::where('program_id',$parameters[0])->where('id',$value)->where('status',1)->where('package_id','!=',0)->count();
+            $count = User::where('program_id',$parameters[0])->where('id',$value)->where('status',1)->count();
             if($count > 0) return true;
             else return false;
         });

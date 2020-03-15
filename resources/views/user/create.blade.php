@@ -41,7 +41,7 @@
                                         </div>
                                         <label class="m-t-10">{{ __('app.email') }}</label>
                                         <div class="input-group">
-                                            <input type="email" value="" name="email" class="form-control form-control-line">
+                                            <input type="email" value="{{ old('email') }}" name="email" class="form-control form-control-line">
                                             @if ($errors->has('email'))
                                                 <span class="text-danger"><small>{{ $errors->first('email') }}</small></span>
                                             @endif
@@ -53,14 +53,20 @@
                                                 <option value="1"  @if(old('gender') == 1) selected @endif>Мужской</option>
                                                 <option value="2"  @if(old('gender') == 2) selected @endif>Женский</option>
                                             </select>
+                                            @if ($errors->has('gender'))
+                                                <span class="text-danger"><small>{{ $errors->first('gender') }}</small></span>
+                                            @endif
                                         </div>
                                         <label class="m-t-10">{{ __('app.country') }}</label>
                                         <div class="input-group">
                                             <select class="form-control form-control-line" name="country_id">
                                                 @foreach(\App\Models\Country::all() as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                    <option value="{{ $item->id }}" @if(old('country_id') == $item->id) selected @endif>{{ $item->title }}</option>
                                                 @endforeach
                                             </select>
+                                            @if ($errors->has('country_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('country_id') }}</small></span>
+                                            @endif
                                         </div>
                                         <label class="m-t-10">{{ __('app.address') }}</label>
                                         <div class="input-group">
@@ -97,9 +103,12 @@
                                             <select class="custom-select form-control required" id="city_id" name="city_id" onchange="getOffices(this)">
                                                 <option>Выберите город</option>
                                                 @foreach(\App\Models\City::where('status',1)->get() as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                    <option value="{{ $item->id }}" @if(old('city_id') == $item->id) selected @endif>{{ $item->title }}</option>
                                                 @endforeach
                                             </select>
+                                            @if ($errors->has('city_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('city_id') }}</small></span>
+                                            @endif
                                         </div>
                                         <label class="m-t-10">Дата регистрации</label>
                                         <div class="input-group">
@@ -118,17 +127,26 @@
                                             <select class="form-control form-control-line" name="inviter_id"  onchange="getSponsorUsers(this)">
                                                 <option>Выберите менеджера</option>
                                                 @foreach($users as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->id }}" @if(old('inviter_id') == $item->id) selected @endif>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
+                                            @if ($errors->has('inviter_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('inviter_id') }}</small></span>
+                                            @endif
                                         </div>
                                         <label class="m-t-10">Закреплен за(показывается только свободные позиции)</label>
                                         <div class="input-group">
                                             <select class="form-control form-control-line" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)"></select>
+                                            @if ($errors->has('sponsor_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('sponsor_id') }}</small></span>
+                                            @endif
                                         </div>
                                         <label class="m-t-10">Позиция размещение</label>
                                         <div class="input-group">
                                              <select class="form-control form-control-line" name="position" id="sponsor_positions"></select>
+                                            @if ($errors->has('position'))
+                                                <span class="text-danger"><small>{{ $errors->first('position') }}</small></span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -137,9 +155,12 @@
                                             <select class="custom-select form-control required" id="package_id" name="package_id" onchange="getStatus(this)">
                                                 <option value="0">Только регистрация - ${{ env('REGISTRATION_FEE') }} / 0 PV</option>
                                                 @foreach(\App\Models\Package::where('status',1)->get() as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }} - ${{ $item->cost }}+${{ env('REGISTRATION_FEE') }}(${{ $item->cost+env('REGISTRATION_FEE') }}) / {{ $item->pv  }} PV</option>
+                                                    <option value="{{ $item->id }}" @if(old('package_id') == $item->id) selected @endif>{{ $item->title }} - ${{ $item->cost }}+${{ env('REGISTRATION_FEE') }}(${{ $item->cost+env('REGISTRATION_FEE') }}) / {{ $item->pv  }} PV</option>
                                                 @endforeach
                                             </select>
+                                            @if ($errors->has('package_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('package_id') }}</small></span>
+                                            @endif
                                             <input type="hidden" value="1" id="#status0">
                                             @foreach(\App\Models\Package::where('status',1)->get() as $item)
                                                 <input type="hidden" value="{{ $item->rank }}" id="#status{{$item->id}}">
@@ -149,13 +170,19 @@
                                         <div class="input-group">
                                             <select class="custom-select form-control required" id="status_id" name="status_id">
                                                 @foreach(\App\Models\Status::all() as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                    <option value="{{ $item->id }}" @if(old('status_id') == $item->id) selected @endif>{{ $item->title }}</option>
                                                 @endforeach
                                             </select>
+                                            @if ($errors->has('status_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('status_id') }}</small></span>
+                                            @endif
                                         </div>
                                         <label  class="m-t-10" for="position">Офис:</label>
                                         <div class="input-group">
                                             <select class="form-control form-control-line" name="office_id" id="user_offices"></select>
+                                            @if ($errors->has('office_id'))
+                                                <span class="text-danger"><small>{{ $errors->first('office_id') }}</small></span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
