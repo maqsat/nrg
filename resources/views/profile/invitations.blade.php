@@ -47,7 +47,7 @@
                                             <td class="text-center">{{ $item->id }}</td>
                                             <td><span class="text-success">{{ $item->name }}</span></td>
                                             <td class="txt-oflo">{{ \App\Models\Status::find(\App\Models\UserProgram::whereUserId($item->id)->first()->status_id)->title }}</td>
-                                            <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find(\App\Models\UserProgram::whereUserId($item->id)->first()->package_id)->title }} @else Без пакета @endif</td>
+                                            <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ $item->number }}</span></td>
                                             <td><span class="text-success">{{ $item->email }}</span></td>
                                         </tr>

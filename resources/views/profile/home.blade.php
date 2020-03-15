@@ -45,12 +45,7 @@
                                     <tr>
                                         <td><span class="round"><img src="{{Auth::user()->photo}}" alt="user" width="50" class="home-img" /></span></td>
                                         <td>
-                                            <h6>{{ $user->name }}</h6>
-                                            @php
-                                                $sponsor = \App\User::find(Auth::user()->sponsor_id);
-                                            @endphp
-                                            <small class="text-muted">Ваш спонсор:  {{ is_null($sponsor) ? 'Нет спонсора' : $sponsor->name }}</small>
-                                        </td>
+                                            <h6>{{ $user->name }}</h6><small class="text-muted">{{ $user->email }}</small></td>
                                         <td>@if(!is_null($package)){{ $package->title }}(${{ $package->cost }})@else Без пакета @endif</td>
                                         <td>{{ $status->title }}</td>
                                         <td>{{ $pv_counter_all }}  PV</td>

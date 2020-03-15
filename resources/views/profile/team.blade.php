@@ -47,7 +47,7 @@
                                             <td class="text-center">{{ $item->user_id }}</td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->name }}</span></td>
                                             <td class="txt-oflo">{{ \App\Models\Status::find($item->status_id)->title }}</td>
-                                            <td class="txt-oflo">{{ \App\Models\Package::find($item->package_id)->title }}</td>
+                                            <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->number }}</span></td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->email }}</span></td>
                                             <td>{{ date('d-m-Y', strtotime(\App\User::find($item->user_id)->created_at)) }}</td>
