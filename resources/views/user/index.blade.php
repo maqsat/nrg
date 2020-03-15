@@ -95,7 +95,7 @@
                                             <td>{{ Balance::getBalance($item->id) }}$</td>
                                             <td>{{ is_null($package) ? '' : $package->title }}</td>
                                             <td class="actions">
-                                                <a href="/user/{{ $item->id }}/program" target="_blank" class="btn  btn-xs btn-info"  title="Пакет, статус"><i class="mdi mdi-account-settings-variant"></i></a>
+                                                <a href="/user/{{ $item->id }}/program" target="_blank" class="btn  btn-xs btn-info"  title="Пакет, статус, офис"><i class="mdi mdi-account-settings-variant"></i></a>
                                                 <a href="/user/{{ $item->id }}/transfer" target="_blank" class="btn  btn-xs btn-warning"  title="Перевод"><i class="mdi mdi-sitemap"></i></a>
                                                 <a href="/user/{{ $item->id }}" target="_blank" class="btn  btn-xs btn-info"><i class="mdi mdi-eye"></i></a>
                                                 <a href="/user/{{ $item->id }}/edit" class="btn  btn-xs btn-success"  title="Изменить"><i class="mdi mdi-grease-pencil" ></i></a>

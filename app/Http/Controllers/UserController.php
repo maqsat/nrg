@@ -86,11 +86,11 @@ class UserController extends Controller
         $request->validate([
             'name'          => 'required',
             'number'        => 'required',
-            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'gender'        => 'required',
-            'birthday'      => 'required',
+            //'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            //gender'        => 'required',
+            //'birthday'      => 'required',
             'country_id'    => 'required',
-            'address'       => 'required',
+            //'address'       => 'required',
             'password'      => [ 'required', 'string', 'min:6'],
             'created_at'    => 'required',
             'city_id'       => 'required',
@@ -501,6 +501,14 @@ class UserController extends Controller
         $users = \App\User::whereStatus(1)->get();
         $user = User::find($id);
         return view('user.transfer',compact('id','users','user'));
+    }
+
+    public function program($id)
+    {
+        $user = User::find($id);
+        $user_program = UserProgram::whereUserId($id)->first();
+        $offices = Office::all();
+        return view('user.program',compact('id','user','user_program','offices'));
     }
 
     /*

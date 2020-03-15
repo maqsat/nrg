@@ -48,7 +48,7 @@
                                         </div>
                                         <label class="m-t-10">Выберите пол:</label>
                                         <div class="input-group">
-                                            <select class="custom-select form-control required" id="gender" name="gender">
+                                            <select class="custom-select form-control" id="gender" name="gender">
                                                 <option>Не указан</option>
                                                 <option value="1"  @if(old('gender') == 1) selected @endif>Мужской</option>
                                                 <option value="2"  @if(old('gender') == 2) selected @endif>Женский</option>
@@ -93,7 +93,7 @@
                                         </div>
                                         <label class="m-t-10">{{ __('app.password') }}</label>
                                         <div class="input-group">
-                                            <input type="text" value="{{ old('password', 'pass123456') }}" name="password" class="form-control form-control-line">
+                                            <input type="text" value="{{ old('password', '123456') }}" name="password" class="form-control form-control-line">
                                             @if ($errors->has('password'))
                                                 <span class="text-danger"><small>{{ $errors->first('password') }}</small></span>
                                             @endif

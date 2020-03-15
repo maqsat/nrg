@@ -66,8 +66,11 @@ Route::get('offices_bonus', 'AdminController@offices_bonus')->middleware("admin"
 Route::get('/sponsor_users', 'UserController@sponsor_users')->middleware("admin");
 Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware("admin");
 Route::get('/user_offices', 'UserController@user_offices');
+Route::get('user/{id}/transfer','UserController@transfer');
+Route::get('user/{id}/program','UserController@program');
 
 
+Route::resource('user', 'UserController')->middleware("admin");
 Route::resource('package', 'PackageController')->middleware("admin");
 Route::resource('office', 'OfficeController')->middleware("admin");
 Route::resource('city', 'CityController')->middleware("admin");
@@ -88,8 +91,6 @@ Route::post('/transfer', 'ProcessingController@transfer')->name('transfer');
 Route::get('/transfer/{status}/{processing_id}', 'ProcessingController@transferAnswer');
 Route::get('/admin', 'AdminController@index')->name('admin');
 
-Route::resource('user', 'UserController')->middleware("admin");
-Route::get('user/{id}/transfer','UserController@transfer');
 
 Route::get('shopuser', 'UserController@getshopusers')->middleware("admin");
 Route::get('clientswithoutphone', 'ClientController@getclientswithoutphone')->middleware("admin");
