@@ -59,7 +59,7 @@ class AdminController extends Controller
 
         foreach ($offices as $key => $item){
             $data[$key][] = $item;
-            $users = User::where('office_id',$item->id)->where('status',1)->get();
+            $users = User::where('office_id',$item->id)->where('status',1)->where('package_id','!=',1)->get();
             $ids = [];
             foreach ($users as $item){
                 $ids[] = $item->id;

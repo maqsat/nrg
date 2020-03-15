@@ -203,25 +203,28 @@ class UserActivated
                                         'status_id' => $item_user_program->status_id
                                     ]);
 
-                                    Balance::changeBalance($item,$item_status->status_bonus,'status_bonus',$id,$program->id,$package->id,$item_status->id);
+                                    if($item_user_program->package_id != 1){
+                                        Balance::changeBalance($item,$item_status->status_bonus,'status_bonus',$id,$program->id,$package->id,$item_status->id);
 
-                                    if ($next_status->travel_bonus){
-                                        DB::table('not_cash_bonuses')->insert([
-                                            'user_id' => $item,
-                                            'type' => 'travel_bonus',
-                                            'status_id' => $next_status->id,
-                                            'status' => 0,
-                                        ]);
+                                        if ($next_status->status_no_cash_bonus){
+                                            DB::table('not_cash_bonuses')->insert([
+                                                'user_id' => $item,
+                                                'type' => 'status_no_cash_bonus',
+                                                'status_id' => $next_status->id,
+                                                'status' => 0,
+                                            ]);
+                                        }
+
+                                        if ($next_status->travel_bonus){
+                                            DB::table('not_cash_bonuses')->insert([
+                                                'user_id' => $item,
+                                                'type' => 'travel_bonus',
+                                                'status_id' => $next_status->id,
+                                                'status' => 0,
+                                            ]);
+                                        }
                                     }
 
-                                    if ($next_status->status_no_cash_bonus){
-                                        DB::table('not_cash_bonuses')->insert([
-                                            'user_id' => $item,
-                                            'type' => 'status_no_cash_bonus',
-                                            'status_id' => $next_status->id,
-                                            'status' => 0,
-                                        ]);
-                                    }
 
                                 }
                             }
@@ -252,21 +255,24 @@ class UserActivated
                         }
                         Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$temp_sum);
 
-                        /*start set  matching_bonus  */
-                        $inviter_list = Hierarchy::getInviterList($item,'').',';
-                        $inviter_list = explode(',',trim($inviter_list,','));
-                        $inviter_list = array_slice($inviter_list, 0, 3);
 
-                        foreach ($inviter_list as $inviter_key => $inviter_item){
-                            if($inviter_item != ''){
-                                $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-                                $list_inviter_status = Status::find($inviter_user_program->status_id);
-                                if($list_inviter_status->depth_line <= $inviter_key+1){
-                                    Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
+                        if($item_user_program->package_id != 1){
+                            /*start set  matching_bonus  */
+                            $inviter_list = Hierarchy::getInviterList($item,'').',';
+                            $inviter_list = explode(',',trim($inviter_list,','));
+                            $inviter_list = array_slice($inviter_list, 0, 3);
+
+                            foreach ($inviter_list as $inviter_key => $inviter_item){
+                                if($inviter_item != ''){
+                                    $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                                    $list_inviter_status = Status::find($inviter_user_program->status_id);
+                                    if($list_inviter_status->depth_line <= $inviter_key+1){
+                                        Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
+                                    }
                                 }
                             }
+                            /*end  set  matching_bonus  */
                         }
-                        /*end  set  matching_bonus  */
                     }
                     else {
                         Balance::changeBalance($item,0,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$sum);

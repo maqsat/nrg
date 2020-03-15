@@ -263,7 +263,7 @@ class UserController extends Controller
         elseif($result_mentor->exists()){
             return redirect()->back()->with('status', 'У данного пользователя имеется лично приглашенные, сначала удалите людей который данный спонсор приглашал');
         }
-        elseif(User::find($id)->status == 1){
+        elseif(!is_null(UserProgram::where('user_id',$id)->first())){
             return redirect()->back()->with('status', 'Данный пользователь активирован, удаление осуществляется только через администраторов сайта');
         }
         else
