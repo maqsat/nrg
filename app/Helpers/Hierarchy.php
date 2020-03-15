@@ -172,12 +172,12 @@ class Hierarchy {
 
         $render = '<ul>';
 
-        $items = User::where('sponsor_id',$id)->where('status',1)->where('id','<',5000)->get();
+        $items = User::where('sponsor_id',$id)->where('status',1)->orderBy('position')->get();
 
         foreach ($items as $item) {
             $render .= '<li><div><a href="/tree/'.$item->id.'" target="blank">' . $item->name.'</a></div>';
 
-            $innerItem = User::where('sponsor_id',$id)->where('status',1)->where('id','<',5000)->get();
+            $innerItem = User::where('sponsor_id',$id)->where('status',1)->orderBy('position')->get();
             if (count($innerItem) > 0) {
                 $render .= $this->getTree($item->id);
             }
