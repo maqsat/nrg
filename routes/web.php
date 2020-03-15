@@ -68,6 +68,7 @@ Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware
 Route::get('/user_offices', 'UserController@user_offices');
 Route::get('user/{id}/transfer','UserController@transfer');
 Route::get('user/{id}/program','UserController@program');
+Route::post('user/{id}/program','UserController@programStore');
 
 
 Route::resource('user', 'UserController')->middleware("admin");

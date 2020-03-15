@@ -511,6 +511,59 @@ class UserController extends Controller
         return view('user.program',compact('id','user','user_program','offices'));
     }
 
+    public function programStore(Request $request,$id)
+    {
+        $request->validate([
+            'package_id'    => 'required',
+            'office_id'     => 'required',
+            'status_id'     =>  'required',
+        ]);
+
+        $user = User::find($id);
+        $user_program = UserProgram::where('user_id',$id)->first();
+
+        if ($user->package_id !== $request->package_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->package_id,
+                'old' => $user->package_id,
+                'type' => 3,
+                'user_id' => $id,
+            ]);
+
+            $user->package_id = $request->package_id;
+            $user->save();
+
+            $user_program->package_id = $request->package_id;
+            $user_program->save();
+        }
+
+        if ($user_program->status_id !== $request->status_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->status_id,
+                'old' => $user->status_id,
+                'type' => 4,
+                'user_id' => $id,
+            ]);
+
+            $user_program->status_id = $request->status_id;
+            $user_program->save();
+        }
+
+        if ($user->office_id !== $request->office_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->office_id,
+                'old' => $user->office_id,
+                'type' => 5,
+                'user_id' => $id,
+            ]);
+
+            $user->office_id = $request->office_id;
+            $user->save();
+        }
+
+        return redirect()->back()->with('status', 'Успешно изменено');
+    }
+
     /*
      *
      *
