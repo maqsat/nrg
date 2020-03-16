@@ -35,4 +35,10 @@
 
 @push('styles')
 <link href="/css/tree.css" rel="stylesheet">
+
+<style>
+    body{
+        overflow-x: scroll !important;
+    }
+</style>
 @endpush
