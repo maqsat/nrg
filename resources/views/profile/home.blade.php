@@ -94,7 +94,7 @@
                                 </a>
                             </div>
                             <div class="input-group m-t-15">
-                                <input  class="form-control form-control-line" id="post-shortlink" value="https://nrg.bgpro.kz/register?inviter_id={{ Auth::user()->id }}">
+                                <input  class="form-control form-control-line" id="post-shortlink" value="https://nrg-max.kz/register?inviter_id={{ Auth::user()->id }}">
                                 <span class="input-group-btn">
                                     <button type="button" id="copy-button" data-clipboard-target="#post-shortlink" class="btn waves-effect waves-light btn-success">Копировать</button>
                                 </span>

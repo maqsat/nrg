@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Activation;
 use App\Facades\Balance;
+use App\Models\Counter;
 use App\Models\Order;
 use App\Models\UserProgram;
 use DB;
@@ -23,7 +24,12 @@ class TestController extends Controller
 {
     public function tester()
     {
-        dd(Hierarchy::getSponsorId(1));
+        $id = $_GET['id'];
+        UserProgram::where('user_id',$id)->delete();
+        Processing::where('user_id',$id)->delete();
+        Counter::where('user_id',$id)->delete();
+        User::find($id)->delete();
+
     }
 
     public function changeStatusesPercentage()
