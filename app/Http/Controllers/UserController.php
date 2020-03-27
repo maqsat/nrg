@@ -451,15 +451,18 @@ class UserController extends Controller
             'position'   => 'required',
         ]);
 
-        $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
-        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята');
-
-        $list_checker = UserProgram::where('user_id',$request->sponsor_id)->first();
-
-        $pos = strpos($list_checker->list, ",$request->inviter_id,");
-        if ($pos === false)  if($checker > 0) return  redirect()->back()->with('status', 'Наставник не находиться в структуре спонсора');
-
         $user = User::find($request->user_id);
+
+        if ($user->sponsor_id !== $request->sponsor_id){
+            $list_checker = UserProgram::where('user_id',$request->sponsor_id)->first();
+            $pos = strpos($list_checker->list, ",$request->inviter_id,");
+            if ($pos === false)  return  redirect()->back()->with('status', 'Наставник не находиться в структуре спонсора');
+        }
+
+        if ($user->sponsor_id !== $request->sponsor_id){
+            $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+            if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята');
+        }
 
         if ($user->inviter_id !== $request->inviter_id) {
             DB::table('user_changes')->insert([
