@@ -38,7 +38,7 @@
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/invitations">Лично приглашенные</a></li>
                             <li><a href="/tree/{{ Auth::user()->id }}">Мое дерево</a></li>
-                            <li><a href="/hierarchy">Иерархия</a></li>
+                            <li><a href="/hierarchy" target="_blank">Иерархия</a></li>
                             <li><a href="/team">Моя команда</a></li>
                         </ul>
                     </li>

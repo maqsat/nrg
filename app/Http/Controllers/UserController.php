@@ -422,6 +422,130 @@ class UserController extends Controller
         return $text;
     }
 
+    public function transfer($id)
+    {
+        $users = User::whereStatus(1)->get();
+
+        $user = User::find($id);
+        $sponsor_users = Hierarchy::followersList($user->inviter_id);
+
+        $sponsor_users_list = [];
+
+        foreach ($sponsor_users  as $key => $item){
+            $left_user = User::whereSponsorId($item->user_id)->wherePosition(1)->whereStatus(1)->first();
+            $right_user = User::whereSponsorId($item->user_id)->wherePosition(2)->whereStatus(1)->first();
+
+            if(is_null($left_user) or is_null($right_user)){
+                $name = User::find($item->user_id)->name;
+                $sponsor_users_list[$key]['id'] = $item->user_id;
+                $sponsor_users_list[$key]['name'] = $name;
+            }
+        }
+
+        return view('user.transfer',compact('id','users','user','sponsor_users_list'));
+    }
+
+    public function transferStore(Request $request)
+    {
+        $request->validate([
+            'user_id'    => 'required',
+            'inviter_id' => 'required',
+            'sponsor_id' => 'required',
+            'position'   => 'required',
+        ]);
+
+        $user = User::find($request->user_id);
+
+        /*$checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+        if($checker > 0) return  redirect()->back();*/
+
+        if ($user->inviter_id !== $request->inviter_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->inviter_id,
+                'old' => $user->inviter_id,
+                'type' => 4,
+                'user_id' => $request->user_id,
+            ]);
+
+            $user->inviter_id = $request->inviter_id;
+            $user->save();
+
+            $followers = Hierarchy::inviterList($request->user_id);
+
+            foreach ($followers as $item){
+                $user_program = UserProgram::where('id',$item->id)->first();
+
+                $inviter_list = str_replace(",$user->inviter_id,", ",$request->inviter_id,", $user_program->inviter_list);
+
+                $user_program->inviter_list = $inviter_list;
+                $user_program->save();
+            }
+        }
+
+    }
+
+    public function program($id)
+    {
+        $user = User::find($id);
+        $user_program = UserProgram::whereUserId($id)->first();
+        $offices = Office::all();
+        return view('user.program',compact('id','user','user_program','offices'));
+    }
+
+    public function programStore(Request $request,$id)
+    {
+        $request->validate([
+            'package_id'    => 'required',
+            'office_id'     => 'required',
+            'status_id'     =>  'required',
+        ]);
+
+        $user = User::find($id);
+        $user_program = UserProgram::where('user_id',$id)->first();
+
+        if ($user->package_id !== $request->package_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->package_id,
+                'old' => $user->package_id,
+                'type' => 3,
+                'user_id' => $id,
+            ]);
+
+            $user->package_id = $request->package_id;
+            $user->save();
+
+            $user_program->package_id = $request->package_id;
+            $user_program->save();
+        }
+
+        if ($user_program->status_id !== $request->status_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->status_id,
+                'old' => $user->status_id,
+                'type' => 4,
+                'user_id' => $id,
+            ]);
+
+            $user_program->status_id = $request->status_id;
+            $user_program->save();
+        }
+
+        if ($user->office_id !== $request->office_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->office_id,
+                'old' => $user->office_id,
+                'type' => 5,
+                'user_id' => $id,
+            ]);
+
+            $user->office_id = $request->office_id;
+            $user->save();
+        }
+
+        return redirect()->back()->with('status', 'Успешно изменено');
+    }
+
+
     /*
      *
      * not used methods
@@ -494,74 +618,6 @@ class UserController extends Controller
         $list = DB::select('select sum(sum) as sum, created_at from counters where user_id = ? GROUP By MONTH(created_at) Order By created_at DESC', [Auth::user()->id]);
 
         return view('profile.rang-history',compact('list','userProgram'));
-    }
-
-    public function transfer($id)
-    {
-        $users = \App\User::whereStatus(1)->get();
-        $user = User::find($id);
-        return view('user.transfer',compact('id','users','user'));
-    }
-
-    public function program($id)
-    {
-        $user = User::find($id);
-        $user_program = UserProgram::whereUserId($id)->first();
-        $offices = Office::all();
-        return view('user.program',compact('id','user','user_program','offices'));
-    }
-
-    public function programStore(Request $request,$id)
-    {
-        $request->validate([
-            'package_id'    => 'required',
-            'office_id'     => 'required',
-            'status_id'     =>  'required',
-        ]);
-
-        $user = User::find($id);
-        $user_program = UserProgram::where('user_id',$id)->first();
-
-        if ($user->package_id !== $request->package_id) {
-            DB::table('user_changes')->insert([
-                'new' => $request->package_id,
-                'old' => $user->package_id,
-                'type' => 3,
-                'user_id' => $id,
-            ]);
-
-            $user->package_id = $request->package_id;
-            $user->save();
-
-            $user_program->package_id = $request->package_id;
-            $user_program->save();
-        }
-
-        if ($user_program->status_id !== $request->status_id) {
-            DB::table('user_changes')->insert([
-                'new' => $request->status_id,
-                'old' => $user->status_id,
-                'type' => 4,
-                'user_id' => $id,
-            ]);
-
-            $user_program->status_id = $request->status_id;
-            $user_program->save();
-        }
-
-        if ($user->office_id !== $request->office_id) {
-            DB::table('user_changes')->insert([
-                'new' => $request->office_id,
-                'old' => $user->office_id,
-                'type' => 5,
-                'user_id' => $id,
-            ]);
-
-            $user->office_id = $request->office_id;
-            $user->save();
-        }
-
-        return redirect()->back()->with('status', 'Успешно изменено');
     }
 
     /*

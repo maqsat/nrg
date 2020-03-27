@@ -124,7 +124,7 @@
                                     <div class="col-md-6">
                                         <label class="m-t-10">Менеджер</label>
                                         <div class="input-group">
-                                            <select class="form-control form-control-line" name="inviter_id"  onchange="getSponsorUsers(this)">
+                                            <select class="form-control form-control-line select2" name="inviter_id"  onchange="getSponsorUsers(this)">
                                                 <option>Выберите менеджера</option>
                                                 @foreach($users as $item)
                                                     <option value="{{ $item->id }}" @if(old('inviter_id') == $item->id) selected @endif>{{ $item->name }}</option>
@@ -136,7 +136,7 @@
                                         </div>
                                         <label class="m-t-10">Закреплен за(показывается только свободные позиции)</label>
                                         <div class="input-group">
-                                            <select class="form-control form-control-line" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)"></select>
+                                            <select class="form-control form-control-line select2" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)"></select>
                                             @if ($errors->has('sponsor_id'))
                                                 <span class="text-danger"><small>{{ $errors->first('sponsor_id') }}</small></span>
                                             @endif
@@ -311,5 +311,18 @@
             $("#status_id").val(status_id);
         }
     </script>
+    <script src="/monster_admin//assets/plugins/select2/dist/js/select2.full.min.js" type="text/javascript"></script>
+    <script src="/monster_admin/assets/plugins/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(function() {
+            // For select 2
+            $(".select2").select2();
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+@endpush
+
+@push('scripts')
+    <link href="/monster_admin/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
 @endpush
 

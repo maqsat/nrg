@@ -24,11 +24,7 @@ class TestController extends Controller
 {
     public function tester()
     {
-        $id = $_GET['id'];
-        UserProgram::where('user_id',$id)->delete();
-        Processing::where('user_id',$id)->delete();
-        Counter::where('user_id',$id)->delete();
-        User::find($id)->delete();
+
 
     }
 

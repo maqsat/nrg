@@ -201,10 +201,12 @@ class HomeController extends Controller
 
     public function hierarchy()
     {
+        return view('profile.hierarchy1');
+    }
 
-        $tree = Hierarchy::getTree(Auth::user()->id);
-
-        return view('profile.hierarchy', compact('tree'));
+    public function hierarchyTree($id)
+    {
+        return response()->json(['name' => Auth::user()->name, 'children' => Hierarchy::getNewTree(Auth::user()->id)]);
     }
 
     public function team()

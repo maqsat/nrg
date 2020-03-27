@@ -23,6 +23,7 @@ class Hierarchy {
 
     public $sponsor_id;
 
+
     /**
      * @param $user_id
      * @param $position
@@ -190,6 +191,28 @@ class Hierarchy {
 
     /**
      * @param $id
+     * @return string
+     */
+    public function getNewTree($id){
+
+        $items = User::where('sponsor_id',$id)->where('status',1)->orderBy('position')->get();
+        $render= [];
+        foreach ($items as $key => $item) {
+            $child = User::where('sponsor_id',$item->id)->where('status',1)->count();
+            if ($child){
+                $render[$key]['name'] = $item->name;
+                $render[$key]['children'] = $this->getNewTree($item->id);
+            }
+            else $render[$key]['name'] = $item->name;
+        }
+
+        return $render;
+
+
+    }
+
+    /**
+     * @param $id
      */
     public function setQS()
     {
@@ -226,6 +249,20 @@ class Hierarchy {
             ->where('list', 'like', '%,' . $user_id . ',%')
             ->orWhere('list', 'like', '%,' . $user_id)
             ->orWhere('list', 'like', $user_id . ',%')
+            ->orWhere('user_id', $user_id)
+            ->groupBy('user_id')
+            ->get();
+
+        return $count;
+    }
+
+
+    public function inviterList($user_id)
+    {
+        $count =  DB::table('user_programs')
+            ->where('list', 'inviter_list', '%,' . $user_id . ',%')
+            ->orWhere('list', 'inviter_list', '%,' . $user_id)
+            ->orWhere('list', 'inviter_list', $user_id . ',%')
             ->orWhere('user_id', $user_id)
             ->groupBy('user_id')
             ->get();

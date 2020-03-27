@@ -45,6 +45,7 @@ Route::get('/faq', 'PageController@faq');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/invitations', 'HomeController@invitations')->name('invitations');
 Route::get('/hierarchy', 'HomeController@hierarchy')->name('hierarchy');
+Route::get('/hierarchy/{id}', 'HomeController@hierarchyTree')->name('hierarchyTree');
 Route::get('/tree/{id}', 'HomeController@tree')->name('tree');
 Route::get('/team', 'HomeController@team')->name('team');
 Route::get('/user_processing', 'HomeController@processing')->name('processing');//->middleware("activation");
@@ -67,6 +68,7 @@ Route::get('/sponsor_users', 'UserController@sponsor_users')->middleware("admin"
 Route::get('/sponsor_positions', 'UserController@sponsor_positions')->middleware("admin");
 Route::get('/user_offices', 'UserController@user_offices');
 Route::get('user/{id}/transfer','UserController@transfer');
+Route::post('user/transfer','UserController@transferStore');
 Route::get('user/{id}/program','UserController@program');
 Route::post('user/{id}/program','UserController@programStore');
 
