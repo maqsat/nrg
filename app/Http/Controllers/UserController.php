@@ -453,7 +453,7 @@ class UserController extends Controller
             'sponsor_id' => 'required',
             'position'   => 'required',
         ]);
-
+dd($request->all());
         $user = User::find($request->user_id);
 
         /*$checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
