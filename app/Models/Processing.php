@@ -8,7 +8,12 @@ class Processing extends Model
 {
     protected $table = 'processing';
 
-    protected $fillable = [
-        'status','sum','in_user','user_id','program_id','created_at','status_id','package_id','card_number'
-    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
 }

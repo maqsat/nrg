@@ -6,6 +6,7 @@ use App\Facades\Hierarchy;
 use App\Models\Office;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Status;
 use DB;
 use App\User;
 use Carbon\Carbon;
@@ -156,17 +157,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        if($user->status == 1){
-            $list = User::whereSponsorId($id)->get();
-            $non_activate_count = User::whereSponsorId($id)->whereStatus(0)->count();
-            $in_sum = Program::find($user->program_id)->in_sum;
-            $balance = Balance::getBalance($id);
-
-            return view('profile.home', compact('list','non_activate_count','in_sum','balance', 'user'));
-        }
-        else
-            return view('profile.non-activated');
+        Auth::loginUsingId($id);
+        return redirect('home');
     }
 
     /**
@@ -591,6 +583,49 @@ class UserController extends Controller
         return redirect()->back()->with('status', 'Успешно изменено');
     }
 
+    public function processing($id)
+    {
+        $user  = User::find($id);
+        $balance = Balance::getBalance($id);
+        $all = Balance::getIncomeBalance($id);
+        $out = Balance::getBalanceOut($id);
+        $week = Balance::getWeekBalance($id);
+
+        $list = Processing::whereUserId($id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
+
+        return view('user.processing', compact('list', 'balance', 'all', 'out','week','user'));
+    }
+
+    public function processingStore(Request $request)
+    {
+
+        $request->validate([
+            'sum'   => 'required', 'integer',/* ,'min:1000',*/
+            'user_id' => 'required', 'integer'/* ,'min:1000',*/
+        ]);
+
+        $balance = Balance::getBalance($request->user_id);
+        $sum = $request->sum/385;
+
+        if($balance < $sum) return redirect()->back()->with('status', 'У аккаунта недостаточно средств!');
+
+        $user = User::find($request->user_id);
+        $user_program = UserProgram::where('user_id',$user->id)->first();
+
+        $data = Processing::create([
+            'status' => 'out',
+            'sum' => $request->sum,
+            'in_user' => 0,
+            'user_id' => $user->id,
+            'program_id' => $user->program_id,
+            'status_id' => $user_program->status_id,
+            'package_id' => $user->package_id,
+            'is_admin' => Auth::user()->id,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->back()->with('status', 'Успешно выполнено!');
+    }
 
     /*
      *

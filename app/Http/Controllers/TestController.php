@@ -24,7 +24,7 @@ class TestController extends Controller
 {
     public function tester()
     {
-
+        return response()->json(['name' => 'Супер админ', 'children' => Hierarchy::getNewTree(1)]);
 
     }
 

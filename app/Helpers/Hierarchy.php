@@ -199,11 +199,14 @@ class Hierarchy {
         $render= [];
         foreach ($items as $key => $item) {
             $child = User::where('sponsor_id',$item->id)->where('status',1)->count();
+            if($item->position == 1) $pos = 'L:';
+            else $pos = 'R:';
+
             if ($child){
-                $render[$key]['name'] = $item->name;
+                $render[$key]['name'] = $pos.$item->name;
                 $render[$key]['children'] = $this->getNewTree($item->id);
             }
-            else $render[$key]['name'] = $item->name;
+            else $render[$key]['name'] = $pos.$item->name;
         }
 
         return $render;

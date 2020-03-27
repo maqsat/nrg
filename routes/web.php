@@ -71,6 +71,8 @@ Route::get('user/{id}/transfer','UserController@transfer');
 Route::post('user/transfer','UserController@transferStore');
 Route::get('user/{id}/program','UserController@program');
 Route::post('user/{id}/program','UserController@programStore');
+Route::get('user/{id}/processing','UserController@processing');
+Route::post('user/processing','UserController@processingStore');
 
 
 Route::resource('user', 'UserController')->middleware("admin");
