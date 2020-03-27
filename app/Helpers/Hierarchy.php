@@ -260,9 +260,9 @@ class Hierarchy {
     public function inviterList($user_id)
     {
         $count =  DB::table('user_programs')
-            ->where('list', 'inviter_list', '%,' . $user_id . ',%')
-            ->orWhere('list', 'inviter_list', '%,' . $user_id)
-            ->orWhere('list', 'inviter_list', $user_id . ',%')
+            ->where('inviter_list', 'like', '%,' . $user_id . ',%')
+            ->orWhere('inviter_list', 'like', '%,' . $user_id)
+            ->orWhere('inviter_list', 'like', $user_id . ',%')
             ->orWhere('user_id', $user_id)
             ->groupBy('user_id')
             ->get();

@@ -43,8 +43,9 @@
                                         <label class="m-t-10">Закреплен за(показывается только свободные позиции)</label>
                                         <div class="input-group">
                                             <select class="form-control form-control-line select2" name="sponsor_id" id="sponsor_users"  onchange="getPosition(this)">
+                                                <option value="{{ $sponsor->id }}">{{ $sponsor->name }}</option>
                                                 @foreach($sponsor_users_list as $item)
-                                                    <option value="{{ $item['id'] }}"  @if(old('sponsor_id',$user->sponsor_id) == $item['id']) selected @endif>{{ $item['name'] }}</option>
+                                                    <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

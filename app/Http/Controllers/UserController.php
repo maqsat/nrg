@@ -428,6 +428,8 @@ class UserController extends Controller
 
         $user = User::find($id);
         $sponsor_users = Hierarchy::followersList($user->inviter_id);
+        $sponsor = User::find($user->sponsor_id);
+
 
         $sponsor_users_list = [];
 
@@ -435,14 +437,17 @@ class UserController extends Controller
             $left_user = User::whereSponsorId($item->user_id)->wherePosition(1)->whereStatus(1)->first();
             $right_user = User::whereSponsorId($item->user_id)->wherePosition(2)->whereStatus(1)->first();
 
-            if(is_null($left_user) or is_null($right_user)){
-                $name = User::find($item->user_id)->name;
-                $sponsor_users_list[$key]['id'] = $item->user_id;
-                $sponsor_users_list[$key]['name'] = $name;
+            if($item->user_id != $id && $item->user_id != $sponsor->id){
+                if(is_null($left_user) or is_null($right_user)){
+                    $name = User::find($item->user_id)->name;
+                    $sponsor_users_list[$key]['id'] = $item->user_id;
+                    $sponsor_users_list[$key]['name'] = $name;
+                }
             }
+
         }
 
-        return view('user.transfer',compact('id','users','user','sponsor_users_list'));
+        return view('user.transfer',compact('id','users','user','sponsor_users_list','sponsor'));
     }
 
     public function transferStore(Request $request)
@@ -453,11 +458,16 @@ class UserController extends Controller
             'sponsor_id' => 'required',
             'position'   => 'required',
         ]);
-dd($request->all());
-        $user = User::find($request->user_id);
 
-        /*$checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
-        if($checker > 0) return  redirect()->back();*/
+        $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята');
+
+        $list_checker = UserProgram::where('user_id',$request->sponsor_id)->first();
+
+        $pos = strpos($list_checker->list, ",$request->inviter_id,");
+        if ($pos === false)  if($checker > 0) return  redirect()->back()->with('status', 'Наставник не находиться в структуре спонсора');
+
+        $user = User::find($request->user_id);
 
         if ($user->inviter_id !== $request->inviter_id) {
             DB::table('user_changes')->insert([
@@ -482,6 +492,42 @@ dd($request->all());
             }
         }
 
+        if ($user->sponsor_id !== $request->sponsor_id) {
+            DB::table('user_changes')->insert([
+                'new' => $request->sponsor_id,
+                'old' => $user->sponsor_id,
+                'type' => 5,
+                'user_id' => $request->user_id,
+            ]);
+
+            $user->sponsor_id = $request->sponsor_id;
+            $user->save();
+
+            $followers = Hierarchy::followersList($request->user_id);
+
+            foreach ($followers as $item){
+                $user_program = UserProgram::where('id',$item->id)->first();
+
+                $list = str_replace(",$user->sponsor_id,", ",$request->sponsor_id,", $user_program->list);
+
+                $user_program->list = $list;
+                $user_program->save();
+            }
+        }
+
+        if ($user->position !== $request->position) {
+            DB::table('user_changes')->insert([
+                'new' => $request->position,
+                'old' => $user->position,
+                'type' => 6,
+                'user_id' => $request->user_id,
+            ]);
+
+            $user->position = $request->position;
+            $user->save();
+        }
+
+        return redirect()->back()->with('status', 'Успешно изменено');
     }
 
     public function program($id)
