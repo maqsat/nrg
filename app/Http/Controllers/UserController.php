@@ -103,7 +103,7 @@ class UserController extends Controller
         ]);
 
         $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
-        if($checker > 0) return  redirect()->back();
+        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
 
         $user = User::create([
             'name'          => $request->name,
@@ -246,13 +246,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $result = User::whereSponsorId($id);
-        $result_mentor = User::whereInviterId($id);
+        $result_sponsor = User::whereSponsorId($id);
+        $result_inviter = User::whereInviterId($id);
 
-        if($result->exists()){
-            return redirect()->back()->with('status', 'У данного пользователя имеется структура, сначала удалите людей который данный спонсор приглашал');
+        if($result_sponsor->exists()){
+            return redirect()->back()->with('status', 'У данного пользователя имеется структура, сначала удалите людей под этим наставником');
         }
-        elseif($result_mentor->exists()){
+        elseif($result_inviter->exists()){
             return redirect()->back()->with('status', 'У данного пользователя имеется лично приглашенные, сначала удалите людей который данный спонсор приглашал');
         }
         elseif(!is_null(UserProgram::where('user_id',$id)->first())){

@@ -55,6 +55,7 @@ Route::get('/profile', 'HomeController@profile')->name('profile');
 Route::get('/faq-profile','FaqController@index');
 
 Route::get('/rang-history', 'UserController@rangHistory')->middleware("activation");
+
 /*
 ************************ Admin Control ***********************
  */
