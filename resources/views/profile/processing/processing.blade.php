@@ -43,7 +43,7 @@
                                 <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
                             <div class="align-self-center m-l-20">
                                 <h3 class="m-b-0 text-info">{{ $week }}$</h3>
-                                <h5 class="text-muted m-b-0">В блоке</h5></div>
+                                <h5 class="text-muted m-b-0">Еженедельная  выплата</h5></div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                                             <?php
                                                 $in_user = \App\User::find($item->in_user)
                                             ?>
-                                            <td class="txt-oflo">@if(!is_null($in_user)) {{ $in_user->name }} @else {{ $item->in_user }} @endif</td>
+                                            <td class="txt-oflo">@if(!is_null($in_user)) {{ $in_user->name }} @else {{ $item->in_user }} @endif @if($item->status == 'matching_bonus') <i>{{ $item->matching_line }} линия</i> @endif  </td>
                                             <td class="txt-oflo">@if($item->in_user != 0) {{ \App\Models\Package::find($item->package_id)->title }} @endif</td>
                                             <td>{{ $item->card_number }}</td>
                                             <td class="txt-oflo">{{ $item->created_at }}</td>

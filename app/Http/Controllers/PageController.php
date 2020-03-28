@@ -91,32 +91,4 @@ class PageController extends Controller
     {
         //
     }
-
-    public function welcome()
-    {
-        return redirect('/home');
-        $news = News::orderBy('created_at')->take(4)->get();
-        return view('welcome',compact('news'));
-    }
-
-    public function about()
-    {
-        return view('page.about');
-    }
-
-    public function products()
-    {
-        return view('page.products');
-    }
-
-    public function cert()
-    {
-        return view('page.cert');
-    }
-
-    public function faq()
-    {
-        $faq=Faq::where('is_admin','0')->get();
-        return view('page.faq',compact('faq'));
-    }
 }

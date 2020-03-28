@@ -53,8 +53,6 @@ class UserActivated
 
         /*start init and activate*/
         $inviter = User::find($event->user->inviter_id);
-        $sponsor = User::find($event->user->sponsor_id);
-
 
         if ($event->user->package_id == 0){
             $package_id = 0;
@@ -260,23 +258,23 @@ class UserActivated
                         Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$temp_sum);
 
 
-                        if($item_user_program->package_id != 1){
-                            /*start set  matching_bonus  */
-                            $inviter_list = Hierarchy::getInviterList($item,'').',';
-                            $inviter_list = explode(',',trim($inviter_list,','));
-                            $inviter_list = array_slice($inviter_list, 0, 3);
+                        /*start set  matching_bonus  */
+                        $inviter_list = $item_user_program->inviter_list;
+                        $inviter_list = explode(',',trim($inviter_list,','));
+                        $inviter_list = array_slice($inviter_list, 0, 3);
 
-                            foreach ($inviter_list as $inviter_key => $inviter_item){
-                                if($inviter_item != ''){
-                                    $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                        foreach ($inviter_list as $inviter_key => $inviter_item){
+                            if($inviter_item != ''){
+                                $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                                if($inviter_user_program->package_id != 1){
                                     $list_inviter_status = Status::find($inviter_user_program->status_id);
                                     if($list_inviter_status->depth_line <= $inviter_key+1){
-                                        Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$id,$program->id,$package->id,$list_inviter_status->id);
+                                        Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package->id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
                                     }
                                 }
                             }
-                            /*end  set  matching_bonus  */
                         }
+                        /*end  set  matching_bonus  */
                     }
                     else {
                         Balance::changeBalance($item,0,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$sum);

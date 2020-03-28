@@ -35,8 +35,9 @@
                                     <tr>
                                         <th>ID #</th>
                                         <th>Тип</th>
-                                        <th>Сообщение</th>
                                         <th>Пользователь</th>
+                                        <th>Сообщение</th>
+                                        <th>Дата</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -48,8 +49,8 @@
                                             @else
                                                 <td><span class="label label-rouded label-success">достижение нового статуса</span></td>
                                             @endif
-                                            <td class="txt-oflo">{{ $item->message }}</td>
                                             <td class="txt-oflo">{{ \App\User::find($item->user_id)->name }}</td>
+                                            <td class="txt-oflo">{{ $item->message }}</td>
                                             <td class="txt-oflo">{{ $item->created_at }}</td>
                                         </tr>
                                     @endforeach

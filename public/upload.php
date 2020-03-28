@@ -12,8 +12,6 @@ $imageFolder = $_SERVER['DOCUMENT_ROOT'] . "/public/uploads/";
 
 reset ($_FILES);
 $temp = current($_FILES);
-// /var/www/www-root/data/www/https://en-rise.com//public/upload.php
-// /var/www/www-root/data/www/https://en-rise.com//images/pp.jpg
 if (is_uploaded_file($temp['tmp_name'])){
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         // same-origin requests won't set an origin. If the origin is set, it must be valid.

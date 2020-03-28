@@ -14,7 +14,7 @@ use App\Models\Processing;
 
 class Balance {
 
-    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0,$limited_sum = 0)
+    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0,$limited_sum = 0,$matching_line = 0)
     {
         Processing::insert(
             [
@@ -26,6 +26,7 @@ class Balance {
                 'package_id' => $package_id,
                 'status_id' => $status_id,
                 'pv' => $pv,
+                'matching_line ' => $matching_line,
                 'limited_sum' => $limited_sum,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]
@@ -54,20 +55,26 @@ class Balance {
         return round($sum, 2);
     }
 
-
     public function getWeekBalance($user_id)
     {
-        //dd(Carbon::now()->startOfWeek());
-        $sum = Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','matching_bonus','auto_bonus'])->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
+        $sum = Processing::whereUserId($user_id)->whereIn('status', ['turnover_bonus','matching_bonus'])->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
         return round($sum, 2);
     }
-
 
     public function getIncomeBalance($user_id)
     {
-        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','matching_bonus','auto_bonus'])->sum('sum');
+        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum');
         return round($sum, 2);
     }
+
+    public function getBalanceOut($user_id)
+    {
+        $sum = Processing::whereUserId($user_id)->whereStatus('out')->sum('sum');
+        return round($sum, 2);
+    }
+
+
+    /*************************** OLD METHODS ****************************/
 
     public function getWeekBalanceByStatus($user_id,$date_from,$date_to,$status)
     {
@@ -98,11 +105,6 @@ class Balance {
         return round($sum, 2);
     }
 
-    public function getBalanceOut($user_id)
-    {
-        $sum = Processing::whereUserId($user_id)->whereStatus('out')->sum('sum');
-        return round($sum, 2);
-    }
 
     public function getBalanceOutAllUsers()
     {

@@ -63,9 +63,8 @@ class AdminController extends Controller
             $ids = [];
             foreach ($users as $item){
                 $ids[] = $item->id;
-
-                $sum = Counter::whereIn('user_id',[$ids])->sum('sum');
             }
+            $sum = Counter::whereIn('user_id',[$ids])->sum('sum');
             $data[$key][] = $sum;
         }
 

@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Models\News;
 
 /*
 ************************ Auth Elements ***********************
@@ -18,27 +17,20 @@ use App\Models\News;
 Auth::routes();
 
 /*
-************************ Pay Elements ***********************
+************************ Website ***********************
  */
-Route::get('/pay-types', 'PayController@payTypes')->middleware("auth");
-Route::get('/pay-prepare', 'PayController@payPrepare')->middleware("auth");
-Route::post('/pay-processing/{id}', 'PayController@payProcessing');
-Route::get('/paypost', 'PayController@paypostSend')->name('paypost');// скоро нужно удалить
-Route::get('/webhook/{id}', 'PayController@webhook')->name('webhook');// скоро нужно удалить
+Route::get('/', 'WebController@welcome');
+Route::get('/about', 'WebController@about');
+Route::get('/products', 'WebController@products');
+Route::get('/cert', 'WebController@cert');
+Route::get('/faq', 'WebController@faq');
 
 /*
 ************************ Test Elements ***********************
  */
 Route::get('/tester', 'TestController@tester');
 
-/*
-************************ Website ***********************
- */
-Route::get('/', 'PageController@welcome');
-Route::get('/about', 'PageController@about');
-Route::get('/products', 'PageController@products');
-Route::get('/cert', 'PageController@cert');
-Route::get('/faq', 'PageController@faq');
+
 /*
 ************************ Profile ***********************
  */
@@ -53,8 +45,22 @@ Route::get('/programs' , 'HomeController@programs')->name('programs');
 Route::get('/notifications', 'HomeController@notifications')->name('notifications');
 Route::get('/profile', 'HomeController@profile')->name('profile');
 Route::get('/faq-profile','FaqController@index');
+Route::post('/updateProfile', 'HomeController@updateProfile')->name('updateProfile');
+Route::post('/updateAvatar', 'HomeController@updateAvatar')->name('updateAvatar');
+Route::get('/marketing', 'HomeController@marketing')->name('marketing');
+Route::post('/transfer', 'ProcessingController@transfer')->name('transfer');
+Route::get('/transfer/{status}/{processing_id}', 'ProcessingController@transferAnswer');
+Route::get('/rang-history', 'UserController@rangHistory')->middleware("activation");// скоро нужно удалить
 
-Route::get('/rang-history', 'UserController@rangHistory')->middleware("activation");
+
+/*
+************************ Pay Elements ***********************
+ */
+Route::get('/pay-types', 'PayController@payTypes')->middleware("auth");
+Route::get('/pay-prepare', 'PayController@payPrepare')->middleware("auth");
+Route::post('/pay-processing/{id}', 'PayController@payProcessing');
+Route::get('/paypost', 'PayController@paypostSend')->name('paypost');// скоро нужно удалить
+Route::get('/webhook/{id}', 'PayController@webhook')->name('webhook');// скоро нужно удалить
 
 /*
 ************************ Admin Control ***********************
@@ -74,7 +80,7 @@ Route::get('user/{id}/program','UserController@program');
 Route::post('user/{id}/program','UserController@programStore');
 Route::get('user/{id}/processing','UserController@processing');
 Route::post('user/processing','UserController@processingStore');
-
+Route::get('/admin', 'AdminController@index')->name('admin');
 
 Route::resource('user', 'UserController')->middleware("admin");
 Route::resource('package', 'PackageController')->middleware("admin");
@@ -84,18 +90,9 @@ Route::resource('country', 'CountryController')->middleware("admin");
 /*
 ************************ Anything else ***********************
  */
-
-
-
 Route::get('/bot_activation', 'AutoActivationController@bot_activation');
 Route::get('/check_mentor', 'AutoActivationController@checkMentor');
 
-Route::post('/updateProfile', 'HomeController@updateProfile')->name('updateProfile');
-Route::post('/updateAvatar', 'HomeController@updateAvatar')->name('updateAvatar');
-Route::get('/marketing', 'HomeController@marketing')->name('marketing');
-Route::post('/transfer', 'ProcessingController@transfer')->name('transfer');
-Route::get('/transfer/{status}/{processing_id}', 'ProcessingController@transferAnswer');
-Route::get('/admin', 'AdminController@index')->name('admin');
 
 
 Route::get('shopuser', 'UserController@getshopusers')->middleware("admin");
@@ -129,15 +126,6 @@ Route::resource('/news','NewsController')->middleware("admin");
 Route::get('/faqgetadmin','FaqController@alladminfaq')->middleware("admin");
 Route::get('/faqgetguest','FaqController@allguestfaq')->middleware("admin");
 
-
-Route::get('/getnews',function(){
-    $news=News::all();
-   return  view('news.all_news',compact('news'));
-});
-Route::get('/getnews/{id}',function($id){
-    $news=News::where('id',$id)->first();
-    return  view('news.single',compact('news'));
-});
 Route::get('/contact',function(){
     return  view('page.contact');
 });

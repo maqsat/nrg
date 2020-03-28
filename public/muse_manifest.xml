@@ -1,0 +1,602 @@
+<manifest alg="2" build="2018.1.0.386" opt="false" iceEnabled="true" iceMarkupVersion="2" iceEnabledOptions="link,responsive,cachebuster,textStyling" exportTarget="other" domain="nrg-max.com" resolutions="1x" timestamp="1582899819847">
+  <folder name="css">
+    <file name="site_global.css" crc="3988030232"/>
+    <file name="contacts.css" crc="388235224" ref="contacts"/>
+    <file name="iefonts_contacts.css" crc="293060583" ref="contacts"/>
+    <file name="news-1.css" crc="524068841" ref="news-1"/>
+    <file name="iefonts_news-1.css" crc="8534722" ref="news-1"/>
+    <file name="pro2.css" crc="3905049082" ref="pro2"/>
+    <file name="iefonts_pro2.css" crc="420059523" ref="pro2"/>
+    <file name="business.css" crc="4178757975" ref="business"/>
+    <file name="iefonts_business.css" crc="3978372783" ref="business"/>
+    <file name="about.css" crc="4161596294" ref="about"/>
+    <file name="iefonts_about.css" crc="4085712763" ref="about"/>
+    <file name="pro1.css" crc="535450938" ref="pro1"/>
+    <file name="iefonts_pro1.css" crc="85911005" ref="pro1"/>
+    <file name="news.css" crc="71819989" ref="news"/>
+    <file name="iefonts_news.css" crc="4257175658" ref="news"/>
+    <file name="index.css" crc="501942422" ref="index"/>
+    <file name="iefonts_index.css" crc="3784695876" ref="index"/>
+    <file name="team.css" crc="405704306" ref="team"/>
+    <file name="iefonts_team.css" crc="4053254890" ref="team"/>
+    <file name="news-_____.css" crc="3990621568" ref="news-копия"/>
+    <file name="iefonts_news-_____.css" crc="498933145" ref="news-копия"/>
+    <file name="master_______-___2.css" crc="346583968" ref="contacts-eng:about-eng:team-eng:main-eng"/>
+    <file name="master_______-___1.css" crc="3787239073" ref="pro2-kaz:pro1-kaz:business-kaz:team-kaz:contacts-kaz:about-kaz:main-kaz"/>
+    <file name="master_______-___.css" crc="3872008088" ref="news-копия:team:pro5:news-1:contacts:pro7:pro4:news:about:pro1:pro6:pro2:pro3:business:index"/>
+    <file name="pro5.css" crc="4096762214" ref="pro5"/>
+    <file name="iefonts_pro5.css" crc="4015198327" ref="pro5"/>
+    <file name="contacts-eng.css" crc="332703127" ref="contacts-eng"/>
+    <file name="iefonts_contacts-eng.css" crc="186819768" ref="contacts-eng"/>
+    <file name="about-eng.css" crc="3872146498" ref="about-eng"/>
+    <file name="iefonts_about-eng.css" crc="73710491" ref="about-eng"/>
+    <file name="pro7.css" crc="3839528997" ref="pro7"/>
+    <file name="iefonts_pro7.css" crc="481334166" ref="pro7"/>
+    <file name="pro4.css" crc="339904317" ref="pro4"/>
+    <file name="iefonts_pro4.css" crc="64858483" ref="pro4"/>
+    <file name="pro2-kaz.css" crc="311539687" ref="pro2-kaz"/>
+    <file name="iefonts_pro2-kaz.css" crc="463308981" ref="pro2-kaz"/>
+    <file name="pro1-kaz.css" crc="4203337846" ref="pro1-kaz"/>
+    <file name="iefonts_pro1-kaz.css" crc="4109764077" ref="pro1-kaz"/>
+    <file name="team-eng.css" crc="443270161" ref="team-eng"/>
+    <file name="iefonts_team-eng.css" crc="4203402586" ref="team-eng"/>
+    <file name="business-kaz.css" crc="4122001216" ref="business-kaz"/>
+    <file name="iefonts_business-kaz.css" crc="4124587556" ref="business-kaz"/>
+    <file name="main-eng.css" crc="3799657875" ref="main-eng"/>
+    <file name="iefonts_main-eng.css" crc="3881136720" ref="main-eng"/>
+    <file name="team-kaz.css" crc="267783267" ref="team-kaz"/>
+    <file name="iefonts_team-kaz.css" crc="3831997881" ref="team-kaz"/>
+    <file name="pro6.css" crc="175329043" ref="pro6"/>
+    <file name="iefonts_pro6.css" crc="3992770076" ref="pro6"/>
+    <file name="contacts-kaz.css" crc="4103265975" ref="contacts-kaz"/>
+    <file name="iefonts_contacts-kaz.css" crc="460428096" ref="contacts-kaz"/>
+    <file name="about-kaz.css" crc="121758418" ref="about-kaz"/>
+    <file name="iefonts_about-kaz.css" crc="4075114167" ref="about-kaz"/>
+    <file name="main-kaz.css" crc="3936152632" ref="main-kaz"/>
+    <file name="iefonts_main-kaz.css" crc="4083231891" ref="main-kaz"/>
+    <file name="pro3.css" crc="3783063995" ref="pro3"/>
+    <file name="iefonts_pro3.css" crc="3770803440" ref="pro3"/>
+  </folder>
+  <folder name="assets">
+    <file name="phoneredirect.php" crc="3818513474" seo="true" mt="1560609116000"/>
+  </folder>
+  <folder name="scripts">
+    <file name="jquery-1.8.3.min.js" crc="209076791" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="museutils.js" crc="340535759" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="whatinput.js" crc="86476730" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="museconfig.js" crc="4286661555" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="jquery.watch.js" crc="51536988" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="jquery.musepolyfill.bgsize.js" crc="4260645839" ref="phone>index:phone>about:phone>pro1:phone>pro2:phone>news:phone>news-1:phone>business:index:about:pro1:pro2:news:news-1:business:phone>team:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:team:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:pro3:main-eng:about-eng:team-eng:pro4:pro5:pro6:pro7"/>
+    <file name="jquery.musemenu.js" crc="510910590" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия"/>
+    <file name="webpro.js" crc="4059564322" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:contacts:news-копия:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:contacts-kaz:main-eng:contacts-eng:pro7"/>
+    <file name="musewpslideshow.js" crc="3862962738" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:news-копия:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:main-eng:pro7"/>
+    <file name="jquery.museoverlay.js" crc="4147669564" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:news-копия:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:main-eng:pro7"/>
+    <file name="touchswipe.js" crc="4075097462" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:news-копия:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:main-eng:pro7"/>
+    <file name="jquery.scrolleffects.js" crc="39568856" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:main-eng:pro7"/>
+    <file name="html5shiv.js" crc="4241844378" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="require.js" crc="7928878" ref="phone>index:phone>about:phone>team:phone>pro1:phone>pro2:phone>contacts:phone>news:phone>news-1:phone>business:index:about:team:pro1:pro2:contacts:news:news-1:news-копия:business:phone>басты-бет:phone>about-kaz:phone>team-kaz:phone>pro1-kaz:phone>pro2-kaz:phone>business-копия:phone>contacts-копия:main-kaz:about-kaz:team-kaz:pro1-kaz:pro2-kaz:business-kaz:contacts-kaz:pro3:main-eng:about-eng:team-eng:contacts-eng:pro4:pro5:pro6:pro7"/>
+    <file name="form_check.php" crc="4020933626" ref="phone>contacts"/>
+    <file name="form_throttle.php" crc="4259590256" ref="phone>contacts"/>
+    <file name="form_process.php" crc="37464564" ref="phone>contacts"/>
+    <file name="form-u9874.php" crc="4114415597" ref="phone>contacts"/>
+    <file name="form-u9682.php" crc="374924622" ref="contacts"/>
+    <file name="form-u15837.php" crc="4229372100" ref="phone>contacts-копия"/>
+    <file name="form-u15069.php" crc="227801980" ref="contacts-kaz"/>
+    <file name="form-u17172.php" crc="3872222025" ref="contacts-eng"/>
+  </folder>
+  <folder name="images">
+    <file name="logo green.png" crc="506530923" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="log.png" crc="4241699305" ref="phone>index:index:phone>басты-бет:main-kaz">
+      <caption webpage="index" alt=" Личный кабинет"/>
+      <caption webpage="index" alt=" Личный кабинет"/>
+      <caption webpage="index" alt=" Личный кабинет"/>
+      <caption webpage="index" alt=" Личный кабинет"/>
+      <caption webpage="about" alt=" Личный кабинет"/>
+      <caption webpage="about" alt=" Личный кабинет"/>
+      <caption webpage="about" alt=" Личный кабинет"/>
+      <caption webpage="main-kaz" alt=" Жеке кабинет"/>
+      <caption webpage="main-kaz" alt=" Жеке кабинет"/>
+      <caption webpage="main-kaz" alt=" Жеке кабинет"/>
+    </file>
+    <file name="blank.gif" crc="4208392903" ref="phone>index:phone>contacts:phone>news:index:contacts:news:phone>басты-бет:phone>contacts-копия:main-kaz:contacts-kaz:main-eng:contacts-eng:pro7"/>
+    <file name="main-b.jpg" crc="4217166474" seo="true" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="maxilin-1.jpg" crc="3856682718" seo="true" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="vesna-1.jpg" crc="252938146" seo="true" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="left2-u7281-3-fr.png" crc="273707845" ref="phone>index:phone>басты-бет"/>
+    <file name="left2-1-u7281-3-r-fr.png" crc="39323162" ref="phone>index:phone>басты-бет"/>
+    <file name="right2-u7307-3-fr.png" crc="3813375574" ref="phone>index:phone>басты-бет"/>
+    <file name="right2-1-u7307-3-r-fr.png" crc="229277100" ref="phone>index:phone>басты-бет"/>
+    <file name="loading.gif" crc="3815509949" ref="phone>index:index:news-копия:phone>басты-бет:main-kaz:main-eng:pro7"/>
+    <file name="back1.jpg" crc="4260491079" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="басты-бет" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="pro1-u7715-fr.png" crc="4278162802" ref="phone>index:phone>басты-бет"/>
+    <file name="pro1-1-1-u7727-fr.png" crc="216808913" ref="phone>index:phone>басты-бет"/>
+    <file name="backgr-1-1.jpg" crc="92938220" ref="phone>index:index:phone>басты-бет:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="girl-manager-u9350-fr.png" crc="4012595038" ref="phone>index:phone>басты-бет"/>
+    <file name="mac-laptop-png-13-u9668-fr.png" crc="3887538943" ref="phone>about:phone>about-kaz"/>
+    <file name="icon1-1.png" crc="4244326914" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="gift.png" crc="3881528688" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="trophy.png" crc="3953327156" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="presentation1.png" crc="4091141213" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="repair-tools.png" crc="209709286" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="df8ddb0b5df29bc4350fd9f4c701c09b.png" crc="3977163355" ref="phone>about">
+      <caption webpage="about" alt=""/>
+    </file>
+    <file name="001-agreement.png" crc="134322637" ref="phone>about:about:phone>about-kaz:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+      <caption webpage="about" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-kaz" alt=""/>
+      <caption webpage="about-eng" alt=""/>
+    </file>
+    <file name="02-u6484-fr.jpg" crc="4234632587" ref="phone>pro1"/>
+    <file name="product-1-1.png" crc="294182993" ref="phone>pro1:phone>pro1-kaz">
+      <caption webpage="pro1" alt=""/>
+      <caption webpage="pro1-kaz" alt=""/>
+    </file>
+    <file name="banner-1-u6932-fr.jpg" crc="3878136770" ref="phone>pro2"/>
+    <file name="product-2.png" crc="4111760513" ref="phone>pro2:phone>pro2-kaz">
+      <caption webpage="pro2" alt=""/>
+      <caption webpage="pro2-kaz" alt=""/>
+    </file>
+    <file name="anonce1.png" crc="3791138123" ref="phone>news:phone>news-1:news:news-1">
+      <caption webpage="news-1" alt=""/>
+      <caption webpage="news-1" alt=""/>
+      <caption webpage="news" alt=""/>
+      <caption webpage="news" alt=""/>
+    </file>
+    <file name="instagram.png" crc="493010928" ref="phone>news-1:news-1">
+      <caption webpage="news-1" alt=""/>
+      <caption webpage="news-1" alt=""/>
+    </file>
+    <file name="mp2jpg-u12310-fr.png" crc="276414668" ref="phone>business"/>
+    <file name="зтп01-u11732-fr.png" crc="160552239" ref="phone>business:phone>business-копия"/>
+    <file name="marketing-plan-03-u11724-fr.jpg" crc="260717009" ref="phone>business:phone>business-копия"/>
+    <file name="mp3-1-1-u11737-fr.png" crc="492002346" ref="phone>business:phone>business-копия"/>
+    <file name="зтп1-1-u11738-fr.png" crc="352755836" ref="phone>business:phone>business-копия"/>
+    <file name="mp5jpg-u11744-fr.png" crc="503539869" ref="phone>business:phone>business-копия"/>
+    <file name="mp9-u12358-fr.jpg" crc="4126765295" ref="phone>business"/>
+    <file name="mp10-u12419-fr.jpg" crc="3796585195" ref="phone>business"/>
+    <file name="mp10-1-u12418-fr.jpg" crc="388742982" ref="phone>business"/>
+    <file name="mpp7-1-u11728-fr.jpg" crc="3848090387" ref="phone>business"/>
+    <file name="mp7.jpg" crc="3878675388" ref="phone>business:business:phone>business-копия:business-kaz">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp11-u11727-fr.jpg" crc="3784833160" ref="phone>business"/>
+    <file name="mp12-u11758-fr.png" crc="165497202" ref="phone>business:phone>business-копия"/>
+    <file name="mp12-1-u11763-fr.png" crc="3953743694" ref="phone>business:phone>business-копия"/>
+    <file name="mp13-u11759-fr.jpg" crc="167963441" ref="phone>business:phone>business-копия"/>
+    <file name="mp13-1-u11762-fr.png" crc="279584386" ref="phone>business:phone>business-копия"/>
+    <file name="mp14-u11760-fr.jpg" crc="3969101047" ref="phone>business:phone>business-копия"/>
+    <file name="mp13-1-u11761-fr.png" crc="3952147933" ref="phone>business:phone>business-копия"/>
+    <file name="mp21-u11824-fr.jpg" crc="24936499" ref="phone>business:phone>business-копия"/>
+    <file name="путишес 2.png" crc="4071855719" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="максилин2.png" crc="276593791" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="весна 2-u4450.png" crc="4170754692" ref="index"/>
+    <file name="pro1-1-1.png" crc="383642848" seo="true" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="pro1.png" crc="4024403199" seo="true" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="left2.png" crc="3775047437" ref="index:main-kaz:main-eng:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+      <caption webpage="pro7" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="right2.png" crc="427329454" ref="index:main-kaz:main-eng:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+      <caption webpage="pro7" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="girl-manager.png" crc="531342460" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="arrow-up-step1.png" crc="4110015954" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="mac-laptop-png-13.png" crc="4171537213" ref="about:about-kaz:about-eng">
+      <caption webpage="about" alt=""/>
+    </file>
+    <file name="02.jpg" crc="4011963620" ref="pro1">
+      <caption webpage="pro1" alt=""/>
+    </file>
+    <file name="product-1-12.png" crc="3861091845" ref="pro1:pro1-kaz">
+      <caption webpage="pro1" alt=""/>
+      <caption webpage="pro1-kaz" alt=""/>
+    </file>
+    <file name="banner-1-u3754-fr.jpg" crc="316677902" ref="pro2"/>
+    <file name="product-22.png" crc="4101895472" ref="pro2:pro2-kaz">
+      <caption webpage="pro2" alt=""/>
+      <caption webpage="pro2-kaz" alt=""/>
+    </file>
+    <file name="arrow-up-2.png" crc="4251850517" ref="news-копия">
+      <caption webpage="news-копия" alt=""/>
+    </file>
+    <file name="arrow-up-1.png" crc="3834465397" ref="news-копия">
+      <caption webpage="news-копия" alt=""/>
+    </file>
+    <file name="close1.png" crc="4203193913" ref="news-копия">
+      <caption webpage="news-копия" alt=""/>
+    </file>
+    <file name="marketing-plan-01.jpg" crc="4277807189" ref="business:business-kaz">
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp2jpg.png" crc="4201305263" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="зтп01.png" crc="362155893" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-plan-02.jpg" crc="216159760" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mpp7-1.jpg" crc="265694973" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="зтп1-1.png" crc="206075814" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp10.jpg" crc="309485087" ref="business:phone>business-копия:business-kaz">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp5jpg.png" crc="123672812" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp3-1-1.png" crc="302357804" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-plan-03.jpg" crc="447713740" ref="business:business-kaz">
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp9.jpg" crc="4238244529" ref="business:business-kaz">
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp10-1.jpg" crc="408648115" ref="business:phone>business-копия:business-kaz">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp11.jpg" crc="501513336" ref="business:phone>business-копия:business-kaz">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp12.png" crc="113990095" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp12-1.png" crc="4135385267" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp13.jpg" crc="3910623408" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp13-1.png" crc="519445724" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp14.jpg" crc="3767065136" ref="business:business-kaz">
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="mp21.jpg" crc="348885459" ref="business:business-kaz">
+      <caption webpage="business-kaz" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="quote-icon-u14236-fr.png" crc="35036704" ref="phone>team:phone>team-kaz"/>
+    <file name="marketing-mobile-ru-1.jpg" crc="4073692526" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-2.jpg" crc="207788538" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-3.jpg" crc="3775429354" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-7.jpg" crc="491626634" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-4.jpg" crc="468261704" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-5.jpg" crc="4123249771" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-mobile-ru-6.jpg" crc="3773171139" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-rus-small.jpg" crc="430085516" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-rus-mediuml.jpg" crc="454405685" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-rus-big.jpg" crc="240856849" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="marketing-rus-vip.jpg" crc="149337600" ref="phone>business:phone>business-копия">
+      <caption webpage="business-копия" alt=""/>
+      <caption webpage="business" alt=""/>
+    </file>
+    <file name="maxilin-01-u14491-fr.jpg" crc="239493849" ref="phone>pro1-kaz"/>
+    <file name="vesna-1-u14688-fr.jpg" crc="4286243808" ref="phone>pro2-kaz"/>
+    <file name="mp9-u15332-fr.jpg" crc="3818380830" ref="phone>business-копия"/>
+    <file name="mpp7-1-u15329-fr.jpg" crc="130414119" ref="phone>business-копия"/>
+    <file name="left2-1.png" crc="3872286998" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="right2-1.png" crc="502119143" ref="index:main-kaz:main-eng">
+      <caption webpage="index" alt=""/>
+      <caption webpage="main-eng" alt=""/>
+      <caption webpage="main-kaz" alt=""/>
+    </file>
+    <file name="pro-3-1.png" crc="4234888240" seo="true" ref="index:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+    </file>
+    <file name="pro-4-1.png" crc="240384969" seo="true" ref="index:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+    </file>
+    <file name="pro-5-1.png" crc="53217738" seo="true" ref="index:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+    </file>
+    <file name="pro-6-1.png" crc="3968408564" seo="true" ref="index:pro7">
+      <caption webpage="index" alt=""/>
+      <caption webpage="pro7" alt=""/>
+    </file>
+    <file name="pro-7-1.png" crc="4240564620" seo="true" ref="index">
+      <caption webpage="index" alt=""/>
+    </file>
+    <file name="quote-icon.png" crc="144193585" ref="team:team-kaz:team-eng">
+      <caption webpage="team-kaz" alt=""/>
+      <caption webpage="team-kaz" alt=""/>
+      <caption webpage="team-eng" alt=""/>
+      <caption webpage="team-eng" alt=""/>
+      <caption webpage="team" alt=""/>
+      <caption webpage="team" alt=""/>
+    </file>
+    <file name="maxilin-01.jpg" crc="4214271177" ref="pro1-kaz">
+      <caption webpage="pro1-kaz" alt=""/>
+    </file>
+    <file name="vesna-12.jpg" crc="4021465151" ref="pro2-kaz">
+      <caption webpage="pro2-kaz" alt=""/>
+    </file>
+    <file name="product-3-2.png" crc="328710717" ref="pro3">
+      <caption webpage="pro3" alt=""/>
+    </file>
+    <file name="log-09.png" crc="170343602" ref="main-eng">
+      <caption webpage="main-eng" alt=" Log in"/>
+      <caption webpage="main-eng" alt=" Log in"/>
+      <caption webpage="main-eng" alt=" Log in"/>
+    </file>
+    <file name="product-4-2.png" crc="185126581" ref="pro4">
+      <caption webpage="pro4" alt=""/>
+    </file>
+    <file name="product-5-2.png" crc="289158924" ref="pro5">
+      <caption webpage="pro5" alt=""/>
+    </file>
+    <file name="product-6-2.png" crc="464469775" ref="pro6">
+      <caption webpage="pro6" alt=""/>
+    </file>
+    <file name="product-7-2.png" crc="166148258" ref="pro7">
+      <caption webpage="pro7" alt=""/>
+    </file>
+  </folder>
+  <folder name="phone">
+    <folder name="css">
+      <file name="contacts.css" crc="110948386" ref="phone>contacts"/>
+      <file name="news.css" crc="4206208515" ref="phone>news"/>
+      <file name="about.css" crc="443184803" ref="phone>about"/>
+      <file name="iefonts_about.css" crc="334055704" ref="phone>about"/>
+      <file name="news-1.css" crc="3793487609" ref="phone>news-1"/>
+      <file name="iefonts_news-1.css" crc="4195704747" ref="phone>news-1"/>
+      <file name="index.css" crc="22660872" ref="phone>index"/>
+      <file name="iefonts_index.css" crc="478952286" ref="phone>index"/>
+      <file name="team.css" crc="102472937" ref="phone>team"/>
+      <file name="pro1.css" crc="4083511363" ref="phone>pro1"/>
+      <file name="iefonts_pro1.css" crc="3852366909" ref="phone>pro1"/>
+      <file name="business.css" crc="279544167" ref="phone>business"/>
+      <file name="iefonts_business.css" crc="3851623539" ref="phone>business"/>
+      <file name="pro2.css" crc="3794026721" ref="phone>pro2"/>
+      <file name="iefonts_pro2.css" crc="4075376075" ref="phone>pro2"/>
+      <file name="master_______-___.css" crc="174768381" ref="phone>business:phone>news-1:phone>news:phone>contacts:phone>pro2:phone>pro1:phone>team:phone>about:phone>index"/>
+      <file name="master_______-___1.css" crc="4066757961" ref="phone>about-kaz:phone>contacts-копия:phone>business-копия:phone>pro2-kaz:phone>pro1-kaz:phone>team-kaz:phone>басты-бет"/>
+      <file name="about-kaz.css" crc="4185772030" ref="phone>about-kaz"/>
+      <file name="iefonts_about-kaz.css" crc="65889778" ref="phone>about-kaz"/>
+      <file name="iefonts_news.css" crc="3876733362" ref="phone>news"/>
+      <file name="iefonts_contacts.css" crc="4170749552" ref="phone>contacts"/>
+      <file name="contacts-_____.css" crc="181037183" ref="phone>contacts-копия"/>
+      <file name="iefonts_contacts-_____.css" crc="4184205922" ref="phone>contacts-копия"/>
+      <file name="business-_____.css" crc="28501877" ref="phone>business-копия"/>
+      <file name="iefonts_business-_____.css" crc="4116723625" ref="phone>business-копия"/>
+      <file name="iefonts_team.css" crc="4110619973" ref="phone>team"/>
+      <file name="pro2-kaz.css" crc="3968057497" ref="phone>pro2-kaz"/>
+      <file name="iefonts_pro2-kaz.css" crc="16339815" ref="phone>pro2-kaz"/>
+      <file name="pro1-kaz.css" crc="460920796" ref="phone>pro1-kaz"/>
+      <file name="iefonts_pro1-kaz.css" crc="219900167" ref="phone>pro1-kaz"/>
+      <file name="team-kaz.css" crc="101870883" ref="phone>team-kaz"/>
+      <file name="iefonts_team-kaz.css" crc="476324086" ref="phone>team-kaz"/>
+      <file name="_____-___.css" crc="250601284" ref="phone>басты-бет"/>
+      <file name="iefonts______-___.css" crc="3941853962" ref="phone>басты-бет"/>
+    </folder>
+    <file name="index.html" crc="3981053419" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="about.html" crc="3821856216" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="team.html" crc="60268813" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="pro1.html" crc="3899649885" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="pro2.html" crc="53695934" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="contacts.html" crc="4107685698" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="news.html" crc="499275703" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="news-1.html" crc="4174718503" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="business.html" crc="100239620" seo="true" mt="1582882816597" redirect="true"/>
+    <file name="басты-бет.html" crc="92718367" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="about-kaz.html" crc="273408137" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="team-kaz.html" crc="435454145" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="pro1-kaz.html" crc="3972675172" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="pro2-kaz.html" crc="62385820" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="business-копия.html" crc="492797057" seo="true" mt="1582883008936" redirect="true"/>
+    <file name="contacts-копия.html" crc="3850410618" seo="true" mt="1582883008936" redirect="true"/>
+  </folder>
+  <file name="index.html" crc="3996023133" seo="true" mt="1582897281549" redirect="true"/>
+  <file name="about.html" crc="434071462" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="team.html" crc="4197707719" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="pro1.html" crc="442375706" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="pro2.html" crc="3924633254" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="contacts.html" crc="430118853" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="news.html" crc="229256677" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="news-1.html" crc="363534590" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="news-копия.html" crc="172169564" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="business.html" crc="3972389209" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="main-kaz.html" crc="226013056" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="about-kaz.html" crc="4121337299" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="team-kaz.html" crc="210390439" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="pro1-kaz.html" crc="350880399" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="pro2-kaz.html" crc="3963335810" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="business-kaz.html" crc="59244171" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="contacts-kaz.html" crc="160770166" seo="true" mt="1582893085053" redirect="true"/>
+  <file name="pro3.html" crc="3957116046" seo="true" mt="1582899790939" redirect="true"/>
+  <file name="main-eng.html" crc="3872406631" seo="true" mt="1582894012817" redirect="true"/>
+  <file name="about-eng.html" crc="214689224" seo="true" mt="1582894012817" redirect="true"/>
+  <file name="team-eng.html" crc="4123740201" seo="true" mt="1582894012817" redirect="true"/>
+  <file name="contacts-eng.html" crc="4249778197" seo="true" mt="1582894012817" redirect="true"/>
+  <file name="pro4.html" crc="4128650717" seo="true" mt="1582899791014" redirect="true"/>
+  <file name="pro5.html" crc="478794149" seo="true" mt="1582899791087" redirect="true"/>
+  <file name="pro6.html" crc="3789427740" seo="true" mt="1582899791158" redirect="true"/>
+  <file name="pro7.html" crc="487127067" seo="true" mt="1582899791243" redirect="true"/>
+</manifest>
