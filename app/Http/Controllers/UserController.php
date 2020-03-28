@@ -455,8 +455,10 @@ class UserController extends Controller
 
         if ($user->sponsor_id !== $request->sponsor_id){
             $list_checker = UserProgram::where('user_id',$request->sponsor_id)->first();
-            $pos = strpos($list_checker->list, ",$request->inviter_id,");
-            if ($pos === false)  return  redirect()->back()->with('status', 'Наставник не находиться в структуре спонсора');
+           if($list_checker->user_id != $request->inviter_id){
+               $pos = strpos($list_checker->list, ",$request->inviter_id,");
+               if ($pos === false)  return  redirect()->back()->with('status', 'Наставник не находиться в структуре спонсора');
+           }
         }
 
         if ($user->sponsor_id !== $request->sponsor_id){
