@@ -27,8 +27,6 @@ class UserActivated
      *
      */
 
-    public $dollar = 385;
-
     public function __construct()
     {
         //
@@ -189,7 +187,13 @@ class UserActivated
                                             ->count() + 1;
                                 }
 
-                                $all_count = $left_user_count+$right_user_count;
+                                if($left_user_count == 0 or $right_user_count ==0){
+                                    $all_count = 0;
+                                }
+                                else{
+                                    $all_count = $left_user_count+$right_user_count;
+                                }
+
 
                                 if($all_count  >= $next_status->condition){
 
@@ -224,8 +228,6 @@ class UserActivated
                                             ]);
                                         }
                                     }
-
-
                                 }
                             }
                         }

@@ -64,7 +64,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-block timer">
-                            <h5>Бонус быстрого старта, до следующего списание осталось:</h5>
+                            <h5>Бонус быстрого старта, до следующего зачисление  осталось:</h5>
                             <ul>
                                 <li><span id="days"></span>День</li>
                                 <li><span id="hours"></span>Час</li>

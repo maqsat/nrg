@@ -201,6 +201,11 @@ class HomeController extends Controller
 
     public function hierarchy()
     {
+        /* old*/
+        $tree = Hierarchy::getTree(Auth::user()->id);
+        return view('profile.hierarchy', compact('tree'));
+
+        /* new*/
         return view('profile.hierarchy1');
     }
 
@@ -209,9 +214,15 @@ class HomeController extends Controller
         return response()->json(['name' => Auth::user()->name, 'children' => Hierarchy::getNewTree(Auth::user()->id)]);
     }
 
-    public function team()
+    public function team(Request $request)
     {
-        $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->paginate(30);
+        if(isset($request->own)){
+            $list = UserProgram::where('inviter_list','like','%,'.Auth::user()->id.',%')->paginate(30);
+        }
+        else{
+            $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->paginate(30);
+        }
+
 
         return view('profile.team', compact('list'));
     }
