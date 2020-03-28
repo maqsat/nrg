@@ -24,7 +24,9 @@ class TestController extends Controller
 {
     public function tester()
     {
-        return response()->json(['name' => 'Супер админ', 'children' => Hierarchy::getNewTree(1)]);
+        $user  = User::find(1);
+
+        event(new Activation($user = $user));
 
     }
 

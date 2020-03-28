@@ -165,10 +165,10 @@ class UserActivated
                                     $right_user_list = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->get();
                                     $right_user_count = 0;
                                     foreach ($right_user_list as  $right_user_item){
-                                        $right_user_item_user = User::find( $right_user_item->user_id);
-                                        $right_user_item_sponsor = User::find($right_user_item_user->sponsor_id);
-                                        $right_user_item_count = UserProgram::where('user_id', $right_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
-                                        $right_user_count =  $right_user_count +  $right_user_item_count;
+                                         $right_user_item_user = User::find( $right_user_item->user_id);
+                                         $right_user_item_sponsor = User::find($right_user_item_user->sponsor_id);
+                                         $right_user_item_count = UserProgram::where('user_id', $right_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
+                                         $right_user_count =  $right_user_count +  $right_user_item_count;
                                     }
                                     $right_user_status = UserProgram::where('user_id',$right_user->id)->first();
                                     if($right_user_status->status_id >= $item_status->id){
