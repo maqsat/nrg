@@ -268,7 +268,7 @@ class UserActivated
                                 $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
                                 if($inviter_user_program->package_id != 1){
                                     $list_inviter_status = Status::find($inviter_user_program->status_id);
-                                    if($list_inviter_status->depth_line <= $inviter_key+1){
+                                    if($list_inviter_status->depth_line >= $inviter_key+1){
                                         Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package->id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
                                     }
                                 }

@@ -57,6 +57,9 @@ class UserController extends Controller
                 $list = User::whereNotNull('program_id')->whereStatus('0')->orderBy('id','desc')->paginate(30);
             elseif (isset($request->program))
                 $list = User::whereProgramId($request->program)->orderBy('id','desc')->paginate(30);
+            elseif (isset($request->upgrade_request)){
+                $list = User::whereProgramId($request->program)->orderBy('id','desc')->paginate(30);
+            }
             else
                 $list = User::whereNotNull('program_id')->orderBy('id','desc')->paginate(30);
         }

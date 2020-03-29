@@ -23,12 +23,34 @@ class PayController extends Controller
         if(isset($request->package)) $package = Package::find($request->package);
         else $package = null;
 
-        return view('processing.types',compact('package'));
+        if (isset($request->upgrade)){
+            $current_package = Package::find($request->upgrade);
+            return view('processing.types-for-upgrade',compact('package','current_package'));
+        }
+        else return view('processing.types',compact('package'));
     }
 
-        public function payPrepare(Request $request)
-        {
-            $package_id = 0;
+    public function payPrepare(Request $request)
+    {
+        $package_id = 0;
+        if (isset($request->upgrade)){
+            $package = Package::find($request->package);
+            $package_id  = $package->id;
+            $current_package = Package::find($request->upgrade);
+            $cost = $package->cost - $current_package->cost;
+
+            $order =  Order::updateOrCreate(
+                [
+                    'type' => 'upgrade',
+                    'status' => 0,
+                    'payment' => $request->type,
+                    'uuid' => 0,
+                    'user_id' => Auth::user()->id,
+                ],
+                ['amount' => $cost, 'package_id' => $package_id]
+            );
+        }
+        else{
             if(!is_null($request->package)){
                 $package = Package::find($request->package);
                 $cost = $package->cost + env('REGISTRATION_FEE');
@@ -46,18 +68,20 @@ class PayController extends Controller
                 ],
                 ['amount' => $cost, 'package_id' => $package_id]
             );
-
-            User::find(Auth::user()->id)->update(['package_id' => $package_id]);
-
-            if($request->type == "manual"){
-                return view('processing.manual', compact('order', 'cost'));
-            }
-            if($request->type == "paypost"){}
-            if($request->type == "robokassa"){}
-            if($request->type == "payeer"){}
-            if($request->type == "paybox"){}
-            if($request->type == "indigo"){}
         }
+
+
+        //User::find(Auth::user()->id)->update(['package_id' => $package_id]);
+
+        if($request->type == "manual"){
+            return view('processing.manual', compact('order', 'cost'));
+        }
+        if($request->type == "paypost"){}
+        if($request->type == "robokassa"){}
+        if($request->type == "payeer"){}
+        if($request->type == "paybox"){}
+        if($request->type == "indigo"){}
+    }
 
     public function payProcessing(Request $request, $id)
     {

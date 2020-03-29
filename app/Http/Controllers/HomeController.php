@@ -322,7 +322,13 @@ class HomeController extends Controller
     {
         $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();
         $fk = 0;
-        return view('profile.non-activated', compact('orders','fk'));
+
+        $user_program = UserProgram::where('user_id',Auth::user()->id)->first();
+        $current_package = Package::find($user_program->package_id);
+
+        $packages = Package::where('status',1)->where('pv','>',$current_package->pv)->get();
+
+        return view('profile.programs', compact('orders','fk','packages','current_package'));
     }
 
 }

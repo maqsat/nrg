@@ -1,16 +1,6 @@
 <aside class="left-sidebar">
     <!-- Sidebar scroll-->
     <div class="scroll-sidebar">
-        <!-- User profile -->
-{{--        <div class="user-profile">
-            <!-- User profile image -->
-            <div class="profile-img"> <img src="/monster_admin/assets/images/users/1.jpg" alt="user" /> </div>
-            <!-- User profile text-->
-            <div class="profile-text">
-                <a href="#">{{ Auth::user()->login }}</a>
-            </div>
-        </div>--}}
-        <!-- End User profile text-->
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
@@ -20,8 +10,9 @@
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/user?non_activate=1">Неактивированные</a></li>
                         <li><a href="/user">Все пользователи</a></li>
+                        <li><a href="">История Upgrade</a></li>
+                        <li><a href="/user?upgrade_request=1">Заявки на Upgrade</a></li>
                         <li><a href="/user/create">Добавить</a></li>
-                        {{--<li><a href="/shopuser">Пользователи магазина</a></li>--}}
                     </ul>
                 </li>
                 <li>

@@ -22,9 +22,20 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
+
     public function tester()
     {
-        $user  = User::find(1);
+        $id = $_GET['id'];
+        UserProgram::where('user_id',$id)->delete();
+        Processing::where('user_id',$id)->delete();
+        Counter::where('user_id',$id)->delete();
+        User::find($id)->delete();
+
+    }
+
+    public function testerActivation()
+    {
+        $user  = User::find(1867);
 
         event(new Activation($user = $user));
 
