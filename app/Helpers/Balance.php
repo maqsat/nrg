@@ -26,7 +26,7 @@ class Balance {
                 'package_id' => $package_id,
                 'status_id' => $status_id,
                 'pv' => $pv,
-                'matching_line ' => $matching_line,
+                'matching_line' => $matching_line,
                 'limited_sum' => $limited_sum,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]
