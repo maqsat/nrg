@@ -58,7 +58,13 @@ class UserController extends Controller
             elseif (isset($request->program))
                 $list = User::whereProgramId($request->program)->orderBy('id','desc')->paginate(30);
             elseif (isset($request->upgrade_request)){
-                $list = User::whereProgramId($request->program)->orderBy('id','desc')->paginate(30);
+
+                $list = User::join('orders','users.id','=','orders.user_id')
+                    ->where('orders.status',11)
+                    ->where('orders.type',"upgrade")
+                    ->select('users.*')
+                    ->paginate(30);
+                return view('user.upgrade', compact('list'));
             }
             else
                 $list = User::whereNotNull('program_id')->orderBy('id','desc')->paginate(30);
@@ -75,6 +81,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        dd('Проводятся технические работы');
         $users = \App\User::whereStatus(1)->get();
         return view('user.create', compact('users'));
     }
@@ -281,17 +288,56 @@ class UserController extends Controller
 
     public function deactivation($user_id)
     {
-        $order =  Order::where( 'type','register')
-            ->where('user_id',$user_id)
-            ->where('status' ,11)
+        if (isset($_GET['upgrade'])){
+            $order =  Order::where( 'type','upgrade')
+                ->where('user_id',$user_id)
+                ->where('status' ,11)
+                ->update(
+                    [
+                        'status' => 12,
+                    ]
+                );
+
+            return "<h2>Квитанция успешно отклонена!</h2>";
+        }else{
+            $order =  Order::where( 'type','register')
+                ->where('user_id',$user_id)
+                ->where('status' ,11)
+                ->update(
+                    [
+                        'status' => 12,
+                    ]
+                );
+
+            return "<h2>Пользователь успешно деактивирован!</h2>";
+        }
+
+    }
+
+    public function activationUpgrade($order_id)
+    {
+        $order = Order::find($order_id);
+        dd($order);
+        $user  = User::find($order->user_id);
+
+        event(new Activation($user = $user));
+
+        return "<h2>Пользователь успешно активирован!</h2>";
+    }
+
+    public function deactivationUpgrade($order_id)
+    {
+        $order =  Order::where( 'id',$order_id)
             ->update(
                 [
                     'status' => 12,
                 ]
             );
 
-        return "<h2>Пользователь успешно деактивирован!</h2>";
+        return "<h2>Квитанция успешно отклонена!</h2>";
+
     }
+
 
     public function registerValidate(Request $request)
     {

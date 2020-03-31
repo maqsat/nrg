@@ -67,6 +67,8 @@ Route::get('/webhook/{id}', 'PayController@webhook')->name('webhook');// ско�
  */
 Route::get('/activation/{user_id}', 'UserController@activation')->middleware('admin');
 Route::get('/deactivation/{user_id}', 'UserController@deactivation')->middleware('admin');
+Route::get('/upgrade-activation/{order_id}', 'UserController@activationUpgrade')->middleware('admin');
+Route::get('/upgrade-deactivation/{order_id}', 'UserController@deactivationUpgrade')->middleware('admin');
 Route::get('/progress', 'AdminController@progress')->middleware("admin");
 Route::get('/not_cash_bonuses', 'AdminController@notCashBonuses')->middleware("admin");
 Route::get('/not_cash_bonuses/{not_cash_bonuses_id}/{status}', 'AdminController@notCashBonusesAnswer')->middleware("admin");

@@ -7,7 +7,7 @@
         <!-- ============================================================== -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12"> {{ dd($orders) }}
+                <div class="col-12">
                     @if(!is_null($orders))
                         @if($orders->status == 11)
                             <div class="alert alert-warning">
@@ -35,27 +35,6 @@
 
 
                     @if(is_null($orders) or $orders->status == 12)
-                        @if(!isset($fk))
-                            @if(is_null($orders) or $orders->status != 12)<div class="alert alert-danger">
-                                <h3 class="text-danger"><i class="fa fa-check-circle"></i> Примечание!</h3> Вам необходимо оплатить регистрационный сбор и выбрать пакет. У вас есть 24 часа чтобы активировать кабинет, по истечению срока ваш кабинет удалится.
-                            </div>@endif
-                            <div class="col-lg-12 col-md-12 p-0">
-                                <div class="card">
-                                    <div class="d-flex flex-row">
-                                        <div class="p-10 bg-success">
-                                            <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3>
-                                        </div>
-                                        <div class="align-self-center m-l-20 pay_button">
-                                            <h3 class="m-b-0 text-success">${{ env('REGISTRATION_FEE') }}</h3>
-                                            <h5 class="text-muted m-b-0">Регистрационный сбор</h5>
-                                        </div>
-                                        <a href="/pay-types">
-                                            <button class="btn btn-success waves-effect waves-light m-t-15 m-b-15 m-r-10">Оплатить без БИЗНЕС ПАКЕТА</button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                         <div class="card">
                             <div class="card-block">
                                 <div class="row pricing-plan">
