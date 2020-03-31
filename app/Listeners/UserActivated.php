@@ -40,16 +40,18 @@ class UserActivated
      */
     public function handle(Activation $event)
     {
+
         $id = $event->user->id;
         $program = Program::find($event->user->program_id);
         $this_user = User::find($id);
-        if(is_null($this_user)) dd("Пользователь не найден");
 
+        /*start check*/
+        if(is_null($this_user)) dd("Пользователь не найден");
         $check_user_program = UserProgram::where('program_id', $program->id)
             ->where('user_id',$id)
             ->count();
-        if($check_user_program != 0) dd("Пользователь уже активирован");
-
+        if($check_user_program != 0) dd("Пользователь уже активирован -> $id");
+        /*end check*/
 
         /*start init and activate*/
         $inviter = User::find($event->user->inviter_id);
@@ -76,9 +78,8 @@ class UserActivated
         User::whereId($event->user->id)->update(['status' => 1]);
 
 
-
         /*set register sum */
-        Balance::changeBalance(0,$package_cost,'register',$event->user->id,$event->user->program_id,$package_id,0);
+        Balance::changeBalance($id,$package_cost,'register',$event->user->id,$event->user->program_id,$package_id,0);
 
         UserProgram::insert(
             [
@@ -107,7 +108,7 @@ class UserActivated
 
                 $item_user_program = UserProgram::where('user_id',$item)->first();
 
-                if($item_user_program->package_id != 0){
+                if(!is_null($item_user_program) && $item_user_program->package_id != 0){
                     $item_status = Status::find($item_user_program->status_id);
 
                     /*set own pv and change status*/
@@ -117,11 +118,11 @@ class UserActivated
                         $position = $event->user->position;
                     }
                     elseif(count($sponsors_list) == 2 && $item == 1){
-                        $position = User::where('id',$sponsors_list[0])->first()->position;
+                        $position = User::where('id',$sponsors_list[0])->where('status',1)->first()->position;
                     }else{
 
-                        $current_user_first = User::where('id',$sponsors_list[$key-1])->where('position',1)->first();
-                        $current_user_second =  User::where('id',$sponsors_list[$key-1])->where('position',2)->first();
+                        $current_user_first = User::where('id',$sponsors_list[$key-1])->where('position',1)->where('status',1)->first();
+                        $current_user_second =  User::where('id',$sponsors_list[$key-1])->where('position',2)->where('status',1)->first();
 
                         if(!is_null($current_user_first) && strpos($list, ','.$current_user_first->id.',') !== false) $position = 1;
                         if(!is_null($current_user_second) && strpos($list, ','.$current_user_second->id.',') !== false) $position = 2;
@@ -139,37 +140,42 @@ class UserActivated
                     //start check next status conditions and move
                     $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
                     $right_user = User::whereSponsorId($item)->wherePosition(2)->whereStatus(1)->first();
-                    $pv = Hierarchy::pvCounterAllForStatus($item);
+                    $pv = Hierarchy::pvCounterAll($item);
                     $next_status = Status::find($item_status->order+1);
+                    $prev_statuses_pv = Status::where('order','<=',$next_status->order)->sum('pv');
 
                     if(!is_null($left_user) && !is_null($right_user)){
 
                         if(!is_null($next_status)){
-                            if($next_status->pv <= $pv){
+                            if($prev_statuses_pv <= $pv){
 
                                 if(!$next_status->personal){
                                     $left_user_list = UserProgram::where('list','like','%,'.$left_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->get();
+
                                     $left_user_count = 0;
                                     foreach ($left_user_list as $left_user_item){
-                                        $left_user_item_user = User::find($left_user_item->user_id);
-                                        $left_user_item_sponsor = User::find($left_user_item_user->sponsor_id);
-                                        $left_user_item_count = UserProgram::where('user_id',$left_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
-                                        $left_user_count = $left_user_count + $left_user_item_count;
+                                        $pos = strpos($left_user_item->inviter_list, ",$item,");
+                                        if ($pos !== false)  {
+                                            $left_user_count++;
+                                        }
                                     }
-                                    $left_user_status = UserProgram::where('user_id',$left_user->id)->first();
-                                    if($left_user_status->status_id >= $item_status->id){
+                                    $left_user_status = UserProgram::where('user_id',$left_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    if($left_user_status > 0){
                                         $left_user_count++;
                                     }
+
+
                                     $right_user_list = UserProgram::where('list','like','%,'.$right_user->id.','.$item.',%')->where('status_id','>=',$item_status->id)->get();
+
                                     $right_user_count = 0;
                                     foreach ($right_user_list as  $right_user_item){
-                                        $right_user_item_user = User::find( $right_user_item->user_id);
-                                        $right_user_item_sponsor = User::find($right_user_item_user->sponsor_id);
-                                        $right_user_item_count = UserProgram::where('user_id', $right_user_item_sponsor->id)->where('list','like','%,'.$item.',%')->count();
-                                        $right_user_count =  $right_user_count +  $right_user_item_count;
+                                        $pos = strpos($right_user_item->inviter_list, ",$item,");
+                                        if ($pos !== false)  {
+                                            $right_user_count++;
+                                        }
                                     }
-                                    $right_user_status = UserProgram::where('user_id',$right_user->id)->first();
-                                    if($right_user_status->status_id >= $item_status->id){
+                                    $right_user_status = UserProgram::where('user_id',$right_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    if($right_user_status > 0){
                                         $right_user_count++;
                                     }
                                 }
@@ -266,7 +272,7 @@ class UserActivated
                         foreach ($inviter_list as $inviter_key => $inviter_item){
                             if($inviter_item != ''){
                                 $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-                                if($inviter_user_program->package_id != 1){
+                                if(!is_null($inviter_user_program) && $inviter_user_program->package_id != 1){
                                     $list_inviter_status = Status::find($inviter_user_program->status_id);
                                     if($list_inviter_status->depth_line >= $inviter_key+1){
                                         Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package->id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
@@ -285,9 +291,11 @@ class UserActivated
             }
 
             /*start set  invite_bonus  */
-            $inviter_program = UserProgram::where('user_id',$event->user->inviter_id)->first();
-            $inviter_status = Status::find($inviter_program->status_id);
-            Balance::changeBalance($inviter->id,$package->pv*$inviter_status->invite_bonus/100*env('COURSE'),'invite_bonus',$id,$program->id,$package->id,$inviter_status->id,$package->pv);
+            $inviter_program = UserProgram::where('user_id',$inviter->id)->first();
+            if(!is_null($inviter_program) && $inviter_program->package_id != 0){
+                $inviter_status = Status::find($inviter_program->status_id);
+                Balance::changeBalance($inviter->id,$package->pv*$inviter_status->invite_bonus/100*env('COURSE'),'invite_bonus',$id,$program->id,$package->id,$inviter_status->id,$package->pv);
+            }
             /*end set  invite_bonus  */
         }
 

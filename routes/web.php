@@ -25,11 +25,6 @@ Route::get('/products', 'WebController@products');
 Route::get('/cert', 'WebController@cert');
 Route::get('/faq', 'WebController@faq');
 
-/*
-************************ Test Elements ***********************
- */
-Route::get('/tester', 'TestController@tester');
-
 
 /*
 ************************ Profile ***********************
@@ -94,6 +89,13 @@ Route::resource('country', 'CountryController')->middleware("admin");
  */
 Route::get('/bot_activation', 'AutoActivationController@bot_activation');
 Route::get('/check_mentor', 'AutoActivationController@checkMentor');
+
+
+/*
+************************ Test Elements ***********************
+ */
+Route::get('/tester', 'TestController@tester');
+
 
 
 

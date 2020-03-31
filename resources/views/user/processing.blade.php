@@ -43,7 +43,7 @@
                                 <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
                             <div class="align-self-center m-l-20">
                                 <h3 class="m-b-0 text-info">{{ $week }}$</h3>
-                                <h5 class="text-muted m-b-0">В блоке</h5></div>
+                                <h5 class="text-muted m-b-0">Еженедельная  выплата</h5></div>
                         </div>
                     </div>
                 </div>

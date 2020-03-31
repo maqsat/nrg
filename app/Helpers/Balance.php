@@ -51,12 +51,13 @@ class Balance {
 
     public function getBalance($user_id)
     {
-        $sum = $this->getIncomeBalance($user_id) - $this->getBalanceOut($user_id) - $this->getWeekBalance($user_id);
+        $sum = $this->getIncomeBalance($user_id) - $this->getBalanceOut($user_id);// - $this->getWeekBalance($user_id)
         return round($sum, 2);
     }
 
     public function getWeekBalance($user_id)
     {
+        return 0;
         $sum = Processing::whereUserId($user_id)->whereIn('status', ['turnover_bonus','matching_bonus'])->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('sum');
         return round($sum, 2);
     }
