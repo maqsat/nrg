@@ -200,6 +200,8 @@
                                                     Матчинг бонус
                                                 @elseif($item->status == 'request')
                                                     Запрос на списание вернул ошибку
+                                                @elseif($item->status == 'register')
+                                                    Регистрация
                                                 @elseif($item->status == 'out')
                                                     Выведено
                                                 @else

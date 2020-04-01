@@ -181,14 +181,23 @@ class UserActivated
                                 }
                                 else{
                                     $left_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
-                                            ->where('list','like','%,'.$left_user->id.','.$item.',%')
-                                            ->where('users.inviter_id',$item)
-                                            ->count() + 1;
+                                        ->where('list','like','%,'.$left_user->id.','.$item.',%')
+                                        ->where('users.inviter_id',$item)
+                                        ->count();
+                                    $left_user_status = UserProgram::where('user_id',$left_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    if($left_user_status > 0){
+                                        $left_user_count++;
+                                    }
 
                                     $right_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
-                                            ->where('list','like','%,'.$right_user->id.','.$item.',%')
-                                            ->where('users.inviter_id',$item)
-                                            ->count() + 1;
+                                        ->where('list','like','%,'.$right_user->id.','.$item.',%')
+                                        ->where('users.inviter_id',$item)
+                                        ->count();
+
+                                    $right_user_status = UserProgram::where('user_id',$right_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
+                                    if($right_user_status > 0){
+                                        $right_user_count++;
+                                    }
                                 }
 
                                 if($left_user_count == 0 or $right_user_count ==0){
