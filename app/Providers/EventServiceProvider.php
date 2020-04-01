@@ -29,6 +29,10 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\BonusDistribution'
         ],
 
+        'App\Events\Upgrade' => [
+            'App\Listeners\UserUpgraded'
+        ],
+
     ];
 
     /**
