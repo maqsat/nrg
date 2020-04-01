@@ -23,54 +23,7 @@
             <!-- Start Page Content -->
             <!-- ============================================================== -->
 
-            <div class="row">
-                <!-- Column -->
-                <div class="col-lg-3 col-md-3">
-                    <div class="card">
-                        <div class="d-flex flex-row">
-                            <div class="p-10 bg-info">
-                                <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
-                            <div class="align-self-center m-l-20">
-                                <h3 class="m-b-0 text-info">{{ $balance }}$/{{ round($balance*385) }} ₸</h3>
-                                <h5 class="text-muted m-b-0">Доступная сумма</h5></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="card">
-                        <div class="d-flex flex-row">
-                            <div class="p-10 bg-primary">
-                                <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
-                            <div class="align-self-center m-l-20">
-                                <h3 class="m-b-0 text-info">{{ $week }}$/{{ round($week*385) }} ₸</h3>
-                                <h5 class="text-muted m-b-0">В блоке</h5></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="card">
-                        <div class="d-flex flex-row">
-                            <div class="p-10 bg-success">
-                                <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
-                            <div class="align-self-center m-l-20">
-                                <h3 class="m-b-0 text-success">{{ $out }}$/{{ round($out*385) }} ₸</h3>
-                                <h5 class="text-muted m-b-0">Выведено</h5></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="card">
-                        <div class="d-flex flex-row">
-                            <div class="p-10 bg-inverse">
-                                <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
-                            <div class="align-self-center m-l-20">
-                                <h3 class="m-b-0">{{ $all }}$/{{ round($all*385) }} ₸</h3>
-                                <h5 class="text-muted m-b-0">Оборот</h5></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Column -->
-            </div>
+            @include('profile.processing.main-balance')
 
             <div class="row">
                 <div class="col-12">
@@ -83,7 +36,7 @@
                                             <div class="card-header" role="tab" id="headingOne{{$key}}">
                                                 <h5 class="mb-0">
                                                     <a data-toggle="collapse" data-parent="#accordion2" href="#collapseOne{{$key}}" aria-expanded="true" aria-controls="collapseOne{{$key}}">
-                                                       <b>{{ str_replace('-','.',$weeks[$key+1]) }} – {{ str_replace('-','.',$item) }} @if($key == 0) (В блоке) @endif</b>
+                                                       <b>{{ str_replace('-','.',$weeks[$key+1]) }} – {{ str_replace('-','.',$item) }} @if($key == 0) (На этой неделе) @endif</b>
                                                     </a>
                                                 </h5>
                                             </div>

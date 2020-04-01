@@ -57,7 +57,11 @@
                                 </table>
                             </div>
 
-                            {{ $list->links() }}
+                            @if(isset($_GET['own']))
+                                {{ $list->appends(['own' => $_GET['own']])->links() }}
+                            @else
+                                {{ $list->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>

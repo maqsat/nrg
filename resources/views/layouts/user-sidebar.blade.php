@@ -1,16 +1,5 @@
 <aside class="left-sidebar">
-    <!-- Sidebar scroll-->
     <div class="scroll-sidebar">
-        <!-- User profile -->
-    {{--      <div class="user-profile">
-              <!-- User profile image -->
-              <div class="profile-img"> <img src="/monster_admin/assets/images/users/1.jpg" alt="user" /> </div>
-              <!-- User profile text-->
-              <div class="profile-text">
-                  <a href="#">{{ Auth::user()->login }}</a>
-              </div>
-          </div>--}}
-    <!-- End User profile text-->
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
@@ -50,7 +39,7 @@
                         </a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/user_processing">{{ __('app.processing') }}</a></li>
-                            {{--<li><a href="/user_processing?weeks=1">По неделям</a></li>--}}
+                            <li><a href="/user_processing?weeks=1">Еженедельная  выплата</a></li>
                             {{--<li><a href="/rang-history">История ранга</a></li>--}}
                         </ul>
                     </li>
