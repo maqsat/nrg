@@ -202,8 +202,8 @@ class HomeController extends Controller
     public function hierarchy()
     {
         /* old*/
-        /*$tree = Hierarchy::getTree(Auth::user()->id);
-        return view('profile.hierarchy', compact('tree'));*/
+        $tree = Hierarchy::getTree(Auth::user()->id);
+        return view('profile.hierarchy', compact('tree'));
 
         /* new*/
 
