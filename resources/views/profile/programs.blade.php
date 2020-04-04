@@ -8,6 +8,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
+
+
                     @if(!is_null($orders))
                         @if($orders->status == 11)
                             <div class="alert alert-warning">

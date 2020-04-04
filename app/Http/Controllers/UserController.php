@@ -23,6 +23,8 @@ use App\Models\Program;
 use App\Models\MobileApp\Course;
 use App\Models\MobileApp\CompletedCourse;
 use App\Events\Activation;
+use App\Events\Upgrade;
+
 
 use Illuminate\Http\Request;
 use JWTAuth;
@@ -81,7 +83,6 @@ class UserController extends Controller
      */
     public function create()
     {
-        dd('Проводятся технические работы');
         $users = \App\User::whereStatus(1)->get();
         return view('user.create', compact('users'));
     }
@@ -317,12 +318,15 @@ class UserController extends Controller
     public function activationUpgrade($order_id)
     {
         $order = Order::find($order_id);
-        dd($order);
-        $user  = User::find($order->user_id);
 
-        event(new Activation($user = $user));
-
-        return "<h2>Пользователь успешно активирован!</h2>";
+        event(new Upgrade($order = $order));
+        Order::where( 'id',$order_id)
+            ->update(
+                [
+                    'status' => 4,
+                ]
+            );
+        return "<h2>Success upgraded!</h2>";
     }
 
     public function deactivationUpgrade($order_id)

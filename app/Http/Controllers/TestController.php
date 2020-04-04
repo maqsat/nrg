@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Activation;
+
 use App\Facades\Balance;
 use App\Models\Counter;
 use App\Models\Order;
@@ -16,7 +16,7 @@ use App\Models\Processing;
 use App\Models\Status;
 use App\Models\Package;
 use App\Facades\Hierarchy;
-
+use App\Events\Activation;
 use App\Events\ShopTurnover;
 use Illuminate\Http\Request;
 
@@ -25,11 +25,14 @@ class TestController extends Controller
 
     public function tester()
     {
-        $id = $_GET['id'];
-        UserProgram::where('user_id',$id)->delete();
-        Processing::where('user_id',$id)->delete();
-        Counter::where('user_id',$id)->delete();
-        User::find($id)->delete();
+        $users = User::where('package_id',3)->get();
+        foreach ($users as $user){
+            if ($user->package_id != $user->status_id){
+                echo $user->id." => ".$user->package_id." => ".$user->status_id."<br>";
+                $user->status_id = 3;
+                $user->save();
+            }
+        }
 
     }
 

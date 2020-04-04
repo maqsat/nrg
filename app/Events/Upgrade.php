@@ -15,13 +15,20 @@ class Upgrade
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * The authenticated user.
      *
-     * @return void
+     * @var \Illuminate\Contracts\Auth\Authenticatable
      */
-    public function __construct()
+    public $order;
+
+
+    /**
+     * Activation constructor.
+     * @param $order
+     */
+    public function __construct($order)
     {
-        //
+        $this->order = $order;
     }
 
     /**

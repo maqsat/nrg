@@ -114,8 +114,8 @@
                                 {{ $list->appends(['program' => $_GET['program']])->links() }}
                             @elseif(isset($_GET['non_activate']))
                                 {{ $list->appends(['non_activate' => $_GET['non_activate']])->links() }}
-                            @elseif(isset($_GET['non_activate']))
-                                {{ $list->appends(['non_activate' => $_GET['s']])->links() }}
+                            @elseif(isset($_GET['s']))
+                                {{ $list->appends(['s' => $_GET['s']])->links() }}
                             @else
                                 {{ $list->links() }}
                             @endif

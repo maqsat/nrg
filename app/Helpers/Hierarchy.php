@@ -203,10 +203,11 @@ class Hierarchy {
             else $pos = 'R:';
 
             if ($child){
-                $render[$key]['name'] = $pos.$item->name;
+                $render[$key]['value'] = $pos.$item->name;
+                $render[$key]['parent'] = $id;
                 $render[$key]['children'] = $this->getNewTree($item->id);
             }
-            else $render[$key]['name'] = $pos.$item->name;
+            else $render[$key]['value'] = $pos.$item->name;
         }
 
         return $render;

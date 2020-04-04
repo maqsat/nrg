@@ -115,7 +115,7 @@ class HomeController extends Controller
         }
 
 
-        $list = Processing::whereUserId(Auth::user()->id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
+        $list = Processing::whereUserId(Auth::user()->id)->where('pv','!=','0')->orderBy('created_at','desc')->paginate(100);
 
 
         return view('profile.processing.processing', compact('list', 'balance', 'all', 'out','week','activation'));
@@ -202,16 +202,22 @@ class HomeController extends Controller
     public function hierarchy()
     {
         /* old*/
-        $tree = Hierarchy::getTree(Auth::user()->id);
-        return view('profile.hierarchy', compact('tree'));
+        /*$tree = Hierarchy::getTree(Auth::user()->id);
+        return view('profile.hierarchy', compact('tree'));*/
 
         /* new*/
-        return view('profile.hierarchy1');
+
+        $data = [];
+        $data['value'] = Auth::user()->name;
+        $data['children'] = Hierarchy::getNewTree(Auth::user()->id);
+        $data = json_encode($data);
+
+        return view('profile.hierarchy1', compact('data'));
     }
 
     public function hierarchyTree($id)
     {
-        return response()->json(['name' => Auth::user()->name, 'children' => Hierarchy::getNewTree(Auth::user()->id)]);
+        return response()->json(['value' => Auth::user()->name, 'children' => Hierarchy::getNewTree(Auth::user()->id)]);
     }
 
     public function team(Request $request)
@@ -320,7 +326,8 @@ class HomeController extends Controller
 
     public function programs()
     {
-        $orders = Order::where('user_id',Auth::user()->id)->where('type','upgrade')->orderBy('id','desc')->first();
+        dd('Проводятся технические работы');
+        $orders = Order::where('user_id',Auth::user()->id)->where('type','upgrade')->where('status','!=',4)->orderBy('id','desc')->first();
 
         $user_program = UserProgram::where('user_id',Auth::user()->id)->first();
         $current_package = Package::find($user_program->package_id);

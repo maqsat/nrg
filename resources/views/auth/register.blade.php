@@ -1,7 +1,5 @@
 @extends('layouts.template')
 
-{{ dd('Проводятся технические работы') }}
-
 @section('content')
     <section id="wrapper" class="login-register register-padding"  style="background-image:url(/nrg/bg.jpg);">
         <div class="row">

@@ -1,51 +1,35 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style type="text/css">
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Иерархия</title>
+    <style>
+        svg{
+            display: block;
+            margin: auto;
+        }
 
-    .node {
-        cursor: pointer;
-    }
+        .node circle{
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 3px;
+        }
 
-    .overlay{
-        background-color:#EEE;
-    }
+        .node text{ font: 12px sans-serif; }
 
-    .node circle {
-        fill: #fff;
-        stroke: steelblue;
-        stroke-width: 1.5px;
-    }
-
-    .node text {
-        font-size:10px;
-        font-family:sans-serif;
-    }
-
-    .link {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 1.5px;
-    }
-
-    .templink {
-        fill: none;
-        stroke: red;
-        stroke-width: 3px;
-    }
-
-    .ghostCircle.show{
-        display:block;
-    }
-
-    .ghostCircle, .activeDrag .ghostCircle{
-        display: none;
-    }
-
-</style>
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-@stack('scripts')
+        .link{
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
 <body>
-    @yield('content')
+<!-- partial:index.partial.html -->
+@yield('content')
+<!-- partial -->
+<script src='/js/d3.min.js'></script>
+@stack('scripts')
 </body>
 </html>
+
