@@ -88,7 +88,7 @@ class HomeController extends Controller
             return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses','quickstart_date'));
         }
         else{
-            $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->orderBy('id','desc')->first();
+            $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->where('payment','manual')->orderBy('id','desc')->first();
 
             return view('profile.non-activated', compact('orders'));
         }

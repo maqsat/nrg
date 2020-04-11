@@ -53,7 +53,7 @@ Route::get('/rang-history', 'UserController@rangHistory')->middleware("activatio
  */
 Route::get('/pay-types', 'PayController@payTypes')->middleware("auth");
 Route::get('/pay-prepare', 'PayController@payPrepare')->middleware("auth");
-Route::post('/pay-processing/{id}', 'PayController@payProcessing');
+Route::any('/pay-processing/{id}', 'PayController@payProcessing');
 Route::get('/paypost', 'PayController@paypostSend')->name('paypost');// скоро нужно удалить
 Route::get('/webhook/{id}', 'PayController@webhook')->name('webhook');// скоро нужно удалить
 

@@ -137,6 +137,9 @@ class UserActivated
 
                     //start check next status conditions and move
                     $pv = Hierarchy::pvCounterAll($item);
+                    if($item_user_program->package_id == 3) $pv =  $pv + 500;
+                    if($item_user_program->package_id == 4) $pv =  $pv + 2500 + 500;
+
                     $next_status = Status::find($item_status->order+1);
                     $prev_statuses_pv = Status::where('order','<=',$next_status->order)->sum('pv');
 

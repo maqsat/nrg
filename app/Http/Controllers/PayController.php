@@ -68,10 +68,17 @@ class PayController extends Controller
                 ],
                 ['amount' => $cost, 'package_id' => $package_id]
             );
+
+            $user = User::find(Auth::user()->id);
+            $user->package_id = $package_id;
+            $user->save();
         }
 
 
         //User::find(Auth::user()->id)->update(['package_id' => $package_id]);
+
+        $order_id = $order->id;
+        $message = "Вы собираетесь оплатить $cost$";
 
         if($request->type == "manual"){
             return view('processing.manual', compact('order', 'cost'));
@@ -80,12 +87,49 @@ class PayController extends Controller
         if($request->type == "robokassa"){}
         if($request->type == "payeer"){}
         if($request->type == "paybox"){}
-        if($request->type == "indigo"){}
+        if($request->type == "indigo"){
+
+            $body = json_encode([
+                'operator_id' => config('pay.indigo_operator_id'),
+                'order_id' => $order_id,
+                'amount' => intval($cost),
+                'expiration_date' => date("Y-m-d H:i:s", time() + 3600 * 24),
+                'description' => $message,
+                'success_url' => 'https://nrg-max.kz/home?success=1',
+                'fail_url' => 'https://nrg-max.kz/home?fail=1',
+                'result_url' => "https://nrg-max.kz/pay-processing/$order_id",
+            ]);
+
+            $signature = md5($body . config('pay.indigo_key'));
+
+            $data = [
+                'body' => $body,
+                'signature' => $signature
+            ];
+
+            $url = 'https://billing.indigo24.com/api/v1/payment';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/x-www-form-urlencoded","Accept: application/json"));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+
+            if (!$response) dd("Error 1. Свяжитесь с Администратором, номер заказа  $order_id");
+
+            $response = json_decode($response);
+
+            if (isset($response->errors)) dd("Error 1. Свяжитесь с Администратором, номер заказа  $order_id");
+
+            return redirect($response->redirect_url);
+        }
     }
 
     public function payProcessing(Request $request, $id)
     {
         $order = Order::find($id);
+        $user_id = $order->user_id;
 
         if($order->payment == 'manual'){
             if ($request->hasFile('scan')) {
@@ -106,6 +150,26 @@ class PayController extends Controller
             }
 
             return redirect()->back()->with('status', 'Вышла ошибка при оплате квитанции');
+        }
+        if($order->payment == 'indigo'){
+
+            $body = $request->body;
+            $signature = $request->signature;
+
+            $mysignature = md5($body . config('pay.indigo_key'));
+
+            if ($signature != $mysignature) return;
+
+            $data = json_decode($body);
+            if (!$data) return;
+
+            if ($data->status != 'successful') return;
+
+            $order->status = 4;
+            $order->save();
+
+            $user  = User::find($user_id);
+            event(new Activation($user = $user));
         }
 
 
