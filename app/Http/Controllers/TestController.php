@@ -25,14 +25,11 @@ class TestController extends Controller
 
     public function tester()
     {
-        $users = User::where('package_id',3)->get();
-        foreach ($users as $user){
-            if ($user->package_id != $user->status_id){
-                echo $user->id." => ".$user->package_id." => ".$user->status_id."<br>";
-                $user->status_id = 3;
-                $user->save();
-            }
-        }
+
+        $user  = User::find(1867);
+
+        event(new Activation($user = $user));
+
 
     }
 

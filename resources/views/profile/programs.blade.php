@@ -43,6 +43,8 @@
 
                                     @if(count($packages) == 0)
                                         <h3 class="text-success"><i class="fa fa-exclamation-triangle"></i> У вас самый большой пакет!</h3>
+                                    @elseif($diff > 0)
+                                        <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> На апгрейд даеться ровно 30 дней с момента регистрации!</h3>
                                     @else
                                         @foreach($packages as $item)
                                             <div class="col-md-3 col-xs-12 col-sm-6 no-padding">

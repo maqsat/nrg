@@ -326,15 +326,17 @@ class HomeController extends Controller
 
     public function programs()
     {
-        dd('Проводятся технические работы');
         $orders = Order::where('user_id',Auth::user()->id)->where('type','upgrade')->where('status','!=',4)->orderBy('id','desc')->first();
 
         $user_program = UserProgram::where('user_id',Auth::user()->id)->first();
+
         $current_package = Package::find($user_program->package_id);
 
         $packages = Package::where('status',1)->where('pv','>',$current_package->pv)->get();
 
-        return view('profile.programs', compact('orders','packages','current_package'));
+        $diff = Carbon::createFromFormat('Y-m-d H:i:s', $user_program->created_at)->diffInDays(Carbon::now());
+
+        return view('profile.programs', compact('orders','packages','current_package','diff'));
     }
 
 }
