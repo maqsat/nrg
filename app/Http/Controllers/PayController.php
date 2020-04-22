@@ -37,7 +37,8 @@ class PayController extends Controller
             $package = Package::find($request->package);
             $package_id  = $package->id;
             $current_package = Package::find($request->upgrade);
-            $cost = $package->cost - $current_package->cost;
+            if (is_null($current_package))  $cost = $package->cost - 0;
+            else $cost = $package->cost - $current_package->cost;
 
             $order =  Order::updateOrCreate(
                 [

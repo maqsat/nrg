@@ -332,7 +332,13 @@ class HomeController extends Controller
 
         $current_package = Package::find($user_program->package_id);
 
-        $packages = Package::where('status',1)->where('pv','>',$current_package->pv)->get();
+        $packages_query = Package::where('status',1);
+
+        if(!is_null($current_package)){
+            $packages_query->where('pv','>',$current_package->pv);
+        }
+
+        $packages = $packages_query->get();
 
         $diff = Carbon::createFromFormat('Y-m-d H:i:s', $user_program->created_at)->diffInDays(Carbon::now());
 

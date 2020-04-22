@@ -14,6 +14,19 @@
                                 <div class="card-block">
                                     <h4 class="card-title">Детали оплаты</h4>
                                     <div class="table-responsive">
+                                        @php
+                                            if(!is_null($current_package)) {
+                                                $current_package_cost = $current_package->cost;
+                                                $current_package_title = $current_package->title;
+                                                $current_package_id = $current_package->id;
+                                            }
+                                            else  {
+                                                $current_package_cost = 0;
+                                                $current_package_title = 'Без пакета';
+                                                $current_package_id = 0;
+                                            }
+
+                                        @endphp
                                         <table class="table stylish-table">
                                             <thead>
                                             <tr>
@@ -27,11 +40,11 @@
                                             <tr>
                                                 <td><span class="round"><i class="ti-shopping-cart"></i></span></td>
                                                 <td>
-                                                    <h6><a href="javascript:void(0)" class="link">Текущий пакет {{ $current_package->title }}</a></h6><small class="text-muted">Package ID : {{ $current_package->id }}  </small></td>
+                                                    <h6><a href="javascript:void(0)" class="link">Текущий пакет {{ $current_package_title }}</a></h6><small class="text-muted">Package ID : {{ $current_package_id}}  </small></td>
                                                 <td>
                                                     <h5>1</h5></td>
                                                 <td>
-                                                    <h5>${{ $current_package->cost }}</h5></td>
+                                                    <h5>${{ $current_package_cost }}</h5></td>
                                             </tr>
                                             @if(!is_null($package))
                                                 <tr>
@@ -51,8 +64,8 @@
                                                 </td>
                                                 @if(!is_null($package))
                                                     <td><h5>1</h5></td>
-                                                    <td><h5>${{ $package->cost - $current_package->cost }}</h5></td>
-                                                    <?php $all_cost = $package->cost - $current_package->cost ?>
+                                                    <td><h5>${{ $package->cost - $current_package_cost }}</h5></td>
+                                                    <?php $all_cost = $package->cost - $current_package_cost ?>
                                                 @endif
                                             </tr>
                                             </tbody>
@@ -74,7 +87,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Скан квитанции</h4>
                                             <p class="card-text">Прикрепите Скан квитанции к форме</p>
-                                            <a href="/pay-prepare?type=manual&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }} @endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=manual&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }} @endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -86,7 +99,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">PayPost</h4>
                                             <p class="card-text">В карте должен быть подключен 3D secure</p>
-                                            <a href="/pay-prepare?type=paypost&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=paypost&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -98,7 +111,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Robokassa</h4>
                                             <p class="card-text">Поддерживает все карты Visa и Master Card</p>
-                                            <a href="/pay-prepare?type=robokassa&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=robokassa&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -110,7 +123,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Payeer</h4>
                                             <p class="card-text">Оплачивайте через электронный кашелек</p>
-                                            <a href="/pay-prepare?type=payeer&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=payeer&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -122,7 +135,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Paybox</h4>
                                             <p class="card-text">Поддерживает все карты Visa и Master Card</p>
-                                            <a href="/pay-prepare?type=paybox&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=paybox&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -134,7 +147,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">indigo24</h4>
                                             <p class="card-text">Отечественный электронный кашелек</p>
-                                            <a href="/pay-prepare?type=indigo&upgrade={{$current_package->id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=indigo&upgrade={{$current_package_id}}&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->

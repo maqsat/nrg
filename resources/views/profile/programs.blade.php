@@ -34,7 +34,7 @@
                             </div>
                         @endif
                     @endif
-                    
+
                     @if(is_null($orders) or $orders->status != 11)
                         <div class="card">
                             <div class="card-block">
@@ -46,21 +46,34 @@
                                         <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> На апгрейд даеться ровно 30 дней с момента регистрации!</h3>--}}
                                     @else
                                         @foreach($packages as $item)
+                                            @php
+                                                if(!is_null($current_package)) {
+                                                    $current_package_cost = $current_package->cost;
+                                                    $current_package_pv = $current_package->pv;
+                                                    $current_package_id = $current_package->id;
+                                                }
+                                                else  {
+                                                    $current_package_cost = 0;
+                                                    $current_package_pv = 0;
+                                                    $current_package_id = 0;
+                                                }
+
+                                            @endphp
                                             <div class="col-md-3 col-xs-12 col-sm-6 no-padding">
                                                 <div class="pricing-box   @if($item->id == 3) featured-plan @endif">
                                                     <div class="pricing-body b-r">
                                                         <div class="pricing-header">
                                                             @if($item->id == 3) <h4 class="price-lable text-white bg-warning"> Popular</h4>@endif
                                                             <h4 class="text-center">{{ $item->title }}</h4>
-                                                            <h2 class="text-center"><span class="price-sign">$</span>{{ $item->cost-$current_package->cost }}</h2>
+                                                            <h2 class="text-center"><span class="price-sign">$</span>{{ $item->cost-$current_package_cost }}</h2>
                                                         </div>
                                                         <div class="price-table-content">
-                                                            <div class="price-row"><i class="fa fa-product-hunt"></i> {{ $item->pv-$current_package->pv }} PV</div>
+                                                            <div class="price-row"><i class="fa fa-product-hunt"></i> {{ $item->pv-$current_package_pv }} PV</div>
                                                             <div class="price-row"><i class="fa fa-money"></i> {{ $item->income }}</div>
                                                             <div class="price-row"><i class="fa fa-star"></i> {{ $item->statusName->title }}</div>
                                                             <div class="price-row"><i class="fa fa-shopping-basket"></i> {{ $item->goods }}</div>
                                                             <div class="price-row">
-                                                                <a href="/pay-types?package={{ $item->id }}&upgrade={{$current_package->id}}">
+                                                                <a href="/pay-types?package={{ $item->id }}&upgrade={{$current_package_id}}">
                                                                     <button class="btn btn-success waves-effect waves-light m-t-20">Выбрать пакет и перейти на оплату</button>
                                                                 </a>
                                                             </div>

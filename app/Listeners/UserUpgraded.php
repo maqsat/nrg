@@ -50,7 +50,9 @@ class UserUpgraded
         $new_package = Package::find($event->order->package_id);
         $old_package = Package::find($this_user->package_id);
         $package_cost = $event->order->amount;
-        $upgrade_pv = $new_package->pv - $old_package->pv;
+
+        if(is_null($old_package)) $upgrade_pv = $new_package->pv - 0;
+        else $upgrade_pv = $new_package->pv - $old_package->pv;
 
         Balance::changeBalance($id,$package_cost,'upgrade',$id,$program->id,$new_package->id,0);
 
