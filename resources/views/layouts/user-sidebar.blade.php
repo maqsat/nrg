@@ -72,22 +72,12 @@
                         </ul>
                     </li>--}}
                     <li>
-                        <a href="/notifications" aria-expanded="false">
-                            <i class="mdi mdi-bell"></i>
-                            <span class="hide-menu">Уведомлении</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/profile" aria-expanded="false">
-                            <i class="mdi mdi-account"></i>
-                            <span class="hide-menu">{{ __('app.profile') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/faq-profile" aria-expanded="false">
-                            <i class="mdi mdi-comment-alert"></i>
-                            <span class="hide-menu">База знаний</span>
-                        </a>
+                        <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Дополнительно</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/profile">{{ __('app.profile') }}</a></li>
+                            <li><a href="/notifications">Уведомлении</a></li>
+                            <li><a href="/faq-profile">База знаний</a></li>
+                        </ul>
                     </li>
                     {{--<li>
                         <a href="/marketing" aria-expanded="false">
