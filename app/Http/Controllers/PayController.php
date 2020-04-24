@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserProgram;
 use DB;
 use Auth;
 use Storage;
@@ -27,6 +28,15 @@ class PayController extends Controller
             $current_package = Package::find($request->upgrade);
             return view('processing.types-for-upgrade',compact('package','current_package'));
         }
+        elseif (isset($request->basket)){
+            $basket = Basket::find($request->basket);
+            $all_cost = DB::table('basket_good')
+                ->join('products','basket_good.good_id','=','products.id')
+                ->where(['basket_id' => $basket->id])
+                ->sum(DB::raw('basket_good.quantity*products.partner_cost'));//['products.*','basket_good.quantity']
+
+            return view('processing.types-for-shop',compact('basket','all_cost'));
+        }
         else return view('processing.types',compact('package'));
     }
 
@@ -50,6 +60,26 @@ class PayController extends Controller
                 ],
                 ['amount' => $cost, 'package_id' => $package_id]
             );
+        }
+        elseif(isset($request->basket)){
+
+            $cost = DB::table('basket_good')
+                ->join('products','basket_good.good_id','=','products.id')
+                ->where(['basket_id' => $request->basket])
+                ->sum(DB::raw('basket_good.quantity*products.partner_cost'));//['products.*','basket_good.quantity']
+
+            $order =  Order::updateOrCreate(
+                [
+                    'type' => 'shop',
+                    'status' => 0,
+                    'payment' => $request->type,
+                    'uuid' => 0,
+                    'user_id' => Auth::user()->id,
+                    'basket_id' => $request->basket
+                ],
+                ['amount' => $cost, 'package_id' => 0]
+            );
+
         }
         else{
             if(!is_null($request->package)){

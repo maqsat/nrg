@@ -66,7 +66,7 @@ class UserActivated
             $package_cost = $package->cost + env('REGISTRATION_FEE');
         }
 
-        if(!is_null($event->user->status_id) && $event->user->status_id != 0){
+        if(!is_null($event->user->status_id) && $event->user->status_id != 0  && $status_id < $event->user->status_id){
             $status_id = $event->user->status_id;
         }
 

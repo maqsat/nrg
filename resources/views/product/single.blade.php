@@ -66,9 +66,9 @@
                 <div class="col-md-7">
                     <div class="info_wrapper">
                         <h4 class="product_title">{{ $product->title }}</h4>
-                        <div class="price">Цена:<span style="font-weight:bold;color:#0275d8;">{{ $product->partner_cost }}$</span></div>
-                        <div class="cv">CV:<span style="font-weight:bold;color:red;">{{ $product->cv }}cv</span></div>
-                        <div class="cv">QV:<span style="font-weight:bold;color:red;">{{ $product->qv }}qv</span></div>
+                        <div class="price">Цена:<span style="font-weight:bold;color:#0275d8;"> {{ $product->partner_cost }}$</span></div>
+                        {{--<div class="cv">CV:<span style="font-weight:bold;color:red;">{{ $product->cv }}cv</span></div>--}}
+                        <div class="cv">PV:<span style="font-weight:bold;color:red;"> {{ $product->pv }}pv</span></div>
                         <div class="description">{!! $product->description !!}</div>
                         <button onclick="addBasket({{ $product->id }},{{ Auth::user()->id }},true)" id="btn{{$product->id}}" class="buy_button btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-shopping-cart"></i></span>Купить</button>
                     </div>
@@ -121,8 +121,8 @@
                     if(data.status == true){
                         $.toast({
                             heading: 'Товар добавлен в корзину!',
-                            text: 'Товар добавлен в корзину! Что бы оплатить перейдите в корзину',
-                            position: 'bottom-right',
+                            text: 'Товар добавлен в корзину! Что бы оплатить перейдите в  <a href="/basket">корзину</a>',
+                            position: 'top-right',
                             loaderBg:'#ff6849',
                             icon: 'success',
                             hideAfter: 30000,

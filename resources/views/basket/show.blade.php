@@ -24,7 +24,7 @@
                                                 <br/> {{ \App\Models\City::whereId(Auth::user()->city_id)->first()->title }},{{ \App\Models\Country::whereId(Auth::user()->country_id)->first()->title }}
                                                 <br/> {{ Auth::user()->post_index }}, {{ Auth::user()->address }}
                                                 <br/> {{ Auth::user()->number }}</p>
-                                        @endif
+                                            @endif
                                     </address>
                                 </div>
                                 <div class="pull-right text-right">
@@ -43,11 +43,11 @@
                                             <th class="text-center">#</th>
                                             <th>Наименование</th>
                                             <th class="text-right">Количество</th>
-                                            <th class="text-right">CV</th>
-                                            <th class="text-right">QV</th>
+                                           {{-- <th class="text-right">CV</th>--}}
+                                            <th class="text-right">PV</th>
                                             <th class="text-right">Цена за одного</th>
-                                            <th class="text-right">Сумма CV</th>
-                                            <th class="text-right">Сумма QV</th>
+                                            {{--<th class="text-right">Сумма CV</th>--}}
+                                            <th class="text-right">Сумма PV</th>
                                             <th class="text-right">Сумма</th>
                                             <th class="text-right">Удалить</th>
                                         </tr>
@@ -55,8 +55,8 @@
                                         <tbody>
                                         <?php
                                         $all = 0;
-                                        $all_cv = 0;
-                                        $all_qv = 0;
+                                       /* $all_cv = 0;*/
+                                        $all_pv = 0;
                                         ?>
                                         @foreach($goods as $key => $item)
                                             <tr>
@@ -75,11 +75,11 @@
                                                         </button>
                                                     @endif
                                                 </td>
-                                                <td class="text-right"> {{ $item->cv }} cv </td>
-                                                <td class="text-right"> {{ $item->qv }} qv </td>
+                                               {{-- <td class="text-right"> {{ $item->cv }} cv </td>--}}
+                                                <td class="text-right"> {{ $item->pv }} pv </td>
                                                 <td class="text-right"> ${{ $item->partner_cost }} </td>
-                                                <td  class="text-right"><span id="cv{{$item->id}}">{{ $item->cv*$item->quantity }}</span>cv </td>
-                                                <td  class="text-right"><span id="qv{{$item->id}}">{{ $item->qv*$item->quantity }}</span>qv </td>
+                                                {{--<td  class="text-right"><span id="cv{{$item->id}}">{{ $item->cv*$item->quantity }}</span>cv </td>--}}
+                                                <td  class="text-right"><span id="pv{{$item->id}}">{{ $item->pv*$item->quantity }}</span>pv </td>
                                                 <td class="text-right"> $<span id="product_sum{{$item->id}}">{{ $item->partner_cost*$item->quantity }} </span></td>
                                                 <td class="text-right">
                                                     <button style="background:transparent;border:none;" onclick="addBasket(this,{{ $item->id }},{{ Auth::user()->id }},{{$key}},false,false,true)">
@@ -89,8 +89,8 @@
                                             </tr>
                                             <?php
                                             $all += $item->partner_cost*$item->quantity;
-                                            $all_cv += $item->cv*$item->quantity;
-                                            $all_qv += $item->qv*$item->quantity;
+                                           /* $all_cv += $item->cv*$item->quantity;*/
+                                            $all_pv += $item->pv*$item->quantity;
                                             ?>
                                         @endforeach
                                         </tbody>
@@ -100,18 +100,18 @@
                             <div class="col-md-12">
                                 <div class="pull-right m-t-30 text-right">
                                     <p>Сумма: $<span id="total_sum">{{ $all }}</span></p>
-                                    <p>Доставка : $8 </p>
-                                    <p>Сумма CV: <span id="all_cv">{{ $all_cv }}</span> cv</p>
-                                    <p>Сумма QV: <span id="all_qv">{{$all_qv}}</span> qv</p>
-                                    <p>Итого в тенге: <span id="total_sum_tg">{{ ($all+8)*385 }}</span> ₸</p>
+                                  {{--  <p>Доставка : $8 </p>--}}
+                                   {{-- <p>Сумма CV: <span id="all_cv">{{ $all_cv }}</span> cv</p>--}}
+                                    <p>Сумма PV: <span id="all_pv">{{$all_pv}}</span> pv</p>
+                                   {{-- <p>Итого в тенге: <span id="total_sum_tg">{{ ($all+0)*385 }}</span> ₸</p>--}}
                                     <hr>
-                                    <h3><b>Итого :</b> $<span id="itogo">{{ $all+8 }}</span></h3>
+                                    <h3><b>Итого :</b> $<span id="itogo">{{ $all+0 }}</span></h3>
                                 </div>
                                 <div class="clearfix"></div>
                                 <hr>
                                 @if(!isset($_GET['id']))
                                     <div class="text-right">
-                                        <a class="btn btn-danger" href="/paypost?shop=1"> Оплатить </a>
+                                        <a class="btn btn-danger" href="/pay-types?basket={{ $basket->id }}"> Оплатить </a>
                                     </div>
                                 @endif
                             </div>
@@ -165,15 +165,15 @@
                         /*quantity of product*/
                         $("#q" + data["goods"][row_order]["id"]).html(data["quantity"]);
                         /*total cv of product*/
-                        $("#cv" + data["goods"][row_order]["id"]).html(data["product_total_cv"]);
+                      /*  $("#cv" + data["goods"][row_order]["id"]).html(data["product_total_cv"]);*/
                         /*total qv of product*/
-                        $("#qv" + data["goods"][row_order]["id"]).html(data["product_total_qv"]);
+                        $("#pv" + data["goods"][row_order]["id"]).html(data["product_total_pv"]);
                         /*total price of product*/
                         $("#product_sum" + data["goods"][row_order]["id"]).html(data["product_total_sum"]);
                         /*Total cv*/
-                        $("#all_cv").html(parseInt($("#all_cv").text()) + parseInt(data["cv"]));
+                      /*  $("#all_cv").html(parseInt($("#all_cv").text()) + parseInt(data["cv"]));*/
                         /*Total qv*/
-                        $("#all_qv").html(parseInt($("#all_qv").text()) + parseInt(data["qv"]));
+                        $("#all_pv").html(parseInt($("#all_pv").text()) + parseInt(data["pv"]));
                         /*Total sum*/
                         $("#total_sum").html(parseInt($("#total_sum").text()) + parseInt(data["cost"]));
                         /*Total sum tg*/
@@ -186,15 +186,15 @@
                         /*quantity of product*/
                         $("#q" + data["goods"][row_order]["id"]).html(data["quantity"]);
                         /*total cv of product*/
-                        $("#cv" + data["goods"][row_order]["id"]).html(data["product_total_cv"]);
+                      /*  $("#cv" + data["goods"][row_order]["id"]).html(data["product_total_cv"]);*/
                         /*total qv of product*/
-                        $("#qv" + data["goods"][row_order]["id"]).html(data["product_total_qv"]);
+                        $("#pv" + data["goods"][row_order]["id"]).html(data["product_total_pv"]);
                         /*total price of product*/
                         $("#product_sum" + data["goods"][row_order]["id"]).html(data["product_total_sum"]);
                         /*Total cv*/
-                        $("#all_cv").html(parseInt($("#all_cv").text()) - parseInt(data["cv"]));
+                     /*   $("#all_cv").html(parseInt($("#all_cv").text()) - parseInt(data["cv"]));*/
                         /*Total qv*/
-                        $("#all_qv").html(parseInt($("#all_qv").text()) - parseInt(data["qv"]));
+                        $("#all_pv").html(parseInt($("#all_pv").text()) - parseInt(data["pv"]));
                         /*Total sum*/
                         $("#total_sum").html(parseInt($("#total_sum").text()) - parseInt(data["cost"]));
                         /*Total sum tg*/
@@ -203,9 +203,9 @@
                     else if(is_delete){
                         $(button).closest('tr').remove();
                         /*Total cv*/
-                        $("#all_cv").html(parseInt($("#all_cv").text()) - parseInt(data["product_total_cv"]));
+                     /*   $("#all_cv").html(parseInt($("#all_cv").text()) - parseInt(data["product_total_cv"]));*/
                         /*Total qv*/
-                        $("#all_qv").html(parseInt($("#all_qv").text()) - parseInt(data["product_total_qv"]));
+                        $("#all_pv").html(parseInt($("#all_pv").text()) - parseInt(data["product_total_pv"]));
                         /*Total sum*/
                         $("#total_sum").html(parseInt($("#total_sum").text()) - parseInt(data["product_total_sum"]));
                         /*Total sum tg*/

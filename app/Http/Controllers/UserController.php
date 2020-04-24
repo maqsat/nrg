@@ -315,18 +315,54 @@ class UserController extends Controller
 
     }
 
+    public function successBasket($basket_id)
+    {
+        $order = Order::where( 'type','shop')
+            ->where('basket_id',$basket_id)
+            ->where('status' ,11)
+            ->update(
+                [
+                    'status' => 1,
+                ]
+            );
+
+        //call event
+
+        return "<h2>Заказ успешно одобрена!</h2>";
+    }
+
+    public function cancelBasket($basket_id)
+    {
+        $order =  Order::where( 'type','shop')
+            ->where('basket_id',$basket_id)
+            ->where('status' ,11)
+            ->update(
+                [
+                    'status' => 12,
+                ]
+            );
+
+        return "<h2>Квитанция успешно отклонена!</h2>";
+
+    }
+
+
     public function activationUpgrade($order_id)
     {
         $order = Order::find($order_id);
 
-        event(new Upgrade($order = $order));
-        Order::where( 'id',$order_id)
-            ->update(
-                [
-                    'status' => 4,
-                ]
-            );
-        return "<h2>Success upgraded!</h2>";
+        if($order->status != 4){
+            Order::where( 'id',$order_id)
+                ->update(
+                    [
+                        'status' => 4,
+                    ]
+                );
+
+            event(new Upgrade($order = $order));
+            return "<h2>Success upgraded!</h2>";
+        }
+        return "<h2>Already upgraded!</h2>";
     }
 
     public function deactivationUpgrade($order_id)

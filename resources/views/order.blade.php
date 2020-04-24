@@ -29,12 +29,11 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Наименование</th>
+                                        <th>Клиент</th>
                                         <th>Тип</th>
-                                        <th>Пакет</th>
                                         <th>Купленные товары</th>
                                         <th>Цена</th>
-                                        <th>Статус заказа</th>
+                                        <th>Статус оплаты</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -43,22 +42,14 @@
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->user["name"] }}</td>
                                             <td>{{ $item->type }}</td>
-                                            <td>{{ isset($item->user->package)?$item->user->package["title"]:'' }}</td>
-                                            <td>
-                                                @if($item->basket_id)
-                                                    <a href="/basket_items/{{$item->basket_id}}" target="_blank" class="btn btn-info">
-                                                        <i class="mdi mdi-eye"></i>
-                                                    </a>
-                                                    @else
-                                                    Пакет
+                                            <td><a href="/basket?id={{ $item->id }}" target="_blank">Посмотреть товары</a></td>
+                                            <td>${{ $item->amount }}</td>
+                                            <td class="actions">
+                                                <a href="/approve-basket-status/{{ $item->basket_id }}" target="_blank" class="btn btn-success"><i class="mdi mdi-account-plus"></i></a>
+                                                @if(!is_null($item) && $item->status == 11)
+                                                    <a href="{{asset($item->scan)}}" target="_blank" class="btn btn-primary"><i class="mdi mdi-account-search"></i></a>
+                                                    <a href="/cancel-basket-status/{{ $item->basket_id }}" target="_blank" class="btn btn-danger"><i class="mdi mdi-account-remove"></i></a>
                                                 @endif
-                                            </td>
-                                            <td>{{ $item->amount }} тенге</td>
-                                            <td>
-                                                <select  id="{{ $item->id }}">
-                                                    <option value="0">Не доставлен</option>
-                                                    <option {{ ($item->delivery_status)?'selected':'' }} value="1">Доставлен</option>
-                                                </select>
                                             </td>
                                         </tr>
                                     @endforeach

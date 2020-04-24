@@ -95,14 +95,13 @@ class ProductController extends Controller
             'partner_cost' => $request->partner_cost,
             'category_id' => $request->category_id,
             'sale' => $request->sale,
-            'cv' => $request->cv,
-            'qv' => $request->qv,
+            'pv' => $request->qv,
             'image1' => $request->image1,
             'image2' => $request->image2,
             'image3' => $request->image3,
         ]);
-        
-        
+
+
         return redirect()->back()->with('status', 'Успешно добавлено');
     }
 
@@ -142,8 +141,7 @@ class ProductController extends Controller
             'title' => 'required',
             'description' => 'required',
             'cost' => 'required',
-            'cv' => 'required',
-            'qv' => 'required',
+            'pv' => 'required',
             'partner_cost' => 'required',
             'category_id' => 'required',
             'image1' => 'required','file',
@@ -175,7 +173,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'sale' => $request->sale,
             'cv' => $request->cv,
-            'qv' => $request->qv,
+            'pv' => $request->pv,
             'image1' => $request->image1,
             'image2' => $request->image2,
             'image3' => $request->image3,
@@ -195,12 +193,18 @@ class ProductController extends Controller
     {
         //
     }
-    public function orders(){
-        $orders = Order::where('status',4)->orWhere('status',6)
-            ->orderBy('updated_at' , 'desc')
-            ->paginate();
+    public function orders(Request $request){
+
+        $orders_query = Order::orderBy('updated_at' , 'desc')->where('type','shop');
+
+        if(isset($request->shop)) $orders_query = $orders_query->where('status',11);
+        else $orders_query = $orders_query->where('status',4)->orWhere('status',6);
+
+        $orders = $orders_query->paginate();
+
         return view('order', compact('orders'));
-}
+    }
+
     public function basket_items($basket_id){
 
         $items = Basket::find($basket_id)->products;

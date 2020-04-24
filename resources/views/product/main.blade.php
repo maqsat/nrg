@@ -16,14 +16,40 @@
 
             <div class="row">
                 <div class="col-12">
+
+                    @if(!is_null($orders))
+                        @if($orders->status == 11)
+                            <div class="alert alert-warning">
+                                <h3 class="text-warning"><i class="fa fa-exclamation-triangle"></i> Квитанция находится на проверке</h3>
+                                Статус модерации:  Квитанция отправлено на проверку <br>
+                                Сумма оплаты: ${{ $orders->amount }} <br>
+                                @if($orders->package_id != 0)
+                                    Выбранный пакет: {{ \App\Models\Package::find($orders->package_id)->title }} <br>
+                                @endif
+                                Дата отправки: {{ $orders->updated_at }}
+                            </div>
+                        @else
+                            <div class="alert alert-danger">
+                                <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> Квитанция отклонена</h3>
+                                Статус модерации:  Фейковая квитанция <br>
+                                Сумма оплаты: ${{ $orders->amount }} <br>
+                                @if($orders->package_id != 0)
+                                    Выбранный пакет: {{ \App\Models\Package::find($orders->package_id)->title }} <br>
+                                @endif
+                                Дата ответа: {{ $orders->updated_at }} <br>
+                                Квитанция:  <a href="{{asset($orders->scan)}}" target="_blank" class="btn btn-xs btn-danger">Посмотреть</a>
+                            </div>
+                        @endif
+                    @endif
+
                     <div class="card">
                         <div class="card-block">
                             <div class="row button-group">
-                                @foreach($tag as $item)
-                                    <div class="col-lg-2 col-md-4">
-                                        <a href="/main-store?tag={{$item->id}}" type="button" class="btn btn-lg btn-block btn-info">{{$item->tag_name}}</a>
-                                    </div>
-                                @endforeach
+                                    {{--@foreach($tag as $item)
+                                        <div class="col-lg-2 col-md-4">
+                                            <a href="/main-store?tag={{$item->id}}" type="button" class="btn btn-lg btn-block btn-info">{{$item->tag_name}}</a>
+                                        </div>
+                                    @endforeach--}}
                                 <!--<div class="col-lg-2 col-md-4">
                                     <button type="button" class="btn btn-lg btn-block btn-info">#Хиты продаж</button>
                                 </div>
@@ -48,14 +74,16 @@
                 </div>
             </div>
 
+            @if(is_null($orders) or $orders->status == 12)
             <div class="row">
                 <div class="col-12">
                     <div class="card-columns text">
                         @foreach($list as $item)
+
                             <div class="card ribbon-wrapper">
                                 <div class="ribbon ribbon-bookmark  ribbon-success">{{ $item->partner_cost }} $</div>
-                                <div class="ribbon ribbon-bookmark  ribbon-danger">+ {{ $item->cv }} cv</div>
-                                <div class="ribbon ribbon-bookmark  ribbon-info">+ {{ $item->qv }} qv</div>
+                                {{--<div class="ribbon ribbon-bookmark  ribbon-danger">+ {{ $item->cv }} cv</div>--}}
+                                <div class="ribbon ribbon-bookmark  ribbon-info">+ {{ $item->pv }} qv</div>
                                 <img class="card-img-top img-fluid" src="{{ $item->image1 }}" alt="{{ $item->title }}">
                                 <div class="card-block">
                                     <h4 class="card-title">{{ $item->title }}</h4>
@@ -68,6 +96,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!-- ============================================================== -->
             <!-- End PAge Content -->
             <!-- ============================================================== -->
@@ -106,8 +135,8 @@
                     if(data.status == true){
                         $.toast({
                             heading: 'Товар добавлен в корзину!',
-                            text: 'Товар добавлен в корзину! Что бы оплатить перейдите в корзину',
-                            position: 'bottom-right',
+                            text: 'Товар добавлен в корзину! Что бы оплатить перейдите в <a href="/basket">корзину</a>',
+                            position: 'top-right',
                             loaderBg:'#ff6849',
                             icon: 'success',
                             hideAfter: 30000,

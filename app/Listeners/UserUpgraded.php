@@ -50,6 +50,11 @@ class UserUpgraded
         $new_package = Package::find($event->order->package_id);
         $old_package = Package::find($this_user->package_id);
         $package_cost = $event->order->amount;
+        $status_id = $new_package->rank;
+
+        if(!is_null($current_user->status_id) && $current_user->status_id != 0 && $status_id < $current_user->status_id){
+            $status_id = $current_user->status_id;
+        }
 
         if(is_null($old_package)) $upgrade_pv = $new_package->pv - 0;
         else $upgrade_pv = $new_package->pv - $old_package->pv;
@@ -57,7 +62,7 @@ class UserUpgraded
         Balance::changeBalance($id,$package_cost,'upgrade',$id,$program->id,$new_package->id,0);
 
         User::whereId($id)->update(['package_id' => $new_package->id]);
-        UserProgram::whereUserId($id)->update(['package_id' => $new_package->id]);
+        UserProgram::whereUserId($id)->update(['package_id' => $new_package->id,'status_id' => $status_id]);
 
         Notification::create([
             'user_id' => $id,

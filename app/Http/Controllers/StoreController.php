@@ -20,13 +20,15 @@ class StoreController extends Controller
     {
         if($user = Auth::user())
         {
+            $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+
             if($user->type==1){
                 $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
                 $tag = Tag::all();
                 if($request->has('tag')){
                     $list = Tag::find($request->tag)->products;
                 }
-                return view('product.user-main', compact('list','tag'));
+                return view('product.user-main', compact('list','tag','orders'));
             }
             else{
                 $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
@@ -34,7 +36,7 @@ class StoreController extends Controller
                 if($request->has('tag')){
                     $list = Tag::find($request->tag)->products;
                 }
-                return view('product.main', compact('list','tag'));
+                return view('product.main', compact('list','tag','orders'));
             }
         }
         else{
@@ -119,8 +121,12 @@ class StoreController extends Controller
                 return view('product.user-single',compact('product'));
             }
             else{
-                $product = Product::find($id);
-                return view('product.single',compact('product'));
+                $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+                if(is_null($orders) or $orders->status == 12) {
+                    $product = Product::find($id);
+                    return view('product.single',compact('product'));
+                }
+               else return redirect('main-store');
             }
         }
         else{

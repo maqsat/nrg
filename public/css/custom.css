@@ -186,6 +186,13 @@ input.error {
     font-size: 25px;
 }
 
+.ribbon-info {
+    top: 55px;
+}
+
+.printableArea p{
+    margin-bottom: 0;
+}
 
 @media (max-width: 767px)
 {

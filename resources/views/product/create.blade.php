@@ -91,7 +91,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group">
+                               {{-- <div class="form-group">
                                     <label class="col-md-12">CV</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ old('cv') }}" name="cv" class="form-control form-control-line">
@@ -99,13 +99,13 @@
                                             <span class="help-block"><small>{{ $errors->first('cv') }}</small></span>
                                         @endif
                                     </div>
-                                </div>
+                                </div>--}}
                                 <div class="form-group">
-                                    <label class="col-md-12">QV</label>
+                                    <label class="col-md-12">PV</label>
                                     <div class="col-md-12">
-                                        <input type="text" value="{{ old('qv') }}" name="qv" class="form-control form-control-line">
-                                        @if ($errors->has('qv'))
-                                            <span class="help-block"><small>{{ $errors->first('qv') }}</small></span>
+                                        <input type="text" value="{{ old('pv') }}" name="pv" class="form-control form-control-line">
+                                        @if ($errors->has('pv'))
+                                            <span class="help-block"><small>{{ $errors->first('pv') }}</small></span>
                                         @endif
                                     </div>
                                 </div>
