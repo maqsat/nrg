@@ -46,7 +46,7 @@
                                             <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3>
                                         </div>
                                         <div class="align-self-center m-l-20 pay_button">
-                                            <h3 class="m-b-0 text-success">${{ env('REGISTRATION_FEE') }}</h3>
+                                            <h3 class="m-b-0 text-success">{{ env('REGISTRATION_FEE')*env('DOLLAR_COURSE') }} ₸</h3>
                                             <h5 class="text-muted m-b-0">Регистрационный сбор</h5>
                                         </div>
                                         <a href="/pay-types">
@@ -66,7 +66,7 @@
                                                     <div class="pricing-header">
                                                         @if($item->id == 3) <h4 class="price-lable text-white bg-warning"> Popular</h4>@endif
                                                         <h4 class="text-center">{{ $item->title }}</h4>
-                                                        <h2 class="text-center"><span class="price-sign">$</span>{{ $item->cost }}</h2>
+                                                        <h2 class="text-center"><span class="price-sign">₸</span>{{ $item->cost*env('DOLLAR_COURSE') }}</h2>
                                                     </div>
                                                     <div class="price-table-content">
                                                         <div class="price-row"><i class="fa fa-product-hunt"></i> {{ $item->pv }} PV</div>

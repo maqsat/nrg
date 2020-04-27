@@ -63,13 +63,13 @@ class RegisterController extends Controller
             'birthday' => ['required'],
             'terms' => ['required', 'accepted'],
             'city_id' => ['required'],
+            'iin' => ['required'],
+            'country_id' => ['required'],
+            'address' => ['required'],
+            'post_index' => ['required'],
+
             //'sponsor_id' => ['required', 'string', 'max:255', 'exists:users,id', "sponsor_in_program:$program_id"],
             //'position' => ['required', "is_exist_position_sponsor:$sponsor_id", "third_position:$sponsor_id"],
-
-            //'iin' => ['required'],//,'size:12'
-            //'country_id' => ['required'],
-            //'address' => ['required'],
-            //'post_index' => ['required'],
             //'package_id' => ['required'],
 
         ]);
@@ -105,10 +105,10 @@ class RegisterController extends Controller
             'position' => $position,
             'country_id'    => $data['country_id'],
             'office_id'     =>  $data['office_id'],
+            'iin' => $data['iin'],
+            'address' => $data['address'],
+            'post_index' => $data['post_index'],
 
-            //'country_id' => $data['country_id'],
-            //'address' => $data['address'],
-            //'post_index' => $data['post_index'],
             //'package_id' => $data['package_id'],
 
         ]);

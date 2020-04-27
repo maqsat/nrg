@@ -41,7 +41,7 @@
                                         <tr>
                                             <td>{{ $key+1 }}</td>
                                             <td>{{ $item->updated_at }}</td>
-                                            <td>{{ $item->cost+8 }}$</td>
+                                            <td>{{ $item->amount }}$</td>
                                             <td>{{ $item->cv }} cv</td>
                                             <td>{{ $item->quantity }}</td>
                                             <td><a href="/basket?id={{ $item->id }}" target="_blank">Посмотреть товары</a></td>

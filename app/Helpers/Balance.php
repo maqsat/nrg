@@ -14,7 +14,7 @@ use App\Models\Processing;
 
 class Balance {
 
-    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id,$status_id,$pv = 0,$limited_sum = 0,$matching_line = 0)
+    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id=0,$status_id=0,$pv = 0,$limited_sum = 0,$matching_line = 0)
     {
         Processing::insert(
             [
@@ -70,7 +70,7 @@ class Balance {
 
     public function getBalanceOut($user_id)
     {
-        $sum = Processing::whereUserId($user_id)->whereStatus('out')->sum('sum');
+        $sum = Processing::whereUserId($user_id)->whereIn('status', ['out','shop'])->sum('sum');
         return round($sum, 2);
     }
 
@@ -97,6 +97,13 @@ class Balance {
         return round($sum, 2);
     }
 
+    public function revitalizationBalance($user_id)
+    {
+        $sum1 = Processing::whereUserId($user_id)->whereIn('status', ['revitalization', 'cashback'])->sum('sum');
+        $sum2 = Processing::whereUserId($user_id)->whereIn('status', ['revitalization-shop'])->sum('sum');
+
+        return round($sum1-$sum2, 2);
+    }
 
     /*************************** OLD METHODS ****************************/
 
@@ -105,7 +112,6 @@ class Balance {
         $sum = Processing::whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','auto_bonus'])->sum('sum') - Processing::whereStatus('out')->sum('sum');
         return round($sum, 2);
     }
-
 
     public function getBalanceOutAllUsers()
     {

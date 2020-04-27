@@ -45,7 +45,7 @@
                                             <td><a href="/basket?id={{ $item->id }}" target="_blank">Посмотреть товары</a></td>
                                             <td>${{ $item->amount }}</td>
                                             <td class="actions">
-                                                <a href="/approve-basket-status/{{ $item->basket_id }}" target="_blank" class="btn btn-success"><i class="mdi mdi-account-plus"></i></a>
+                                                <a href="/success-basket-status/{{ $item->basket_id }}" target="_blank" class="btn btn-success"><i class="mdi mdi-account-plus"></i></a>
                                                 @if(!is_null($item) && $item->status == 11)
                                                     <a href="{{asset($item->scan)}}" target="_blank" class="btn btn-primary"><i class="mdi mdi-account-search"></i></a>
                                                     <a href="/cancel-basket-status/{{ $item->basket_id }}" target="_blank" class="btn btn-danger"><i class="mdi mdi-account-remove"></i></a>

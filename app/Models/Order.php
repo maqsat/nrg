@@ -22,9 +22,12 @@ class Order extends Model
         12: фейковая квитанция
     */
 
-    protected $fillable = [
-        'type','amount','status','uuid','user_id','basket_id','created_at','updated_at' ,'delivery_status','payment','scan','package_id'
-    ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     public function user()
     {

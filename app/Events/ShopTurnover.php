@@ -15,16 +15,16 @@ class ShopTurnover
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
 
-    public $basket;
+    public $data;
 
 
     /**
      * Activation constructor.
-     * @param $user
+     * @param $data
      */
-    public function __construct($basket)
+    public function __construct($data)
     {
-        $this->basket = $basket;
+        $this->data = $data;
     }
 
     /**

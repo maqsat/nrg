@@ -44,6 +44,11 @@
                                                     <input type="email" class="form-control required"  id="email" name="email">
                                                     <div class="error-message"></div>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="email">Номер документа :</label>
+                                                    <input type="text" class="form-control required"  id="iin" name="inn">
+                                                    <div class="error-message"></div>
+                                                </div>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
@@ -109,7 +114,7 @@
                                                     <div class="col-md-12">
                                                         <div class="checkbox checkbox-primary pull-left">
                                                             <input type="checkbox" id="terms" name="terms" class="required" checked>
-                                                            <label for="checkbox-signup">  Регистрируясь на сайте вы подтверждаете, что ознакомились с <a href="">Договором</a> и <a href="">Презентацией</a>. </label>
+                                                            <label for="checkbox-signup">  Регистрируясь на сайте вы подтверждаете, что ознакомились с <a href="/reg_doc.pdf"  target="_blank">Договором</a> и <a href="/business.html" target="_blank">Презентацией</a>. </label>
                                                             <div class="error-message"></div>
                                                         </div>
                                                     </div>
@@ -118,20 +123,10 @@
                                         </div>
                                     </section>
                                     <!-- Step 3 -->
-                                    {{--<h6>Доставка</h6>
+                                    <h6>Доставка</h6>
                                     <section>
                                         <div class="row">
                                             <div class="col-md-8  offset-2">
-                                                <div class="form-group">
-                                                    <label for="city_id">Город :</label>
-                                                    <select class="custom-select form-control required" id="city_id" name="city_id">
-                                                        <option></option>
-                                                        @foreach(\App\Models\City::all() as $item)
-                                                            <option value="{{ $item->id }}"  @if(old('city_id') == $item->id) selected @endif>{{ $item->title }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <div class="error-message"></div>
-                                                </div>
                                                 <div class="form-group">
                                                     <label for="address">Улица, номер дома, номер квартиры :</label>
                                                     <input type="text" class="form-control required" id="address" name="address">
@@ -144,7 +139,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </section>--}}
+                                    </section>
                                     <!-- Step 4 -->
                                     <h6>Оплата</h6>
                                     <section>
@@ -198,7 +193,7 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
 
-                    var params = 'name='+document.getElementById('name').value+'&program_id='+document.getElementById('program_id').value+'&inviter_id='+document.getElementById('inviter_id').value+'&number='+document.getElementById('number').value+'&email='+document.getElementById('email').value+'&gender='+document.getElementById("gender").selectedIndex+'&birthday='+document.getElementById('birthday').value+'&password='+document.getElementById('password').value+'&password_confirmation='+document.getElementById('password_confirmation').value+'&step='+currentIndex;
+                    var params = 'name='+document.getElementById('name').value+'&program_id='+document.getElementById('program_id').value+'&inviter_id='+document.getElementById('inviter_id').value+'&number='+document.getElementById('number').value+'&email='+document.getElementById('email').value+'&gender='+document.getElementById("gender").selectedIndex+'&birthday='+document.getElementById('birthday').value+'&password='+document.getElementById('password').value+'&password_confirmation='+document.getElementById('password_confirmation').value+'&iin='+document.getElementById('iin').value+'&step='+currentIndex;
 
                     console.log(params);
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
@@ -250,11 +245,11 @@
                         return true;
                     }
                 }
-                /*if(currentIndex == 3){
+                if(currentIndex == 2){
 
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
-                    var params = 'post_index='+document.getElementById('post_index').value+'&country_id='+document.getElementById('country_id').value+'&city_id='+document.getElementById('city_id').value+'&address='+document.getElementById('address').value+'&step='+currentIndex;
+                    var params = 'post_index='+document.getElementById('post_index').value+'&address='+document.getElementById('address').value+'&step='+currentIndex;
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
                     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -274,7 +269,7 @@
                         }
                         return true;
                     }
-                }*/
+                }
                 if(currentIndex == 3){
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
@@ -310,6 +305,7 @@
                     data: {
                         name: document.getElementById('name').value,
                         number: document.getElementById('number').value,
+                        iin: document.getElementById('iin').value,
                         email: document.getElementById('email').value,
                         gender: document.getElementById('gender').value,
                         birthday: document.getElementById('birthday').value,
@@ -321,15 +317,15 @@
                         city_id: document.getElementById('city_id').value,
                         office_id: document.getElementById('user_offices').value,
                         country_id: document.getElementById('country_id').value,
-                        /*address: document.getElementById('address').value,*/
-                        /*post_index: document.getElementById('post_index').value,*/
+                        address: document.getElementById('address').value,
+                        post_index: document.getElementById('post_index').value,
                         /*package_id: document.getElementById('package_id').value*/
                     },
                     success: function(){
                         window.location.href = "/home";
                     },
                     error: function (request, status, error) {
-                        alert('Есть ошибка в регистрационнных данных');
+                        alert('Есть ошибка в регистрационнных данных. Попробуйте занова!');
                     }
                 });
 

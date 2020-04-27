@@ -16,14 +16,7 @@
 
         <div class="row">
             <div class="col-md-6 mx-auto p-5">
-                <ul class="filter-list">
-                    @foreach($tag as $item)
-                        <li>
-                            <a href="/main-store?tag={{$item->id}}" class="btn btn-primary active filter-button"
-                               data-filter="selfie">{{$item->tag_name}}</a>
-                        </li>
-                    @endforeach
-                </ul>
+                Баланс повторной покупки - {{ $balance }}
             </div>
         </div>
 

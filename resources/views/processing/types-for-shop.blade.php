@@ -13,6 +13,30 @@
                             <h4 class="m-b-20">Выберите удобный вид оплаты</h4>
                             <!-- Row -->
                             <div class="row img-for-pay">
+                                <div class="col-lg-3 col-md-6  img-responsive">
+                                    <!-- Card -->
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <h4 class="card-title">Оплатить с основного баланса - ${{ $balance }}</h4>
+                                            <p class="card-text">Баллы распределяются в бинар</p>
+                                            <a href="/pay-prepare?type=balance&@if(!is_null($basket))basket={{ $basket->id }} @endif" class="btn btn-info m-t-10">Оплатить ${{ $all_cost }}</a>
+                                        </div>
+                                    </div>
+                                    <!-- Card -->
+                                </div>
+                                <div class="col-lg-3 col-md-6  img-responsive">
+                                    <!-- Card -->
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <h4 class="card-title">Оплатить с баланса повторной покупки - ${{ $revitalization }}</h4>
+                                            <p class="card-text">Баллы НЕ распределяются в бинар</p>
+                                            <a href="/pay-prepare?type=revitalization&@if(!is_null($basket))basket={{ $basket->id }}@endif" class="btn btn-info m-t-10">Оплатить ${{ $all_cost }}</a>
+                                        </div>
+                                    </div>
+                                    <!-- Card -->
+                                </div>
+                            </div>
+                            <div class="row img-for-pay">
                                 <div class="col-lg-2 col-md-6  img-responsive">
                                     <!-- Card -->
                                     <div class="card">
@@ -102,3 +126,28 @@
 @section('body-class')
     fix-header card-no-border fix-sidebar
 @endsection
+
+@push('scripts')
+
+    <script src="/monster_admin/main/js/toastr.js"></script>
+    <script src="/monster_admin/assets/plugins/toast-master/js/jquery.toast.js"></script>
+
+    @if (session('status'))
+        <script>
+            $.toast({
+                heading: 'Пустая корзина!',
+                text: '{{ session('status') }}',
+                position: 'top-right',
+                loaderBg:'#ffffff',
+                icon: 'error',
+                hideAfter: 60000,
+                stack: 6
+            });
+        </script>
+    @endif
+@endpush
+
+
+@push('styles')
+    <link href="/monster_admin/assets/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
+@endpush

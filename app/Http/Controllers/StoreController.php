@@ -18,26 +18,20 @@ class StoreController extends Controller
 {
     public function store(Request $request)
     {
-        if($user = Auth::user())
-        {
-            $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+        $user = Auth::user();
 
-            if($user->type==1){
-                $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
-                $tag = Tag::all();
-                if($request->has('tag')){
-                    $list = Tag::find($request->tag)->products;
-                }
-                return view('product.user-main', compact('list','tag','orders'));
+        $balance = Balance::revitalizationBalance(Auth::user()->id);
+
+
+        $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+
+        if($user->type==1){
+            $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
+            $tag = Tag::all();
+            if($request->has('tag')){
+                $list = Tag::find($request->tag)->products;
             }
-            else{
-                $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
-                $tag = Tag::all();
-                if($request->has('tag')){
-                    $list = Tag::find($request->tag)->products;
-                }
-                return view('product.main', compact('list','tag','orders'));
-            }
+            return view('product.user-main', compact('list','tag','orders','balance'));
         }
         else{
             $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
@@ -45,21 +39,15 @@ class StoreController extends Controller
             if($request->has('tag')){
                 $list = Tag::find($request->tag)->products;
             }
-            return view('product.user-main', compact('list','tag'));
+            return view('product.main', compact('list','tag','orders','balance'));
         }
+
 
     }
 
     public function story()
     {
-        $list = Basket::join('basket_good','basket_good.basket_id','=','baskets.id')
-            ->join('products','basket_good.good_id','=','products.id')
-            ->where('baskets.user_id', Auth::user()->id)
-            ->where('baskets.status',1)
-            ->select('baskets.*',DB::raw('sum(basket_good.quantity * products.partner_cost) as cost'),DB::raw('sum(basket_good.quantity * products.cv) as cv'),DB::raw('sum(basket_good.quantity) as quantity'))
-            //->groupBy('baskets.id')
-            ->paginate();
-        //dd($list);
+        $list = Order::where('user_id',Auth::user()->id)->where('type','shop')->paginate(30);
 
 
         return view('basket.story',compact('list'));

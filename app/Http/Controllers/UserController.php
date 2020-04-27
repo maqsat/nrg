@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Hierarchy;
+use App\Models\Basket;
 use App\Models\Office;
 use App\Models\Order;
 use App\Models\Package;
@@ -325,6 +326,7 @@ class UserController extends Controller
                     'status' => 1,
                 ]
             );
+        Basket::whereId($basket_id)->update(['status' => 1]);
 
         //call event
 
@@ -406,6 +408,7 @@ class UserController extends Controller
         if($request->step == 1){
             $validator = Validator::make($request->all(), [
                 'city_id'       => ['required', Rule::notIn([0])],
+                'country_id'       => ['required', Rule::notIn([0])],
                 'terms'         => ['required','accepted'],
             ],[
                 'required' => 'Пожалуйста, заполните это поле.'
@@ -413,16 +416,14 @@ class UserController extends Controller
         }
 
 
-        /*if($request->step == 3){
+        if($request->step == 2){
             $validator = Validator::make($request->all(), [
-                'country_id'    => ['required'],
-                'city_id'       => ['required'],
                 'address'       => ['required'],
                 'post_index'       => ['required'],
             ]);
-        }*/
+        }
 
-        if($request->step == 4){
+        if($request->step == 3){
             /*$validator = Validator::make($request->all(), [
                 'package_id'       => ['required'],
             ]);*/
@@ -648,6 +649,34 @@ class UserController extends Controller
 
             $user_program->package_id = $request->package_id;
             $user_program->save();
+
+            $package = Package::find($request->package_id);
+            $current_package = Package::find($user->package_id);
+            if (is_null($current_package))  $cost = $package->cost - 0;
+            else $cost = $package->cost - $current_package->cost;
+
+            $order =  Order::updateOrCreate(
+                [
+                    'type' => 'upgrade',
+                    'status' => 0,
+                    'payment' => 'manual',
+                    'uuid' => 0,
+                    'user_id' => $id,
+                ],
+                ['amount' => $cost, 'package_id' => $request->package_id]
+            );
+
+
+            if($order->status != 4){
+                Order::where( 'id',$order->id)
+                    ->update(
+                        [
+                            'status' => 4,
+                        ]
+                    );
+
+                event(new Upgrade($order = $order));
+            }
         }
 
         if ($user_program->status_id !== $request->status_id) {
@@ -657,6 +686,9 @@ class UserController extends Controller
                 'type' => 4,
                 'user_id' => $id,
             ]);
+
+            $user->status_id = $request->status_id;
+            $user->save();
 
             $user_program->status_id = $request->status_id;
             $user_program->save();

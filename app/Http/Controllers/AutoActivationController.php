@@ -15,7 +15,6 @@ class AutoActivationController extends Controller
         DB::table('counters')->truncate();
         DB::table('notifications')->truncate();
         DB::table('not_cash_bonuses')->truncate();
-        DB::table('orders')->truncate();
         DB::table('user_programs')->truncate();
         Processing::where('status','!=','out')->delete();
 

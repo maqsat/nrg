@@ -50,10 +50,10 @@
                         </a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/main-store">Магазин</a></li>
-                            <li><a href="/userorders">Мои заказы</a></li>
+                            {{--<li><a href="/userorders">Мои заказы</a></li>--}}
                             <li><a href="/basket">Корзина</a></li>
                             <li><a href="/story-store">Покупки</a></li>
-                            <li><a href="/activation-store">История активации</a></li>
+                            <li><a href="/activation-store">История Повторной покупки</a></li>
                         </ul>
                     </li>
                     <li>

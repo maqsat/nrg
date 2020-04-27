@@ -44,30 +44,8 @@
 
                     <div class="card">
                         <div class="card-block">
-                            <div class="row button-group">
-                                    {{--@foreach($tag as $item)
-                                        <div class="col-lg-2 col-md-4">
-                                            <a href="/main-store?tag={{$item->id}}" type="button" class="btn btn-lg btn-block btn-info">{{$item->tag_name}}</a>
-                                        </div>
-                                    @endforeach--}}
-                                <!--<div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-info">#Хиты продаж</button>
-                                </div>
-                                <div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-warning">#Скидки</button>
-                                </div>
-                                <div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-success">#БАД</button>
-                                </div>
-                                <div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-primary">#Книги</button>
-                                </div>
-                                <div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-danger">#Сумки</button>
-                                </div>
-                                <div class="col-lg-2 col-md-4">
-                                    <button type="button" class="btn btn-lg btn-block btn-success">#Тренинг</button>
-                                </div>-->
+                            <div class="row button-group text-center">
+                               <h2> Баланс повторной покупки - ${{ $balance }}</h2>
                             </div>
                         </div>
                     </div>

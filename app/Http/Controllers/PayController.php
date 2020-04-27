@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Balance;
+use App\Facades\Hierarchy;
 use App\Models\UserProgram;
 use DB;
 use Auth;
@@ -29,13 +31,16 @@ class PayController extends Controller
             return view('processing.types-for-upgrade',compact('package','current_package'));
         }
         elseif (isset($request->basket)){
+            $balance = Balance::getBalance(Auth::user()->id);
+            $revitalization = Balance::revitalizationBalance(Auth::user()->id);
+
             $basket = Basket::find($request->basket);
             $all_cost = DB::table('basket_good')
                 ->join('products','basket_good.good_id','=','products.id')
                 ->where(['basket_id' => $basket->id])
                 ->sum(DB::raw('basket_good.quantity*products.partner_cost'));//['products.*','basket_good.quantity']
 
-            return view('processing.types-for-shop',compact('basket','all_cost'));
+            return view('processing.types-for-shop',compact('basket','all_cost','revitalization','balance'));
         }
         else return view('processing.types',compact('package'));
     }
@@ -68,17 +73,34 @@ class PayController extends Controller
                 ->where(['basket_id' => $request->basket])
                 ->sum(DB::raw('basket_good.quantity*products.partner_cost'));//['products.*','basket_good.quantity']
 
-            $order =  Order::updateOrCreate(
-                [
-                    'type' => 'shop',
-                    'status' => 0,
-                    'payment' => $request->type,
-                    'uuid' => 0,
-                    'user_id' => Auth::user()->id,
-                    'basket_id' => $request->basket
-                ],
-                ['amount' => $cost, 'package_id' => 0]
-            );
+            if($request->type == 'revitalization'){
+                $order =  Order::updateOrCreate(
+                    [
+                        'type' => 'shop',
+                        'status' => 0,
+                        'payment' => $request->type,
+                        'uuid' => 0,
+                        'user_id' => Auth::user()->id,
+                        'basket_id' => $request->basket,
+                        'not_original' => 1
+                    ],
+                    ['amount' => $cost, 'package_id' => 0]
+                );
+
+            }
+            else{
+                $order =  Order::updateOrCreate(
+                    [
+                        'type' => 'shop',
+                        'status' => 0,
+                        'payment' => $request->type,
+                        'uuid' => 0,
+                        'user_id' => Auth::user()->id,
+                        'basket_id' => $request->basket
+                    ],
+                    ['amount' => $cost, 'package_id' => 0]
+                );
+            }
 
         }
         else{
@@ -154,6 +176,54 @@ class PayController extends Controller
             if (isset($response->errors)) dd("Error 1. Свяжитесь с Администратором, номер заказа  $order_id");
 
             return redirect($response->redirect_url);
+        }
+        if($request->type == "balance"){
+
+            if(Balance::getBalance(Auth::user()->id) >= $order->amount)
+                return redirect()->back()->with('status', 'У вас недостаточно средств!');
+
+            Order::where( 'id',$order_id)
+                ->update(
+                    [
+                        'status' => 1,
+                    ]
+                );
+            Basket::whereId($order->basket_id)->update(['status' => 1]);
+
+            $order_pv = Hierarchy::orderPv($order_id, Auth::user()->id);
+
+            $data = [];
+            $data['pv'] = $order_pv;
+            $data['user_id'] = Auth::user()->id;
+            Balance::changeBalance(Auth::user()->id,$order->amount,'shop',Auth::user()->id,1,0,0);
+
+            event(new ShopTurnover($data = $data));
+
+            return redirect('/story-store');
+        }
+        if($request->type == "revitalization"){
+
+            if(Balance::revitalizationBalance(Auth::user()->id) >= $order->amount)
+                return redirect()->back()->with('status', 'У вас недостаточно средств!');
+
+            Order::where( 'id',$order_id)
+                ->update(
+                    [
+                        'status' => 1,
+                    ]
+                );
+            Basket::whereId($order->basket_id)->update(['status' => 1]);
+
+            $order_pv = Hierarchy::orderPv($order_id, Auth::user()->id);
+
+            $data = [];
+            $data['pv'] = $order_pv;
+            $data['user_id'] = Auth::user()->id;
+            Balance::changeBalance(Auth::user()->id,$order->amount,'revitalization-shop',Auth::user()->id,1,0,0);
+
+            event(new ShopTurnover($data = $data));
+
+            return redirect('/story-store');
         }
     }
 

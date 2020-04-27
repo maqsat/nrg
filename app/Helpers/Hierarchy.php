@@ -2,8 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Events\ShopTurnover;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Revitalization;
 use DB;
 use Auth;
 use App\User;
@@ -247,6 +249,113 @@ class Hierarchy {
         }
     }
 
+    /**
+     * @param $id
+     */
+    public function revitalization()
+    {
+        $dt = Carbon::now()->addDay(1);
+        $end = $dt->toDateString();
+        $start = Carbon::now()->subMonth()->toDateString();
+
+
+       $user_programs = User::whereDay('created_at', '=', date('d'))->get();
+
+       foreach ($user_programs as $item){
+
+           $balance = Balance::getWeekBalanceByRange($item->id,$start,$end);
+           if($balance >= 200){
+
+               $order_amount = Order::where('type','shop')
+                   ->where('user_id',$item->id)
+                   ->where('not_original',null)
+                   ->whereBetween('created_at', [$start, $end])
+                   ->sum('amount');
+
+               $order_pv = Order::join('baskets','baskets.id','=','orders.basket_id')
+                   ->join('basket_good','basket_good.basket_id','=','baskets.id')
+                   ->join('products','basket_good.good_id','=','products.id')
+                   ->where('orders.type','shop')
+                   ->where('orders.user_id',$item->id)
+                   ->where('orders.not_original',null)
+                   ->whereBetween('orders.created_at', [$start, $end])
+                   ->sum(DB::raw('basket_good.quantity * products.pv'));
+
+               if($balance >= 400){
+                   $commission_sum = 125;
+                   $commission_pv = 100;
+                   if($order_amount < $commission_sum){
+                       $commission_sum = $commission_sum - $order_amount;
+                       $commission_pv = $commission_pv - $order_pv;
+                   }
+                   else{
+                       $commission_sum = 0;
+                       $commission_pv = 0;
+                   }
+               }
+               else{
+                   $commission_sum = 65;
+                   $commission_pv = 50;
+
+                   if($order_amount < $commission_sum){
+                       $commission_sum = $commission_sum - $order_amount;
+                       $commission_pv = $commission_pv - $order_pv;
+                   }
+                   else{
+                       $commission_sum = 0;
+                       $commission_pv = 0;
+                   }
+               }
+
+               Revitalization::insert([
+                   'end_date'       => $end,
+                   'start_date'     => $start,
+                   'earn_amount'    => $balance,
+                   'order_amount'   => $order_amount,
+                   'user_id'        => $item->id,
+                   'pv'             => $order_pv,
+                   'cron_status'    => 0,
+                   'commission_sum' => $commission_sum,
+                   'commission_pv'  => $commission_pv,
+               ]);
+           }
+       }
+
+    }
+
+    public function revitalizationCron()
+    {
+        $list = Revitalization::where('cron_status',0)->get();
+
+        foreach ($list as $item){
+           if($item->order_amount > 0) Balance::changeBalance($item->user_id,$item->order_amount*0.2,'cashback',$item->user_id,1);
+           if($item->commission_sum > 0) {
+               Balance::changeBalance($item->user_id,$item->commission_sum,'revitalization',$item->user_id,1);
+               Balance::changeBalance($item->user_id,$item->commission_sum*0.2,'cashback',$item->user_id,1);
+
+               $data = [];
+               $data['pv'] = $item->commission_pv;
+               $data['user_id'] = $item->user_id;
+
+               event(new ShopTurnover($data = $data));
+           }
+        }
+    }
+
+    public function orderPv($order_id,$user_id)
+    {
+        $order_pv = Order::join('baskets','baskets.id','=','orders.basket_id')
+            ->join('basket_good','basket_good.basket_id','=','baskets.id')
+            ->join('products','basket_good.good_id','=','products.id')
+            ->where('orders.type','shop')
+            ->where('orders.user_id',$user_id)
+            ->where('orders.not_original',null)
+            ->where('orders.id', $order_id)
+            ->sum(DB::raw('basket_good.quantity * products.pv'));
+
+        return $order_pv;
+    }
+
     public function followersList($user_id)
     {
         $count =  DB::table('user_programs')
@@ -259,7 +368,6 @@ class Hierarchy {
 
         return $count;
     }
-
 
     public function inviterList($user_id)
     {
@@ -337,7 +445,6 @@ class Hierarchy {
             }
         }
     }
-
 
     public function getPositionUsers($user_id, $action, $position)
     {
@@ -451,6 +558,16 @@ class Hierarchy {
             ->update(['step' => 1,'program_id' => $program_id + 1]);
     }
 
+    public function deleteNonActivations()
+    {
+        $users = User::whereStatus('0')->whereBetween('created_at', [Carbon::now()->subDay(2),Carbon::now()])->get();
+
+        foreach ($users as $item){
+            $result = UserProgram::where('user_id',$item->id)->first();
+            if(is_null($result))  $item->delete();
+        }
+    }
+
     public function sponsorUsersInFirstStep($sponsor_id,$program_id)
     {
         return User::join('user_programs','users.id','=','user_programs.user_id')
@@ -542,9 +659,6 @@ class Hierarchy {
         //$month = 7;
         return Counter::where('user_id',$user_id)->whereMonth('created_at',$month)->sum('sum');
     }
-
-
-
 
     public function activationCheck()
     {

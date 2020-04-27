@@ -24,6 +24,7 @@
                         <li><a href="/country">Страны</a></li>
                         <li><a href="#">Статусы</a></li>
                         <li><a href="#">Виды бонусов</a></li>
+                        <li><a href="#">FAQ</a></li>
                     </ul>
                 </li>
                 {{--<li>
@@ -40,6 +41,15 @@
                     </ul>
                 </li>
                 <li>
+                    <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-export"></i><span class="hide-menu">Процессинг</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="/processing">Вся движения</a></li>
+                        <li><a href="/processing?status=out">Выведено</a></li>
+                        <li><a href="/processing?status=step">Комиссионная</a></li>
+                        <li><a href="/processing?status=request">Запросы на вывод</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-shopping"></i><span class="hide-menu">Магазин</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/store">Товары</a></li>
@@ -53,14 +63,14 @@
                         <li><a href="/news/create">Добавить новость</a></li>
                     </ul>
                 </li>
-                <li>
+                {{--<li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-help"></i><span class="hide-menu">FAQ</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/faqgetguest">FAQ для гостя</a></li>
                         <li><a href="/faqgetadmin">FAQ для админа</a></li>
                         <li><a href="/faqadmin/create">Добавить FAQ</a></li>
                     </ul>
-                </li>
+                </li>--}}
                 <li>
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Дополнительно</span></a>
                     <ul aria-expanded="false" class="collapse">
