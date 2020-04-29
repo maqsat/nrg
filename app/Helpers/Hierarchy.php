@@ -237,11 +237,10 @@ class Hierarchy {
                 foreach ($users as $innerItem){
                     if($item->package_id != 0){
                         if($innerItem->package_id != 0){
-
                             $package = Package::find($innerItem->package_id);
                             $sum = $package->pv*20/100*env('COURSE');
                             echo $item->user_id."<br>";
-                            Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->id,1,$package->id,$item->status_id,$package->pv);
+                            Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
                         }
                     }
 
