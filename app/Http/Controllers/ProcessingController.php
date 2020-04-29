@@ -41,7 +41,8 @@ class ProcessingController extends Controller
         elseif($request->status == 'transfered_in')
             $list = Processing::orderBy('created_at','desc')->whereStatus('transfered_in')->paginate(30);
         else
-            $list = Processing::orderBy('created_at','desc')->where('status','!=','in_score')->paginate(30);
+            $list = Processing::orderBy('created_at','desc')->paginate(30);
+
         $in = Processing::whereStatus('in')->sum('sum');
         $all = Processing::sum('sum');
         $out = Processing::whereStatus('out')->sum('sum');
@@ -249,5 +250,22 @@ class ProcessingController extends Controller
         $shop = Processing::where('status', 'shop')->sum('sum');
 
         return view('processing.overview',compact('register','commission','out','shop'));
+    }
+
+    public function request(Request $request)
+    {
+        $request->validate([
+            'sum' => ['required', 'numeric', 'min:0'],
+            'login' => 'required',
+            'program_id' => 'required',
+        ]);
+
+        if(Balance::getBalance(Auth::user()->id) < $request->sum) return redirect()->back()->with('status', 'У вас недостаточно средств!');
+        $pv = $request->sum/env('COURSE');
+
+        Balance::changeBalance(Auth::user()->id,$request->sum,'request',0,$request->program_id,0,0,$pv,0,0,$request->login);
+
+
+        return redirect()->back()->with('status', 'Запрос успечно отправлен админу!');
     }
 }

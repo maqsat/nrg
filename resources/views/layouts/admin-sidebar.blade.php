@@ -46,7 +46,7 @@
                         <li><a href="/processing">Вся движения</a></li>
                         <li><a href="/processing?status=out">Выведено</a></li>
                         <li><a href="/processing?status=step">Комиссионная</a></li>
-                        <li><a href="/processing?status=request">Запросы на вывод</a></li>
+                        <li><a href="/processing?status=request">Запросы на вывод(Ручная)</a></li>
                     </ul>
                 </li>
                 <li>

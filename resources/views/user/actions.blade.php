@@ -19,7 +19,7 @@
                                 <div class="col-lg-12">
                                     <div class="input-group">
                                         <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                        <input type="number"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
+                                        <input type="text"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
                                         <span class="input-group-btn">
                                             <button class="btn btn-info" type="submit">Вывести</button>
                                         </span>

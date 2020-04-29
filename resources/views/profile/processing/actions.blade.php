@@ -6,7 +6,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs customtab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#home2" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Вывод карту</span>
+                        <a class="nav-link active" data-toggle="tab" href="#home2" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Вывод карту или наличными</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -21,16 +21,17 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active   p-20" id="home2" role="tabpanel">
-                        <form {{--action="/processing"--}} {{--action="/request"--}} method="post">
+                        <form {{--action="/processing"--}} action="/request" method="post">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="input-group">
-                                        <input type="number"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
+                                        <input type="hidden" value="1" name="program_id">
+                                        <input type="text"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
                                         <input type="text"  name="login" class="form-control" placeholder="Номер карты" required>
                                         <span class="input-group-btn">
-                                                        <button class="btn btn-info" type="submit">Вывести</button>
-                                                    </span>
+                                            <button class="btn btn-info" type="submit">Вывести</button>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -38,16 +39,17 @@
                         </form>
                     </div>
                     <div class="tab-pane  p-20" id="profile2" role="tabpanel">
-                        <form {{--action="/processing"--}} {{--action="/request"--}} method="post">
+                        <form {{--action="/processing"--}} action="/request" method="post">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="input-group">
-                                        <input type="number"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
+                                        <input type="hidden" value="1" name="program_id">
+                                        <input type="text"  name="sum" class="form-control" placeholder="Выводимая сумма" max="{{ $balance }}" required>
                                         <input type="text"  name="login" class="form-control" placeholder="Логин в системе" required>
                                         <span class="input-group-btn">
-                                                        <button class="btn btn-info" type="submit">Вывести</button>
-                                                    </span>
+                                            <button class="btn btn-info" type="submit">Вывести</button>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +65,8 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="input-group">
-                                        <input type="number"  name="sum" class="form-control" placeholder="Переводимая сумма" max="{{ $balance }}" required>
+                                        <input type="hidden" value="1" name="program_id">
+                                        <input type="text"  name="sum" class="form-control" placeholder="Переводимая сумма" max="{{ $balance }}" required>
                                         <input type="text"  name="transfer_user_id" class="form-control" placeholder="Почта абонента" required>
                                         <span class="input-group-btn">
                                     <button class="btn btn-info" type="submit">Перевести</button>

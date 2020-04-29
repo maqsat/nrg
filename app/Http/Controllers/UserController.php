@@ -726,8 +726,8 @@ class UserController extends Controller
     {
 
         $request->validate([
-            'sum'   => 'required', 'integer',/* ,'min:1000',*/
-            'user_id' => 'required', 'integer'/* ,'min:1000',*/
+            'sum' => ['required', 'numeric', 'min:0'],
+            'user_id' => ['required', 'integer']
         ]);
 
         $balance = Balance::getBalance($request->user_id);

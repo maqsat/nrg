@@ -61,7 +61,7 @@
 
             @if(!is_null($package))
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                     <div class="card">
                         <div class="card-block timer">
                             <h5>Бонус быстрого старта, до следующего зачисление  осталось:</h5>
@@ -74,7 +74,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-block timer">
+                            <h5>Повторная покупка, до следующего списание осталось:</h5>
+                            <ul>
+                                <li><span id="days2"></span>День</li>
+                                <li><span id="hours2"></span>Час</li>
+                                <li><span id="minutes2"></span>Минут</li>
+                                <li><span id="seconds2"></span>Секунд</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <div class="row">
                 <div class="col-12">
@@ -288,7 +302,38 @@
                 //  'IT'S MY BIRTHDAY!;
                 //}
 
-            }, second)
+            }, second);
+
+
+
+        const second2 = 1000,
+            minute2 = second2 * 60,
+            hour2 = minute2 * 60,
+            day2 = hour2 * 24;
+
+        let countDown2 = new Date('{{$revitalization_date}}').getTime(),
+            x2 = setInterval(function() {
+
+                let now = new Date().getTime(),
+                    distance = countDown2 - now;
+
+                document.getElementById('days2').innerText = Math.floor(distance / (day2)),
+                    document.getElementById('hours2').innerText = Math.floor((distance % (day2)) / (hour2)),
+                    document.getElementById('minutes2').innerText = Math.floor((distance % (hour2)) / (minute2)),
+                    document.getElementById('seconds2').innerText = Math.floor((distance % (minute2)) / second2);
+
+                //do something later when date is reached
+                //if (distance < 0) {
+                //  clearInterval(x);
+                //  'IT'S MY BIRTHDAY!;
+                //}
+
+            }, second2)
+    </script>
+
+    <script>
+
+
     </script>
 
 @endpush

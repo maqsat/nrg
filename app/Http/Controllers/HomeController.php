@@ -84,8 +84,18 @@ class HomeController extends Controller
                 $quickstart_date = Carbon::now()->addDays(7)->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
             }
 
+            $registered_day = $user_program->created_at->format('d');
+            $today_day =  Carbon::now()->format('d');
 
-            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses','quickstart_date'));
+
+            if($today_day < $registered_day){
+                $revitalization_date = Carbon::now()->day($registered_week_day)->format('M d, Y')." 00:00:00";
+            }
+            else{
+                $revitalization_date = Carbon::now()->addMonth(1)->day($registered_day)->format('M d, Y')." 00:00:00";
+            }
+
+            return view('profile.home', compact('user', 'invite_list', 'pv_counter_all', 'balance', 'out_balance', 'status', 'list', 'package','pv_counter_left','pv_counter_right','not_cash_bonuses','quickstart_date','revitalization_date'));
         }
         else{
             $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->where('payment','manual')->orderBy('id','desc')->first();

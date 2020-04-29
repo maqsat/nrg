@@ -174,11 +174,10 @@
                                         <th>Статус</th>
                                         @if(isset($_GET['status']) && $_GET['status'] == 'request')<th>Ответ</th>@endif
                                         <th>Сумма</th>
-                                        <th>Получатель</th>
+                                        <th>От кого</th>
                                         <th>Отправитель</th>
                                         <th>Номер карты</th>
                                         <th>Дата</th>
-                                        <th>Программа</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -186,27 +185,7 @@
                                         <tr>
                                             <td class="text-center">{{ $item->id }}</td>
                                             <td>
-                                                @if($item->status == 'invite_bonus')
-                                                    Реферальный бонус
-                                                @elseif($item->status == 'cashback')
-                                                    Кэшбек
-                                                @elseif($item->status == 'turnover_bonus')
-                                                    Бонус за бинар
-                                                @elseif($item->status == 'status_bonus')
-                                                    Бонус признания
-                                                @elseif($item->status == 'quickstart_bonus')
-                                                    Быстрый старт
-                                                @elseif($item->status == 'matching_bonus')
-                                                    Матчинг бонус
-                                                @elseif($item->status == 'request')
-                                                    Запрос на списание вернул ошибку
-                                                @elseif($item->status == 'register')
-                                                    Регистрация
-                                                @elseif($item->status == 'out')
-                                                    Выведено
-                                                @else
-                                                    Не определено
-                                                @endif
+                                                @include('processing.processing-title')
                                             </td>
                                             @if(isset($_GET['status'])  && $_GET['status'] == 'request')
                                                 <td  class="actions">
@@ -224,14 +203,15 @@
                                                     </form>
                                                 </td>
                                             @endif
-                                            <td><span class="text-success">{{ $item->sum }} тг</span></td>
-                                            <?php $query1 = \App\User::where('id',$item->user_id)->first() ?>
-                                            <?php $query2 = \App\User::where('id',$item->in_user)->first() ?>
-                                            <td class="txt-oflo">@if(!is_null($query1)){{ \App\User::find($item->user_id)->login  }}@endif</td>
-                                            <td class="txt-oflo">@if(!is_null($query2)){{ \App\User::find($item->in_user)->login  }} @endif</td>
-                                            <td class="txt-oflo">@if(!is_null($query1)){{ \App\User::find($item->user_id)->card  }}@endif</td>
-                                            <td class="txt-oflo">{{ date('d-m-Y', strtotime($item->created_at)) }}</td>
-                                            <td class="txt-oflo">{{ \App\Models\Program::find($item->program_id)->title }}</td>
+                                            <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
+                                            <?php
+                                                $in_user = \App\User::find($item->in_user);
+                                                $user_id = \App\User::find($item->user_id);
+                                            ?>
+                                            <td class="txt-oflo">@if(!is_null($user_id)) {{ $user_id->name }} @else Не найден @endif </td>
+                                            <td class="txt-oflo">@if(!is_null($in_user)) {{ $in_user->name }} @else {{ $item->in_user }} @endif @if($item->status == 'matching_bonus') <i>{{ $item->matching_line }} линия</i> @endif  </td>
+                                            <td>{{ $item->card_number }}</td>
+                                            <td class="txt-oflo">{{ $item->created_at }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

@@ -99,25 +99,7 @@
                                         <tr>
                                             <td class="text-center">{{ $item->id }}</td>
                                             <td>
-                                                @if($item->status == 'invite_bonus')
-                                                    Реферальный бонус
-                                                @elseif($item->status == 'cashback')
-                                                    Кэшбек
-                                                @elseif($item->status == 'turnover_bonus')
-                                                    Бонус за бинар
-                                                @elseif($item->status == 'status_bonus')
-                                                    Бонус признания
-                                                @elseif($item->status == 'quickstart_bonus')
-                                                    Быстрый старт
-                                                @elseif($item->status == 'matching_bonus')
-                                                    Матчинг бонус
-                                                @elseif($item->status == 'request')
-                                                    Запрос на списание вернул ошибку
-                                                @elseif($item->status == 'out')
-                                                    Выведено
-                                                @else
-                                                    Не определено
-                                                @endif
+                                                @include('processing.processing-title')
                                             </td>
                                             <td><span class="text-success">{{ round($item->sum,2) }} $</span></td>
                                             <td><span class="text-success">{{ $item->pv}} PV</span></td>
@@ -154,10 +136,11 @@
 @endsection
 
 @push('scripts')
-@if (session('status'))
-
     <script src="/monster_admin/main/js/toastr.js"></script>
     <script src="/monster_admin/assets/plugins/toast-master/js/jquery.toast.js"></script>
+
+@if (session('status'))
+
     <script>
         $.toast({
             heading: 'Вывод средств',
@@ -170,6 +153,23 @@
         });
     </script>
 @endif
+
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <script>
+            $.toast({
+                heading: '{{ __('app.errors in login') }}',
+                text: '{{ __($error) }}',
+                position: 'top-right',
+                loaderBg:'#ffffff',
+                icon: 'error',
+                hideAfter: 30000,
+                stack: 6
+            });
+        </script>
+    @endforeach
+@endif
+
 @endpush
 
 @push('styles')
