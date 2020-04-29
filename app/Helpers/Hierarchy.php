@@ -236,17 +236,62 @@ class Hierarchy {
 
                 foreach ($users as $innerItem){
                     if($item->package_id != 0){
-                        $package = Package::find($innerItem->package_id);
-                        $sum = $package->pv*20/100*env('COURSE');
+                        if($innerItem->package_id != 0){
 
-                        Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->id,1,$package->id,$item->status_id,$package->pv);
+                            $package = Package::find($innerItem->package_id);
+                            $sum = $package->pv*20/100*env('COURSE');
+                            echo $item->user_id."<br>";
+                            Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->id,1,$package->id,$item->status_id,$package->pv);
+                        }
                     }
 
                 }
+
             }
 
 
         }
+    }
+
+    public function setTempQS()
+    {
+        echo "<br>";
+
+        for($i = 6; $i <= 29; $i++){
+            $date = new \DateTime();
+            $date->setDate(2020, 4, $i);
+            $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 0, 0, 0, 'Asia/Almaty');
+
+            $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),$date->format('N')-1)->get();
+
+            foreach ($user_programs as $item){
+
+                $dt2 = $dt->copy();
+
+                $users = User::join('user_programs','users.id','=','user_programs.user_id')
+                    ->where('users.inviter_id',$item->user_id)
+                    ->where('users.status',1)
+                    ->whereBetween('users.created_at', [$dt2->subDay(7), $dt])
+                    ->get();
+
+                if(count($users) >= 2){
+
+                    foreach ($users as $innerItem){
+                        if($item->package_id != 0){
+                            if($innerItem->package_id != 0){
+
+                                $package = Package::find($innerItem->package_id);
+                                $sum = $package->pv*20/100*env('COURSE');
+                                echo $item->user_id."<br>";
+                                Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->id,1,$package->id,$item->status_id,$package->pv);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 
     /**
