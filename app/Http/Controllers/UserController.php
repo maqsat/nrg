@@ -117,6 +117,14 @@ class UserController extends Controller
         $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
         if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
 
+        $package = Package::find($request->package_id);
+        $status_id = $package->rank;
+
+        if ($status_id < $request->status_id){
+            $status_id = $request->status_id;
+        }
+
+
         $user = User::create([
             'name'          => $request->name,
             'number'        => $request->number,
@@ -132,8 +140,8 @@ class UserController extends Controller
             'sponsor_id'    => $request->sponsor_id,
             'position'      => $request->position,
             'package_id'    => $request->package_id,
-            'status_id'     =>  $request->status_id,
-            'office_id'     =>  $request->office_id,
+            'status_id'     => $status_id,
+            'office_id'     => $request->office_id,
             'program_id'     =>  1,
         ]);
 
@@ -408,6 +416,7 @@ class UserController extends Controller
         if($request->step == 1){
             $validator = Validator::make($request->all(), [
                 'city_id'       => ['required', Rule::notIn([0])],
+                'office_id'       => ['required', Rule::notIn([0]), Rule::notIn([-1])],
                 'country_id'       => ['required', Rule::notIn([0])],
                 'terms'         => ['required','accepted'],
             ],[
@@ -491,7 +500,7 @@ class UserController extends Controller
             'city_id' => 'required', 'integer'
         ]);
 
-        $text = '';
+        $text = '<option>Не указан</option>';
 
         $offices = Office::where('city_id',$request->city_id)->get();
 

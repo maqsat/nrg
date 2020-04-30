@@ -604,7 +604,7 @@ class Hierarchy {
 
     public function deleteNonActivations()
     {
-        $users = User::whereStatus('0')->whereBetween('created_at', [Carbon::now()->subDay(2),Carbon::now()])->get();
+        $users = User::whereStatus('0')->whereBetween('created_at', [Carbon::now()->subDay(2),Carbon::now()->subDay(1)])->get();
 
         foreach ($users as $item){
             $result = UserProgram::where('user_id',$item->id)->first();

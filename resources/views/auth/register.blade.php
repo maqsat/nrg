@@ -107,7 +107,9 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="position">Офис:</label>
-                                                    <select class="form-control form-control-line" name="office_id" id="user_offices"></select>
+                                                    <select class="form-control form-control-line" name="office_id" id="office_id">
+                                                        <option>Не указан</option>
+                                                    </select>
                                                     <div class="error-message"></div>
                                                 </div>
                                                 <div class="form-group">
@@ -222,7 +224,7 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/register-validate', false);
 
-                    var params = 'terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&office_id='+document.getElementById("user_offices").selectedIndex+'&country_id='+document.getElementById("country_id").selectedIndex+'&step='+currentIndex;
+                    var params = 'terms='+document.getElementById('terms').value+'&city_id='+document.getElementById("city_id").selectedIndex+'&office_id='+document.getElementById("office_id").selectedIndex+'&country_id='+document.getElementById("country_id").selectedIndex+'&step='+currentIndex;
                     console.log(params);
 
                     xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
@@ -237,6 +239,7 @@
                         console.log( JSON.parse(xhr.responseText) );
                         if(result["status"] == false){
                             for (var key in result.error_list) {
+                                console.log(key);
                                 $('#' + key).addClass('error');
                                 $('#' + key).closest('.form-group').find('.error-message').html('<label id="inviter_id-error" class="text-danger" for="inviter_id">' + result.error_list[key][0] + '</label>');
                             }
@@ -315,7 +318,7 @@
                         inviter_id: document.getElementById('inviter_id').value,
                         terms: document.getElementById('terms').value,
                         city_id: document.getElementById('city_id').value,
-                        office_id: document.getElementById('user_offices').value,
+                        office_id: document.getElementById('office_id').value,
                         country_id: document.getElementById('country_id').value,
                         address: document.getElementById('address').value,
                         post_index: document.getElementById('post_index').value,
@@ -325,7 +328,7 @@
                         window.location.href = "/home";
                     },
                     error: function (request, status, error) {
-                        alert('Есть ошибка в регистрационнных данных. Попробуйте занова!');
+                        alert('Есть ошибка в регистрационнных данных. Попробуйте занова! Напоминаем что причиной ошибки может быть неактивированные пользователи спонсора.');
                     }
                 });
 
@@ -364,7 +367,7 @@
                     console.log('Submission was successful.');
                     console.log(data);
 
-                    $('#user_offices')
+                    $('#office_id')
                         .find('option')
                         .remove()
                         .end()

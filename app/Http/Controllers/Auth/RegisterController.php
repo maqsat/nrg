@@ -89,7 +89,8 @@ class RegisterController extends Controller
         $position = $sponsor_data[1];
 
         $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position)->count();
-        if($checker > 0) return  redirect()->back();
+        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+
 
         return User::create([
             'name' => $data['name'],

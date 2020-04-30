@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Facades\Hierarchy;
 use Illuminate\Console\Command;
 
-class Revitalization extends Command
+class DeleteNonActivations extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'revitalization:start {type}';
+    protected $signature = 'delete:non_activated';
 
     /**
      * The console command description.
@@ -38,11 +38,6 @@ class Revitalization extends Command
      */
     public function handle()
     {
-        if($this->argument('type') == 1) {
-            Hierarchy::revitalization();
-        }
-        else{
-            Hierarchy::revitalizationCron();
-        }
+        Hierarchy::deleteNonActivations();
     }
 }
