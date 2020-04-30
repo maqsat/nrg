@@ -136,7 +136,34 @@ class PayController extends Controller
         if($request->type == "manual"){
             return view('processing.manual', compact('order', 'cost'));
         }
-        if($request->type == "paypost"){}
+        if($request->type == "paypost"){
+            $payment_webhook = "http://nrg-max.kz/pay-processing/$order_id/";
+
+            $payPost = PayPost::generateUrl([
+                'amount' => $cost*env('DOLLAR_COURSE'),
+                //'amount' => 10,
+                'email' => Auth::user()->email,
+                'language' => 'ru',
+                'currency' => 'KZT',
+                'type' => 'card',
+                'payment_webhook' => $payment_webhook
+            ]);
+
+            if ($payPost->success) {
+                // todo white success instructions
+                $paymentId = $payPost->result->payment;
+                $paymentUrl = $payPost->result->url;
+
+                Order::where('id',$order->id)->update([
+                    'uuid' => $paymentId,
+                ]);
+
+                return redirect($paymentUrl);
+            }
+            else{
+                dd("Что то пошло не так, уведовимте администратора сайта");
+            }
+        }
         if($request->type == "robokassa"){}
         if($request->type == "payeer"){}
         if($request->type == "paybox"){}
@@ -229,6 +256,7 @@ class PayController extends Controller
 
     public function payProcessing(Request $request, $id)
     {
+
         $order = Order::find($id);
         $user_id = $order->user_id;
 
@@ -272,8 +300,49 @@ class PayController extends Controller
             $user  = User::find($user_id);
             event(new Activation($user = $user));
         }
+        if($order->payment == 'paypost'){
+            $check = PayPost::checkStatusPay("$order->uuid");
 
+            if($check->success){
 
+                Order::where('uuid',$check->result->id)
+                    ->update([
+                        'status' => $check->result->status,
+                    ]);
+
+                $uuid_order = Order::where('uuid',$check->result->id)->first();
+
+                $user = User::find($uuid_order->user_id);
+
+                if($check->result->status == 4 or $check->result->status == 6){
+
+                    if($uuid_order->type == 'shop'){
+                        Basket::whereId($uuid_order->basket_id)->update(['status' => 1]);
+                        $basket = Basket::find($uuid_order->basket_id);
+                        //event(new ShopTurnover($basket = $basket));
+                    }
+                    else{
+                        if($user->status == 1) {
+                            Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь уже активирован: $user->id");
+                        }
+                        else{
+                            User::whereId($user->id)->update(['status' => 1]);
+                            event(new Activation($user = $user));
+                            Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь успешно активирован: $user->id");
+                        }
+                    }
+                }
+                else{
+                    $success = $check->result->status;
+                    Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Ошибка оплаты с кодом: $success у пользователя: $user->id");
+                }
+
+                return redirect('/home');
+            }
+            else{
+                Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),'Pay Error 2');
+            }
+        }
     }
 
     public function paypostSend(Request $request)

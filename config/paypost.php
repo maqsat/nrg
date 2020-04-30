@@ -11,16 +11,16 @@ return [
     'stages' => [
         'test' => [
             'url' => 'https://testpay.post.kz',
-            'token' => env('PAY_POST_TEST_TOKEN'),
+            'token' => '43aa10b199c03d5342907e7d6f3f9217e88a9824',
             'key' => env('PAY_POST_TEST_KEY', 'DEMO'),
         ],
         'prod' => [
             'url' => 'https://pay.post.kz',
-            'token' => env('PAY_POST_PROD_TOKEN'),
+            'token' => 'abe5c50959ad1d64c3d6bab61adfb8dae95c73f2',
             'key' => env('PAY_POST_PROD_KEY'),
         ]
     ],
-    'back_link' => 'http://en-rise.com/home',
+    'back_link' => 'http://nrg-max.kz/home',
     'urls' => [
         'generateUrl' => '/api/v0/orders/payment/',
     ]
