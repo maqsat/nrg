@@ -19,13 +19,19 @@ use App\Facades\Hierarchy;
 use App\Events\Activation;
 use App\Events\ShopTurnover;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
 {
 
     public function tester()
     {
-        $sponsor_data = Hierarchy::deleteNonActivations();
+        $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->get();
+
+        foreach ($list as $item){
+            $count = Counter::where('user_id',1340)->where('inner_user_id',$item->user_id)->count();
+            if($count == 0) dd($item);
+        }
     }
 
 
