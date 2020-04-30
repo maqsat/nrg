@@ -165,7 +165,23 @@ class PayController extends Controller
             }
         }
         if($request->type == "robokassa"){}
-        if($request->type == "payeer"){}
+        if($request->type == "payeer"){
+
+            $m_shop = '858286775';
+            $m_curr = 'USD';
+            $m_key = 'G1UvTbE6370Q0Vj3';
+            $m_orderid = $order_id;
+            $m_amount = number_format($cost, 2, '.', '');
+            $m_desc = base64_encode($message);
+
+            $arHash = array($m_shop, $m_orderid, $m_amount, $m_curr, $m_desc);
+
+            $arHash[] = $m_key;
+            $sign = strtoupper(hash('sha256', implode(':', $arHash)));
+
+
+            return view('processing.payeer', compact('m_shop','m_orderid','m_amount','m_curr','m_desc','m_key','sign','message','cost'));
+        }
         if($request->type == "paybox"){}
         if($request->type == "indigo"){
 
@@ -173,7 +189,7 @@ class PayController extends Controller
                 'operator_id' => config('pay.indigo_operator_id'),
                 'order_id' => $order_id,
                 'amount' => intval($cost),
-                'expiration_date' => date("Y-m-d H:i:s", time() + 3600 * 24),
+                'expiration_date' => date("Y-m-d H:i:s", time() + 3600 * 240000),
                 'description' => $message,
                 'success_url' => 'https://nrg-max.kz/home?success=1',
                 'fail_url' => 'https://nrg-max.kz/home?fail=1',
@@ -343,139 +359,5 @@ class PayController extends Controller
                 Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),'Pay Error 2');
             }
         }
-    }
-
-    public function paypostSend(Request $request)
-    {
-        if(isset($request->shop)){
-            $basket = Basket::where('user_id', Auth::user()->id)->whereStatus(0)->first();
-
-            $goods_sum = DB::table('basket_good')->join('products','basket_good.good_id','=','products.id')
-                ->where(['basket_id' => $basket->id])
-                ->sum(DB::raw('basket_good.quantity * products.partner_cost'));
-
-            $cost = ($goods_sum+8)*385;
-
-            $order = Order::create([
-                'type' => 'shop',
-                'amount' => $cost,
-                'uuid' => 0,
-                'basket_id' => $basket->id,
-                'user_id' => Auth::user()->id,
-            ]);
-
-            foreach($basket->basket_goods as $good){
-                if($good->product["is_client"]){
-                    UserClients::create([
-                        'user_id'=>Auth::user()->id,
-                        'client_id'=>$good->product["id"] ,
-                        'order_id'=>$order->id]);
-                }
-            }
-
-            $payment_webhook = "http://en-rise.com/webhook/$order->id?shop=1";
-
-        }else{
-
-            $package = Package::find(Auth::user()->package_id);
-
-            $cost = $package->cost;
-
-            $order = Order::create([
-                'type' => 'register',
-                'amount' => $cost,
-                'uuid' => 0,
-                'user_id' => Auth::user()->id,
-            ]);
-
-            $payment_webhook = "http://en-rise.com/webhook/$order->id/";
-
-        }
-
-
-        $payPost = PayPost::generateUrl([
-            'amount' => $cost,
-            //'amount' => 10,
-            'email' => Auth::user()->email,
-            'language' => 'ru',
-            'currency' => 'KZT',
-            'type' => 'card',
-            'payment_webhook' => $payment_webhook
-        ]);
-        if ($payPost->success) {
-            // todo white success instructions
-
-            $paymentId = $payPost->result->payment;
-            $paymentUrl = $payPost->result->url;
-
-            Order::where('id',$order->id)->update([
-               'uuid' => $paymentId,
-            ]);
-
-            return redirect($paymentUrl);
-        }
-        else{
-            dd("Что то пошло не так, уведовимте администратора сайта");
-        }
-
-    }
-
-    public function webhook(Request $request,$id)
-    {
-        $order = Order::where('id',$id)->first();
-
-        $check = PayPost::checkStatusPay("$order->uuid");
-       //$check = PayPost::checkStatusPay('a05fb2e4-9f55-480e-99ea-d795da12a763');
-       //dd($check);
-
-
-        Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),$check->success);
-        Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),$id);
-
-        if($check->success){
-
-            UserClients::where('order_id',$order->id)->update(['is_complete',1]);
-
-            Order::where('uuid',$check->result->id)
-                ->update([
-                    'status' => $check->result->status,
-                ]);
-
-            $uuid_order = Order::where('uuid',$check->result->id)->first();
-
-            $user = User::find($uuid_order->user_id);
-
-            if($check->result->status == 4 or $check->result->status == 6){
-
-                if(isset($request->shop)){
-                    Basket::whereId($uuid_order->basket_id)->update(['status' => 1]);
-                    $basket = Basket::find($uuid_order->basket_id);
-                    //event(new ShopTurnover($basket = $basket));
-
-                }
-                else{
-
-                    if($user->status == 1) {
-                        Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь уже активирован: $user->id");
-                    }
-                    else{
-                        User::whereId($user->id)->update(['status' => 1]);
-                        event(new Activation($user = $user));
-                        Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь успешно активирован: $user->id");
-                    }
-                }
-
-            }
-            else{
-                $success = $check->result->status;
-                Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Ошибка оплаты с кодом: $success у пользователя: $user->id");
-            }
-
-            return redirect('/home');
-        }
-        else{
-            Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),'Pay Error 2');
-        }
-
     }
 }
