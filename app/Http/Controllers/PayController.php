@@ -174,25 +174,22 @@ class PayController extends Controller
             $m_amount = number_format($cost, 2, '.', '');
             $m_desc = base64_encode($message);
 
+            $arHash = array($m_shop, $m_orderid, $m_amount, $m_curr, $m_desc);
+
+
             $arParams = array(
-                'success_url' => 'http://nrg-max.kz/home',
-                'fail_url' => 'http://nrg-max.kz/home',
-                'status_url' => "http://nrg-max.kz/pay-processing/$order_id/",
+                'success_url' => 'http://nrg-max.kz/new_success_url',
+                //'fail_url' => 'http://nrg-max.kz/new_fail_url',
+                //'status_url' => 'http://nrg-max.kz/new_status_url',
             );
 
-            $key = md5(''.$m_orderid);
+            $key = md5('G1UvTbE6370Q0Vj3'.$m_orderid);
             $m_params = @urlencode(base64_encode(openssl_encrypt(json_encode($arParams), 'AES-256-CBC', $key, OPENSSL_RAW_DATA)));
+            $arHash[] = $m_params;
 
-            $arHash = array($m_shop, $m_orderid, $m_amount, $m_curr, $m_desc,json_encode($arParams));
 
             $arHash[] = $m_key;
             $sign = strtoupper(hash('sha256', implode(':', $arHash)));
-
-
-
-
-
-
 
             return view('processing.payeer', compact('m_shop','m_orderid','m_amount','m_curr','m_desc','m_key','sign','message','cost'));
         }
