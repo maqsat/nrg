@@ -39,7 +39,7 @@ class StoreController extends Controller
             if($request->has('tag')){
                 $list = Tag::find($request->tag)->products;
             }
-            dd($list);
+
             return view('product.main', compact('list','tag','orders','balance'));
         }
 
