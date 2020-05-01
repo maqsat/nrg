@@ -61,7 +61,7 @@
                             <div class="card ribbon-wrapper">
                                 <div class="ribbon ribbon-bookmark  ribbon-success">{{ $item->partner_cost }} $</div>
                                 {{--<div class="ribbon ribbon-bookmark  ribbon-danger">+ {{ $item->cv }} cv</div>--}}
-                                <div class="ribbon ribbon-bookmark  ribbon-info">+ {{ $item->pv }} qv</div>
+                                <div class="ribbon ribbon-bookmark  ribbon-info">+ {{ $item->pv }} pv</div>
                                 <img class="card-img-top img-fluid" src="{{ $item->image1 }}" alt="{{ $item->title }}">
                                 <div class="card-block">
                                     <h4 class="card-title">{{ $item->title }}</h4>

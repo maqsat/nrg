@@ -26,12 +26,9 @@ class TestController extends Controller
 
     public function tester()
     {
-        $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->get();
+        $user  = User::find(1867);
 
-        foreach ($list as $item){
-            $count = Counter::where('user_id',1340)->where('inner_user_id',$item->user_id)->count();
-            if($count == 0) dd($item);
-        }
+        event(new Activation($user = $user));
     }
 
 

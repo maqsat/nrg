@@ -176,18 +176,6 @@ class PayController extends Controller
 
             $arHash = array($m_shop, $m_orderid, $m_amount, $m_curr, $m_desc);
 
-
-            $arParams = array(
-                'success_url' => 'http://nrg-max.kz/new_success_url',
-                //'fail_url' => 'http://nrg-max.kz/new_fail_url',
-                //'status_url' => 'http://nrg-max.kz/new_status_url',
-            );
-
-            $key = md5('G1UvTbE6370Q0Vj3'.$m_orderid);
-            $m_params = @urlencode(base64_encode(openssl_encrypt(json_encode($arParams), 'AES-256-CBC', $key, OPENSSL_RAW_DATA)));
-            $arHash[] = $m_params;
-
-
             $arHash[] = $m_key;
             $sign = strtoupper(hash('sha256', implode(':', $arHash)));
 
@@ -370,50 +358,57 @@ class PayController extends Controller
                 Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),'Pay Error 2');
             }
         }
-        if($order->payment == 'payeer'){
-            if (!in_array($_SERVER['REMOTE_ADDR'], array('185.71.65.92', '185.71.65.189', '149.202.17.210'))) return 0;
-            if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
+
+    }
+
+    public function payeer(Request $request)
+    {
+        if (!in_array($_SERVER['REMOTE_ADDR'], array('185.71.65.92', '185.71.65.189', '149.202.17.210'))) return 0;
+        if (isset($_POST['m_operation_id']) && isset($_POST['m_sign']))
+        {
+            $m_key = 'G1UvTbE6370Q0Vj3';
+
+            $arHash = array(
+                $_POST['m_operation_id'],
+                $_POST['m_operation_ps'],
+                $_POST['m_operation_date'],
+                $_POST['m_operation_pay_date'],
+                $_POST['m_shop'],
+                $_POST['m_orderid'],
+                $_POST['m_amount'],
+                $_POST['m_curr'],
+                $_POST['m_desc'],
+                $_POST['m_status']
+            );
+
+            if (isset($_POST['m_params']))
             {
-                $m_key = '0xIW0GjW70tVnqPW';
-
-                $arHash = array(
-                    $_POST['m_operation_id'],
-                    $_POST['m_operation_ps'],
-                    $_POST['m_operation_date'],
-                    $_POST['m_operation_pay_date'],
-                    $_POST['m_shop'],
-                    $_POST['m_orderid'],
-                    $_POST['m_amount'],
-                    $_POST['m_curr'],
-                    $_POST['m_desc'],
-                    $_POST['m_status']
-                );
-
-                if (isset($_POST['m_params']))
-                {
-                    $arHash[] = $_POST['m_params'];
-                }
-
-                $arHash[] = $m_key;
-                $sign_hash = strtoupper(hash('sha256', implode(':', $arHash)));
-
-                if ($_POST['m_sign'] == $sign_hash && $_POST['m_status'] == 'success')
-                {
-                    $order = Order::find($_POST['m_orderid']);
-                    Order::where('id',$_POST['m_orderid'])->update([
-                        'status' => 1,
-                    ]);
-                    $data = [];
-                    //$data['inviter_id'] = $order->inviter_id;
-                    $data['program_id'] = $order->program_id;
-                    $data['user_id'] = $order->user_id;
-
-                    event(new Activation($user = $data));
-                    ob_end_clean(); exit($_POST['m_orderid'].'|success');
-                }
-                ob_end_clean(); exit($_POST['m_orderid'].'|error');
+                $arHash[] = $_POST['m_params'];
             }
-            else return 0;
+
+            $arHash[] = $m_key;
+            $sign_hash = strtoupper(hash('sha256', implode(':', $arHash)));
+
+            if ($_POST['m_sign'] == $sign_hash && $_POST['m_status'] == 'success')
+            {
+                $order = Order::find($_POST['m_orderid']);
+                Order::where('id',$_POST['m_orderid'])->update([
+                    'status' => 1,
+                ]);
+                $user = User::find($order->user_id);
+
+                if($user->status == 1) {
+                    Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь уже активирован: $user->id");
+                }
+                else{
+                    User::whereId($user->id)->update(['status' => 1]);
+                    event(new Activation($user = $user));
+                    Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь успешно активирован: $user->id");
+                }
+                ob_end_clean(); exit($_POST['m_orderid'].'|success');
+            }
+            ob_end_clean(); exit($_POST['m_orderid'].'|error');
         }
+        else return 0;
     }
 }

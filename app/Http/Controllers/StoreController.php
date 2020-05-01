@@ -34,11 +34,12 @@ class StoreController extends Controller
             return view('product.user-main', compact('list','tag','orders','balance'));
         }
         else{
-            $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
+            $list = Product::whereNull('is_client')->orderBy('created_at','desc')->get();
             $tag = Tag::all();
             if($request->has('tag')){
                 $list = Tag::find($request->tag)->products;
             }
+            dd($list);
             return view('product.main', compact('list','tag','orders','balance'));
         }
 

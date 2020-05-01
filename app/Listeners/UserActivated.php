@@ -297,13 +297,16 @@ class UserActivated
 
                         $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
 
-                        if($credited_sum < $item_status->week_sum_limit){
+                        /*if($credited_sum < $item_status->week_sum_limit){
                             $temp_sum = 0;
                             if($credited_sum + $sum >  $item_status->week_sum_limit){
                                 $temp_sum = $item_status->week_sum_limit-$credited_sum;
                                 $temp_sum = $sum - $temp_sum;
                                 $sum = $sum - $temp_sum;
-                            }
+                            }*/
+                        if(true){
+                            $temp_sum = 0;
+                            $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');//удалить
 
                             Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package->id,$item_status->id,$to_enrollment_pv,$temp_sum);
 
