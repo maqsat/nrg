@@ -222,7 +222,7 @@ class Hierarchy {
      */
     public function setQS()
     {
-        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),date('N')-1)->get();
+        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),4)->get();
 
         foreach ($user_programs as $item){
 
@@ -233,22 +233,16 @@ class Hierarchy {
                 ->get();
 
             if(count($users) >= 2){
-
                 foreach ($users as $innerItem){
                     if($item->package_id != 0){
                         if($innerItem->package_id != 0){
                             $package = Package::find($innerItem->package_id);
                             $sum = $package->pv*20/100*env('COURSE');
-                            echo $item->user_id."<br>";
                             Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
                         }
                     }
-
                 }
-
             }
-
-
         }
     }
 
