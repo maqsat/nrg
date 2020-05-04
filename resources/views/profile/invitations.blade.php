@@ -38,6 +38,7 @@
                                         <th>Пакет</th>
                                         <th>Номер</th>
                                         <th>Почта</th>
+                                        <th>Дата регистрации</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -50,6 +51,7 @@
                                             <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ $item->number }}</span></td>
                                             <td><span class="text-success">{{ $item->email }}</span></td>
+                                            <td><span class="text-success">{{ $item->created_at }}</span></td>
                                         </tr>
                                     @endforeach
                                     </tbody>

@@ -26,9 +26,7 @@ class TestController extends Controller
 
     public function tester()
     {
-        $user  = User::find(1867);
-
-        event(new Activation($user = $user));
+        Hierarchy::setTempQS();
     }
 
 

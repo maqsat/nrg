@@ -256,7 +256,7 @@ class Hierarchy {
     {
         echo "<br>";
 
-        for($i = 6; $i <= 29; $i++){
+        for($i = 6; $i <= 30; $i++){
             $date = new \DateTime();
             $date->setDate(2020, 4, $i);
             $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 0, 0, 0, 'Asia/Almaty');
@@ -264,9 +264,7 @@ class Hierarchy {
             $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),$date->format('N')-1)->get();
 
             foreach ($user_programs as $item){
-
                 $dt2 = $dt->copy();
-
                 $users = User::join('user_programs','users.id','=','user_programs.user_id')
                     ->where('users.inviter_id',$item->user_id)
                     ->where('users.status',1)
@@ -274,7 +272,6 @@ class Hierarchy {
                     ->get();
 
                 if(count($users) >= 2){
-
                     foreach ($users as $innerItem){
                         if($item->package_id != 0){
                             if($innerItem->package_id != 0){
