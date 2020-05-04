@@ -256,9 +256,9 @@ class Hierarchy {
     {
         echo "<br>";
 
-        for($i = 6; $i <= 30; $i++){
+        for($i = 1; $i <= 4; $i++){
             $date = new \DateTime();
-            $date->setDate(2020, 4, $i);
+            $date->setDate(2020, 5, $i);
             $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 0, 0, 0, 'Asia/Almaty');
 
             $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),$date->format('N')-1)->get();
