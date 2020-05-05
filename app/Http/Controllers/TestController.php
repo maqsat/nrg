@@ -26,7 +26,7 @@ class TestController extends Controller
 
     public function tester()
     {
-        Hierarchy::setTempQS();
+        Hierarchy::setQS();
     }
 
 

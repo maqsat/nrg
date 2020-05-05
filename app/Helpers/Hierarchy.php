@@ -222,7 +222,7 @@ class Hierarchy {
      */
     public function setQS()
     {
-        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),4)->get();
+        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),date('N')-1)->get();
 
         foreach ($user_programs as $item){
 
@@ -238,7 +238,10 @@ class Hierarchy {
                         if($innerItem->package_id != 0){
                             $package = Package::find($innerItem->package_id);
                             $sum = $package->pv*20/100*env('COURSE');
-                            Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
+                            $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
+                            if(is_null($check)){
+                                Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
+                            }
                         }
                     }
                 }
@@ -273,7 +276,10 @@ class Hierarchy {
                                 $package = Package::find($innerItem->package_id);
                                 $sum = $package->pv*20/100*env('COURSE');
                                 echo $item->user_id."<br>";
-                                Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
+                                $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
+                                if(is_null($check)){
+                                    Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
+                                }
                             }
                         }
 
