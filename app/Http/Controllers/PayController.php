@@ -31,6 +31,7 @@ class PayController extends Controller
             return view('processing.types-for-upgrade',compact('package','current_package'));
         }
         elseif (isset($request->basket)){
+
             $balance = Balance::getBalance(Auth::user()->id);
             $revitalization = Balance::revitalizationBalance(Auth::user()->id);
 
@@ -89,6 +90,7 @@ class PayController extends Controller
 
             }
             else{
+
                 $order =  Order::updateOrCreate(
                     [
                         'type' => 'shop',
@@ -221,7 +223,7 @@ class PayController extends Controller
         }
         if($request->type == "balance"){
 
-            if(Balance::getBalance(Auth::user()->id) >= $order->amount)
+            if(Balance::getBalance(Auth::user()->id) < $order->amount)
                 return redirect()->back()->with('status', 'У вас недостаточно средств!');
 
             Order::where( 'id',$order_id)
@@ -245,7 +247,7 @@ class PayController extends Controller
         }
         if($request->type == "revitalization"){
 
-            if(Balance::revitalizationBalance(Auth::user()->id) >= $order->amount)
+            if(Balance::revitalizationBalance(Auth::user()->id) < $order->amount)
                 return redirect()->back()->with('status', 'У вас недостаточно средств!');
 
             Order::where( 'id',$order_id)
