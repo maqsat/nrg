@@ -238,7 +238,7 @@ class Hierarchy {
                         if($innerItem->package_id != 0){
                             $package = Package::find($innerItem->package_id);
                             $sum = $package->pv*20/100*env('COURSE');
-                            $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
+                            $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->where('status','quickstart_bonus')->first();
                             if(is_null($check)){
                                 echo $item->user_id."<br>";
                                 Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
@@ -254,9 +254,9 @@ class Hierarchy {
     {
         echo "<br>";
 
-        for($i = 6; $i <= 30; $i++){
+        for($i = 1; $i <= 5; $i++){
             $date = new \DateTime();
-            $date->setDate(2020, 4, $i);
+            $date->setDate(2020, 5, $i);
             $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 0, 0, 0, 'Asia/Almaty');
 
             $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),$date->format('N')-1)->get();
@@ -276,7 +276,7 @@ class Hierarchy {
 
                                 $package = Package::find($innerItem->package_id);
                                 $sum = $package->pv*20/100*env('COURSE');
-                                $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
+                                $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->where('status','quickstart_bonus')->first();
                                 if(is_null($check)){
                                     echo $item->user_id."<br>";
                                     Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
