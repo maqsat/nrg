@@ -229,7 +229,7 @@ class Hierarchy {
             $users = User::join('user_programs','users.id','=','user_programs.user_id')
                 ->where('users.inviter_id',$item->user_id)
                 ->where('users.status',1)
-                ->whereBetween('user_programs.created_at', [Carbon::now()->subDay(7), Carbon::now()])
+                ->whereBetween('user.created_at', [Carbon::now()->subDay(7), Carbon::now()])
                 ->get();
 
             if(count($users) >= 2){
@@ -250,7 +250,7 @@ class Hierarchy {
     {
         echo "<br>";
 
-        for($i = 1; $i <= 4; $i++){
+        for($i = 1; $i <= 5; $i++){
             $date = new \DateTime();
             $date->setDate(2020, 5, $i);
             $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 0, 0, 0, 'Asia/Almaty');
