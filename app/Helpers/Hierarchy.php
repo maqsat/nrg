@@ -240,6 +240,7 @@ class Hierarchy {
                             $sum = $package->pv*20/100*env('COURSE');
                             $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
                             if(is_null($check)){
+                                echo $item->user_id."<br>";
                                 Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
                             }
                         }
@@ -275,9 +276,9 @@ class Hierarchy {
 
                                 $package = Package::find($innerItem->package_id);
                                 $sum = $package->pv*20/100*env('COURSE');
-                                echo $item->user_id."<br>";
                                 $check = Processing::where('user_id',$item->user_id)->where('in_user',$innerItem->user_id)->first();
                                 if(is_null($check)){
+                                    echo $item->user_id."<br>";
                                     Balance::changeBalance($item->user_id,$sum,'quickstart_bonus',$innerItem->user_id,1,$package->id,$item->status_id,$package->pv);
                                 }
                             }
