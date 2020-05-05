@@ -61,7 +61,7 @@
                                             $inviter = \App\User::find($item->inviter_id);
                                             $package = \App\Models\Package::find($item->package_id);
                                             $user_program = \App\Models\UserProgram::where('user_id',$item->id)->first();
-                                            $order = \App\Models\Order::where('user_id', $item->id)->where('type','upgrade')->orderBy('id','desc')->first();
+                                            $order = \App\Models\Order::where('user_id', $item->id)->where('type','upgrade')->where('payment','manual')->orderBy('id','desc')->first();
                                             $package_new = \App\Models\Package::find($order->package_id);
                                         @endphp
 
