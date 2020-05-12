@@ -27,7 +27,7 @@ class UserActivated
 
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -38,10 +38,10 @@ class UserActivated
      */
     public function handle(Activation $event)
     {
-
         $id = $event->user->id;
         $program = Program::find($event->user->program_id);
         $this_user = User::find($id);
+        $inviter = User::find($event->user->inviter_id);
 
         /*start check*/
         if(is_null($this_user)) dd("Пользователь не найден");
@@ -52,7 +52,6 @@ class UserActivated
         /*end check*/
 
         /*start init and activate*/
-        $inviter = User::find($event->user->inviter_id);
 
         if ($event->user->package_id == 0){
             $package_id = 0;
@@ -64,6 +63,25 @@ class UserActivated
             $package_id = $package->id;
             $status_id = $package->rank;
             $package_cost = $package->cost + env('REGISTRATION_FEE');
+        }
+
+
+        if(is_null($this_user->sponsor_id)){
+            $sponsor_data = Hierarchy::getSponsorId($inviter->id);
+            $sponsor_id = $sponsor_data[0];
+            $position_data = $sponsor_data[1];
+
+            $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position_data)->count();
+            if($checker > 0) dd('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+            else{
+
+                User::find($id)->update([
+                    'sponsor_id' => $sponsor_id,
+                    'position' => $position_data,
+                    'package_id' => $package_id,
+                ]);
+                $this_user = User::find($id);
+            }
         }
 
         if(!is_null($event->user->status_id) && $event->user->status_id != 0  && $status_id < $event->user->status_id){
@@ -112,7 +130,7 @@ class UserActivated
                     $position = 0;
 
                     if((count($sponsors_list) == 1 && $item == 1) || $key == 0){
-                        $position = $event->user->position;
+                        $position = $this_user->position;
                     }
                     elseif(count($sponsors_list) == 2 && $item == 1){
                         $position = User::where('id',$sponsors_list[0])->where('status',1)->first()->position;

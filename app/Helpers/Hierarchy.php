@@ -381,6 +381,9 @@ class Hierarchy {
 
                event(new ShopTurnover($data = $data));
            }
+
+            $item->cron_status = 1;
+            $item->save();
         }
     }
 

@@ -26,7 +26,17 @@ class TestController extends Controller
 
     public function tester()
     {
-        Hierarchy::setTempQS();
+        $sponsor_data = Hierarchy::getSponsorId(1);
+
+        $sponsor_id = $sponsor_data[0];
+        $position = $sponsor_data[1];
+
+        $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position)->count();
+        if($checker > 0) dd('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+
+        dd($sponsor_data);
+
+        //sponsor_id активация жасаганда
     }
 
 

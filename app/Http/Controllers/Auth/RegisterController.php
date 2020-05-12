@@ -83,15 +83,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $sponsor_data = Hierarchy::getSponsorId($data['inviter_id']);
-
-        $sponsor_id = $sponsor_data[0];
-        $position = $sponsor_data[1];
-
-        $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position)->count();
-        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
-
-
         return User::create([
             'name' => $data['name'],
             'number' => $data['number'],
@@ -102,8 +93,8 @@ class RegisterController extends Controller
             'program_id' => $data['program_id'],
             'birthday' => $data['birthday'],
             'city_id' => $data['city_id'],
-            'sponsor_id' => $sponsor_id,
-            'position' => $position,
+            //'sponsor_id' => $sponsor_id,
+            //'position' => $position,
             'country_id'    => $data['country_id'],
             'office_id'     =>  $data['office_id'],
             'iin' => $data['iin'],
