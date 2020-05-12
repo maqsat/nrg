@@ -361,7 +361,7 @@ class UserController extends Controller
     {
         $order = Order::find($order_id);
 
-        if($order->status != 4){
+        if(true){
             Order::where( 'id',$order_id)
                 ->update(
                     [
