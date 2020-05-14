@@ -39,6 +39,39 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Апгрейд</h4>
+                            <div class="text-right">
+                                <h1 class="font-light"><sup><i class="ti-arrow-up text-success"></i></sup> ${{ round($upgrade) }}</h1>
+                            </div>
+                            <span class="text-success">80%</span>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 80%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-block">
+                            <h4 class="card-title">Интернет магазин</h4>
+                            <div class="text-right">
+                                <h1 class="font-light"><sup><i class="ti-arrow-up text-success"></i></sup> ${{ $shop }}</h1>
+                            </div>
+                            <span class="text-inverse">10%</span>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 10%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+
+            <div class="row">
                 <!-- Column -->
                 <!-- Column -->
                 <div class="col-lg-3 col-md-6">
@@ -62,27 +95,11 @@
                         <div class="card-block">
                             <h4 class="card-title">Выведено</h4>
                             <div class="text-right">
-                                <h1 class="font-light"><sup><i class="ti-arrow-up text-inverse"></i></sup> ${{ $out }}</h1>
+                                <h1 class="font-light"><sup><i class="ti-arrow-up text-danger"></i></sup> ${{ $out }}</h1>
                             </div>
-                            <span class="text-inverse">0%</span>
+                            <span class="text-danger">25%</span>
                             <div class="progress">
-                                <div class="progress-bar bg-inverse" role="progressbar" style="width: 0%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Column -->
-                <!-- Column -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="card">
-                        <div class="card-block">
-                            <h4 class="card-title">Интернет магазин</h4>
-                            <div class="text-right">
-                                <h1 class="font-light"><sup><i class="ti-arrow-up text-inverse"></i></sup> ${{ $shop }}</h1>
-                            </div>
-                            <span class="text-inverse">10%</span>
-                            <div class="progress">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 10%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 60%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>

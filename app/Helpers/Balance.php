@@ -110,7 +110,7 @@ class Balance {
 
     public function getBalanceAllUsers()
     {
-        $sum = Processing::whereIn('status', ['sponsor_bonus','partner_bonus', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','mentoring_bonus','auto_bonus'])->sum('sum') - Processing::whereStatus('out')->sum('sum');
+        $sum = Processing::whereIn('status', ['turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum') - Processing::whereStatus('out')->sum('sum');
         return round($sum, 2);
     }
 

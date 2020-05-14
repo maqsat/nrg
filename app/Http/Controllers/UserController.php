@@ -118,7 +118,10 @@ class UserController extends Controller
         if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
 
         $package = Package::find($request->package_id);
-        $status_id = $package->rank;
+        if (is_null($package))   $status_id = 1;
+        else   $status_id = $package->rank;
+
+
 
         if ($status_id < $request->status_id){
             $status_id = $request->status_id;

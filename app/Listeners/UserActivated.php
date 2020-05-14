@@ -202,6 +202,7 @@ class UserActivated
                                     $left_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
                                         ->where('list','like','%,'.$left_user->id.','.$item.',%')
                                         ->where('users.inviter_id',$item)
+                                        ->where('user_programs.package_id','>=',1)
                                         ->count();
                                     $left_user_status = UserProgram::where('user_id',$left_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
                                     if($left_user_status > 0){
@@ -211,6 +212,7 @@ class UserActivated
                                     $right_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
                                         ->where('list','like','%,'.$right_user->id.','.$item.',%')
                                         ->where('users.inviter_id',$item)
+                                        ->where('user_programs.package_id','>=',1)
                                         ->count();
 
                                     $right_user_status = UserProgram::where('user_id',$right_user->id)->where('inviter_list','like','%,'.$item.',%')->where('status_id','>=',$item_status->id)->count();
@@ -275,6 +277,7 @@ class UserActivated
                         $left_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
                             ->where('list','like','%,'.$left_user->id.','.$item.',%')
                             ->where('users.inviter_id',$item)
+                            ->where('user_programs.package_id','>=',1)
                             ->count();
                         $left_user_status = UserProgram::where('user_id',$left_user->id)->where('inviter_list','like','%,'.$item.',%')->count();
                         if($left_user_status > 0){
@@ -284,6 +287,7 @@ class UserActivated
                         $right_user_count = UserProgram::join('users','user_programs.user_id','=','users.id')
                             ->where('list','like','%,'.$right_user->id.','.$item.',%')
                             ->where('users.inviter_id',$item)
+                            ->where('user_programs.package_id','>=',1)
                             ->count();
                         $right_user_status = UserProgram::where('user_id',$right_user->id)->where('inviter_list','like','%,'.$item.',%')->count();
                         if($right_user_status > 0){
@@ -336,13 +340,19 @@ class UserActivated
 
                             foreach ($inviter_list as $inviter_key => $inviter_item){
                                 if($inviter_item != ''){
-                                    $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
-                                    if(!is_null($inviter_user_program) && $inviter_user_program->package_id != 1){
-                                        $list_inviter_status = Status::find($inviter_user_program->status_id);
-                                        if($list_inviter_status->depth_line >= $inviter_key+1){
-                                            Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package->id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
+
+                                    $check_user_processing = Processing::where('user_id',$inviter_item)->where('status','turnover_bonus')->first();
+
+                                    if(!is_null($check_user_processing)){
+                                        $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
+                                        if(!is_null($inviter_user_program) && $inviter_user_program->package_id != 1){
+                                            $list_inviter_status = Status::find($inviter_user_program->status_id);
+                                            if($list_inviter_status->depth_line >= $inviter_key+1){
+                                                Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package->id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
+                                            }
                                         }
                                     }
+
                                 }
                             }
                             /*end  set  matching_bonus  */

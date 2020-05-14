@@ -245,11 +245,12 @@ class ProcessingController extends Controller
     public function overview()
     {
         $register = Processing::where('status', 'register')->sum('sum');
+        $upgrade = Processing::where('status', 'upgrade')->sum('sum');
         $commission = Balance::getBalanceAllUsers();
         $out = Balance::getBalanceOutAllUsers();
         $shop = Processing::where('status', 'shop')->sum('sum');
 
-        return view('processing.overview',compact('register','commission','out','shop'));
+        return view('processing.overview',compact('register','commission','out','shop', 'upgrade'));
     }
 
     public function request(Request $request)
