@@ -99,7 +99,7 @@ class UserController extends Controller
         $request->validate([
             'name'          => 'required',
             'number'        => 'required',
-            //'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
             //gender'        => 'required',
             //'birthday'      => 'required',
             'country_id'    => 'required',
@@ -655,12 +655,6 @@ class UserController extends Controller
                 'type' => 3,
                 'user_id' => $id,
             ]);
-
-            $user->package_id = $request->package_id;
-            $user->save();
-
-            $user_program->package_id = $request->package_id;
-            $user_program->save();
 
             $package = Package::find($request->package_id);
             $current_package = Package::find($user->package_id);

@@ -56,8 +56,12 @@ class UserUpgraded
             $status_id = $current_user->status_id;
         }
 
-        if(is_null($old_package)) $upgrade_pv = $new_package->pv - 0;
-        else $upgrade_pv = $new_package->pv - $old_package->pv;
+        if(is_null($old_package)) {
+            $upgrade_pv = $new_package->pv - 0;
+        }
+        else {
+            $upgrade_pv = $new_package->pv - $old_package->pv;
+        }
 
         Balance::changeBalance($id,$package_cost,'upgrade',$id,$program->id,$new_package->id,0);
 
