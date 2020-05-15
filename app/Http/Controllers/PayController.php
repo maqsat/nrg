@@ -336,7 +336,31 @@ class PayController extends Controller
                     if($uuid_order->type == 'shop'){
                         Basket::whereId($uuid_order->basket_id)->update(['status' => 1]);
                         $basket = Basket::find($uuid_order->basket_id);
-                        //event(new ShopTurnover($basket = $basket));
+
+                        $order_pv = Order::join('baskets','baskets.id','=','orders.basket_id')
+                            ->join('basket_good','basket_good.basket_id','=','baskets.id')
+                            ->join('products','basket_good.good_id','=','products.id')
+                            ->where('orders.type','shop')
+                            ->where('orders.basket_id',$basket->id)
+                            ->where('orders.not_original',null)
+                            ->groupBy('basket_good.good_id')
+                            ->select([DB::raw('basket_good.quantity * products.pv as sum')])
+                            ->get();
+
+                        $sum_pv = 0;
+                        foreach ($order_pv as $pv){
+                            $sum_pv +=$pv->sum;
+                        }
+
+                        if($sum_pv > 0){
+                            $data = [];
+                            $data['pv'] = $sum_pv;
+                            $data['user_id'] = $basket->user_id;
+
+                            event(new ShopTurnover($data = $data));
+
+                            return "<h2>Заказ успешно одобрена!</h2>";
+                        }
                     }
                     else{
                         if($user->status == 1) {

@@ -16,7 +16,7 @@ class BasketController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+        $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->whereNotIn('status',[1,6,4])->where('payment','manual')->orderBy('id','desc')->first();
 
         if(is_null($orders) or $orders->status == 12) {
             if(isset($request['id']))

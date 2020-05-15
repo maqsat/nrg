@@ -378,7 +378,6 @@ class Hierarchy {
                Balance::changeBalance($item->user_id,$item->commission_sum,'revitalization',$item->user_id,1,$user_program->package_id,$user_program->status_id,$item->commission_pv);
                Balance::changeBalance($item->user_id,$item->commission_sum*0.2,'cashback',$item->user_id,1,$user_program->package_id,$user_program->status_id,$item->commission_pv);
 
-
                $data = [];
                $data['pv'] = $item->commission_pv;
                $data['user_id'] = $item->user_id;

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <section id="wrapper" class="login-register login-sidebar only-login-page"   style="background-image:url(/nrg/bg.jpg);">
+    <section id="wrapper" class="login-register login-sidebar only-login-page"   style="background-image:url(/nrg/bg.png);">
         <div class="login-box card p-t-30">
             <div class="card-block">
                     <form method="POST" action="{{ route('login') }}" class="form-horizontal form-material"  id="loginform" >

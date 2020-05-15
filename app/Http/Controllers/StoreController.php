@@ -23,7 +23,7 @@ class StoreController extends Controller
         $balance = Balance::revitalizationBalance(Auth::user()->id);
 
 
-        $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->where('payment','manual')->orderBy('id','desc')->first();
+        $orders = Order::where('user_id', Auth::user()->id)->where('type','shop')->whereNotIn('status',[1,6,4])->where('payment','manual')->orderBy('id','desc')->first();
 
         if($user->type==1){
             $list = Product::whereNull('is_client')->orderBy('created_at','desc')->paginate();
@@ -49,7 +49,6 @@ class StoreController extends Controller
     public function story()
     {
         $list = Order::where('user_id',Auth::user()->id)->where('type','shop')->paginate(30);
-
 
         return view('basket.story',compact('list'));
     }

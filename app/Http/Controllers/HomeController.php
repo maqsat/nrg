@@ -46,7 +46,7 @@ class HomeController extends Controller
         $orders = Order::where('user_id',Auth::user()->id)->where('status',0)->where('uuid','!=',null)->where('uuid','!=',0)->get();
         foreach ($orders as $item){
             $order_id = $item->id;
-            $payment_webhook = "http://127.0.0.1:8000/pay-processing/$order_id/";
+            $payment_webhook = "http://nrg-max.kz/pay-processing/$order_id/";
             return redirect($payment_webhook);
         }
         //end check KazPost order status

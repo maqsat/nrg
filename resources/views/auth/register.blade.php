@@ -1,7 +1,7 @@
 @extends('layouts.template')
 
 @section('content')
-    <section id="wrapper" class="login-register register-padding"  style="background-image:url(/nrg/bg.jpg);">
+    <section id="wrapper" class="login-register register-padding"  style="background-image:url(/nrg/bg.png);">
         <div class="row">
             <div class="col-10 offset-1">
                 <div class="card">

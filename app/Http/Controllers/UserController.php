@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ShopTurnover;
 use App\Facades\Hierarchy;
 use App\Models\Basket;
 use App\Models\Office;
@@ -339,9 +340,32 @@ class UserController extends Controller
             );
         Basket::whereId($basket_id)->update(['status' => 1]);
 
-        //call event
+        $order_pv = Order::join('baskets','baskets.id','=','orders.basket_id')
+            ->join('basket_good','basket_good.basket_id','=','baskets.id')
+            ->join('products','basket_good.good_id','=','products.id')
+            ->where('orders.type','shop')
+            ->where('orders.basket_id',$basket_id)
+            ->where('orders.not_original',null)
+            ->groupBy('basket_good.good_id')
+            ->select([DB::raw('basket_good.quantity * products.pv as sum')])
+            ->get();
 
-        return "<h2>Заказ успешно одобрена!</h2>";
+        $sum_pv = 0;
+        foreach ($order_pv as $pv){
+            $sum_pv +=$pv->sum;
+        }
+
+        if($sum_pv > 0){
+            $data = [];
+            $data['pv'] = $sum_pv;
+            $data['user_id'] = Basket::find($basket_id)->user_id;
+
+            event(new ShopTurnover($data = $data));
+
+            return "<h2>Заказ успешно одобрена!</h2>";
+        }
+
+        return "<h2>Нет достаточного количестов PV!</h2>";
     }
 
     public function cancelBasket($basket_id)
