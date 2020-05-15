@@ -194,12 +194,12 @@ class ProductController extends Controller
     }
     public function orders(Request $request){
 
-        $orders_query = Order::orderBy('updated_at' , 'desc')->where('type','shop');
+        $orders_query = Order::orderBy('updated_at' , 'desc')->where('type','shop')->where('status',11);
 
         if(isset($request->shop)) $orders_query = $orders_query->where('status',11);
         else $orders_query = $orders_query->where('status',4)->orWhere('status',6);
 
-        $orders = $orders_query->paginate();
+        $orders = $orders_query->paginate(10);
 
         return view('order', compact('orders'));
     }

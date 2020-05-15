@@ -53,7 +53,7 @@
                     <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-shopping"></i><span class="hide-menu">Магазин</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="/store">Товары</a></li>
-                        <li><a href="/order">Заказы</a></li>
+                        <li><a href="/order?shop=1">Заказы</a></li>
                     </ul>
                 </li>
                 <li>
