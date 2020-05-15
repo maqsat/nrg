@@ -152,6 +152,9 @@ input.error {
 .login-register {
     position: initial;
 }
+.only-login-page{
+    position: fixed;
+}
 
 .user_create .form-group {
     margin-bottom: 5px;
