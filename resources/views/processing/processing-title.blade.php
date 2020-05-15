@@ -18,6 +18,8 @@
     Выведено
 @elseif($item->status == 'cancel')
     Отменено
+@elseif($item->status == 'revitalization')
+    Автоматическая покупка
 @else
     Не определено
 @endif

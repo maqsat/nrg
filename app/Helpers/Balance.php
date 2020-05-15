@@ -71,7 +71,7 @@ class Balance {
 
     public function getBalanceOut($user_id)
     {
-        $sum = Processing::whereUserId($user_id)->whereIn('status', ['out','shop'])->sum('sum');
+        $sum = Processing::whereUserId($user_id)->whereIn('status', ['out','shop','revitalization'])->sum('sum');
         return round($sum, 2);
     }
 
@@ -83,8 +83,7 @@ class Balance {
         $date_to = explode('-',$date_to);
         $date_to = Carbon::create($date_to[0], $date_to[1], $date_to[2],23,59,59, date_default_timezone_get())->toDateTimeString();
 
-        $sum = Processing::whereUserId($user_id)->where('status', $status)->whereBetween('created_at', [$date_from, $date_to])->get();
-        dd($sum);
+        $sum = Processing::whereUserId($user_id)->where('status', $status)->whereBetween('created_at', [$date_from, $date_to])->sum('sum');
         return round($sum, 2);
     }
 
