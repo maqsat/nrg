@@ -330,6 +330,12 @@ class UserController extends Controller
 
     public function successBasket($basket_id)
     {
+        $order = Order::where( 'type','shop')
+            ->where('basket_id',$basket_id)
+            ->where('status' ,1)
+            ->first();
+        if(!is_null($order) and $order->status == 1) dd("Ссылка не активна");
+
         Order::where( 'type','shop')
             ->where('basket_id',$basket_id)
             ->where('status' ,11)
