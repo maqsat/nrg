@@ -330,7 +330,7 @@ class UserController extends Controller
 
     public function successBasket($basket_id)
     {
-        $order = Order::where( 'type','shop')
+        Order::where( 'type','shop')
             ->where('basket_id',$basket_id)
             ->where('status' ,11)
             ->update(
@@ -338,7 +338,12 @@ class UserController extends Controller
                     'status' => 1,
                 ]
             );
+
         Basket::whereId($basket_id)->update(['status' => 1]);
+
+        $basket  = Basket::find($basket_id);
+
+        $user_program = UserProgram::where('user_id',$basket->user_id)->first();
 
         $order_pv = Order::join('baskets','baskets.id','=','orders.basket_id')
             ->join('basket_good','basket_good.basket_id','=','baskets.id')
@@ -355,10 +360,17 @@ class UserController extends Controller
             $sum_pv +=$pv->sum;
         }
 
+        $order = Order::where( 'type','shop')
+            ->where('basket_id',$basket_id)
+            ->where('status' ,1)
+            ->first();
+
+        Balance::changeBalance($basket->user_id,$order->amount*0.2,'cashback',$basket->user_id,1,$user_program->package_id,$user_program->status_id,$sum_pv);
+
         if($sum_pv > 0){
             $data = [];
             $data['pv'] = $sum_pv;
-            $data['user_id'] = Basket::find($basket_id)->user_id;
+            $data['user_id'] = $basket->user_id;
 
             event(new ShopTurnover($data = $data));
 

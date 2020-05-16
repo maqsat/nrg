@@ -26,10 +26,9 @@ class TestController extends Controller
 
     public function tester()
     {
-        $sponsor_data = Hierarchy::revitalizationCron();
+        $user  = User::find(2317);
 
-
-        //sponsor_id активация жасаганда
+        event(new Activation($user = $user));
     }
 
 

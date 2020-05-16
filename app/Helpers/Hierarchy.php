@@ -373,7 +373,6 @@ class Hierarchy {
 
             $user_program = UserProgram::where('user_id',$item->user_id)->first();
 
-           if($item->order_amount > 0) Balance::changeBalance($item->user_id,$item->order_amount*0.2,'cashback',$item->user_id,1,$user_program->package_id,$user_program->status_id,$item->pv);
            if($item->commission_sum > 0) {
                Balance::changeBalance($item->user_id,$item->commission_sum,'revitalization',$item->user_id,1,$user_program->package_id,$user_program->status_id,$item->commission_pv);
                Balance::changeBalance($item->user_id,$item->commission_sum*0.2,'cashback',$item->user_id,1,$user_program->package_id,$user_program->status_id,$item->commission_pv);
