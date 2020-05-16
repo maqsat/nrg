@@ -28,6 +28,16 @@
                                 @endif
                                 Дата отправки: {{ $orders->updated_at }}
                             </div>
+                        @elseif($orders->status == 0)
+                            <div class="alert alert-warning">
+                                <h3 class="text-warning"><i class="fa fa-exclamation-triangle"></i> Провайдер еще не обработал платеж</h3>
+                                Статус модерации:  Платеж ожидает оплаты на стороне Провайдера <br>
+                                Сумма оплаты: ${{ $orders->amount }} <br>
+                                @if($orders->package_id != 0)
+                                    Выбранный пакет: {{ \App\Models\Package::find($orders->package_id)->title }} <br>
+                                @endif
+                                Дата отправки: {{ $orders->updated_at }}
+                            </div>
                         @else
                             <div class="alert alert-danger">
                                 <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> Квитанция отклонена</h3>
@@ -52,7 +62,7 @@
                 </div>
             </div>
 
-            @if(is_null($orders) or $orders->status == 12)
+            @if(is_null($orders) or $orders->status == 12  or $orders->status == 0)
             <div class="row">
                 <div class="col-12">
                     <div class="card-columns text">
