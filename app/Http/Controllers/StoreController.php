@@ -52,7 +52,7 @@ class StoreController extends Controller
 
     public function story()
     {
-        $list = Order::where('user_id',Auth::user()->id)->where('type','shop')->paginate(30);
+        $list = Basket::where('user_id',Auth::user()->id)->where('status',1)->paginate(30);
 
         return view('basket.story',compact('list'));
     }
