@@ -36,9 +36,10 @@
                                 @if($orders->package_id != 0)
                                     Выбранный пакет: {{ \App\Models\Package::find($orders->package_id)->title }} <br>
                                 @endif
-                                Дата отправки: {{ $orders->updated_at }}
+                                Дата отправки: {{ $orders->updated_at }} <br>
+                                Статус:  <a href="/main-store?history=delete" class="btn btn-xs btn-danger">Удалить и начать заново</a>
                             </div>
-                        @else
+                        @elseif($orders->status == 12)
                             <div class="alert alert-danger">
                                 <h3 class="text-danger"><i class="fa fa-exclamation-triangle"></i> Квитанция отклонена</h3>
                                 Статус модерации:  Фейковая квитанция <br>
@@ -48,6 +49,16 @@
                                 @endif
                                 Дата ответа: {{ $orders->updated_at }} <br>
                                 Квитанция:  <a href="{{asset($orders->scan)}}" target="_blank" class="btn btn-xs btn-danger">Посмотреть</a>
+                            </div>
+                        @else
+                            <div class="alert alert-success">
+                                <h3 class="text-success"><i class="fa fa-exclamation-triangle"></i> Успешно одобрена</h3>
+                                Статус модерации:  Успешно одобрена <br>
+                                Сумма оплаты: ${{ $orders->amount }} <br>
+                                @if($orders->package_id != 0)
+                                    Выбранный пакет: {{ \App\Models\Package::find($orders->package_id)->title }} <br>
+                                @endif
+                                Дата ответа: {{ $orders->updated_at }} <br>
                             </div>
                         @endif
                     @endif
@@ -62,7 +73,7 @@
                 </div>
             </div>
 
-            @if(is_null($orders) or $orders->status == 12  or $orders->status == 0)
+            @if($orders->status != 11 and $orders->status != 0)
             <div class="row">
                 <div class="col-12">
                     <div class="card-columns text">
