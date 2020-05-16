@@ -109,7 +109,16 @@ class HomeController extends Controller
         else{
             $orders = Order::where('user_id',Auth::user()->id)->where('type','register')->where('payment','manual')->orderBy('id','desc')->first();
 
-            return view('profile.non-activated', compact('orders'));
+            if(Auth::user()->country_id == 1){
+                $currency_symbol = '₸';
+                $current_currency = env('DOLLAR_COURSE');
+            }
+            else{
+                $currency_symbol = '$';
+                $current_currency = 1;
+            }
+
+            return view('profile.non-activated', compact('orders','current_currency','currency_symbol'));
         }
     }
 

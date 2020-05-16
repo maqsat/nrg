@@ -43,7 +43,29 @@ class PayController extends Controller
 
             return view('processing.types-for-shop',compact('basket','all_cost','revitalization','balance'));
         }
-        else return view('processing.types',compact('package'));
+        else {
+
+
+            if(Auth::user()->country_id == 1){
+                $currency_symbol = '₸';
+                $current_currency = env('DOLLAR_COURSE');
+            }
+            elseif(Auth::user()->country_id == 12){
+                $currency_symbol = '₽';
+                $current_currency = env('DOLLAR_RUB_COURSE');
+            }
+            elseif(Auth::user()->country_id == 13){
+                $currency_symbol = 'с. ';
+                $current_currency = env('DOLLAR_SOM_COURSE');
+            }
+            else{
+                $currency_symbol = '$';
+                $current_currency = 1;
+            }
+
+
+            return view('processing.types',compact('package','current_currency','currency_symbol'));
+        }
     }
 
     public function payPrepare(Request $request)

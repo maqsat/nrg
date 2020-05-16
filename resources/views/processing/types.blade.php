@@ -31,7 +31,7 @@
                                                 <td>
                                                     <h5>1</h5></td>
                                                 <td>
-                                                    <h5>₸{{ env('REGISTRATION_FEE')*env('DOLLAR_COURSE') }}</h5></td>
+                                                    <h5>{{$currency_symbol}}{{ env('REGISTRATION_FEE')*$current_currency }}</h5></td>
                                             </tr>
                                             @if(!is_null($package))
                                                 <tr>
@@ -41,7 +41,7 @@
                                                     <td>
                                                         <h5>1</h5></td>
                                                     <td>
-                                                        <h5>₸{{ $package->cost*env('DOLLAR_COURSE') }}</h5></td>
+                                                        <h5>{{$currency_symbol}}{{ $package->cost*$current_currency }}</h5></td>
                                                 </tr>
                                             @endif
                                             <tr>
@@ -51,12 +51,12 @@
                                                 </td>
                                                 @if(!is_null($package))
                                                     <td><h5>2</h5></td>
-                                                    <td><h5>₸{{ ($package->cost + env('REGISTRATION_FEE'))*env('DOLLAR_COURSE') }}</h5></td>
-                                                    <?php $all_cost = ($package->cost + env('REGISTRATION_FEE'))*env('DOLLAR_COURSE'); ?>
+                                                    <td><h5>{{$currency_symbol}}{{ ($package->cost + env('REGISTRATION_FEE'))*$current_currency }}</h5></td>
+                                                    <?php $all_cost = ($package->cost + env('REGISTRATION_FEE'))*$current_currency; ?>
                                                 @else
                                                     <td><h5>1</h5></td>
-                                                    <td><h5>₸{{ env('REGISTRATION_FEE')*env('DOLLAR_COURSE') }}</h5></td>
-                                                    <?php $all_cost = env('REGISTRATION_FEE')*env('DOLLAR_COURSE'); ?>
+                                                    <td><h5>{{$currency_symbol}}{{ env('REGISTRATION_FEE')*$current_currency }}</h5></td>
+                                                    <?php $all_cost = env('REGISTRATION_FEE')*$current_currency; ?>
                                                 @endif
                                             </tr>
                                             </tbody>
@@ -78,7 +78,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Скан квитанции</h4>
                                             <p class="card-text">Прикрепите Скан квитанции к форме</p>
-                                            <a href="/pay-prepare?type=manual&@if(!is_null($package))package={{ $package->id }} @endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=manual&@if(!is_null($package))package={{ $package->id }} @endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -90,7 +90,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">PayPost</h4>
                                             <p class="card-text">В карте должен быть подключен 3D secure</p>
-                                            <a href="/pay-prepare?type=paypost&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=paypost&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -102,7 +102,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Robokassa</h4>
                                             <p class="card-text">Поддерживает все карты Visa и Master Card</p>
-                                            <a href="/pay-prepare?type=robokassa&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=robokassa&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -114,7 +114,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Payeer</h4>
                                             <p class="card-text">Оплачивайте через электронный кашелек</p>
-                                            <a href="/pay-prepare?type=payeer&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=payeer&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -126,7 +126,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">Paybox</h4>
                                             <p class="card-text">Поддерживает все карты Visa и Master Card</p>
-                                            <a href="/pay-prepare?type=paybox&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=paybox&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
@@ -138,7 +138,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">indigo24</h4>
                                             <p class="card-text">Отечественный электронный кашелек</p>
-                                            <a href="/pay-prepare?type=indigo&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить ₸{{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=indigo&@if(!is_null($package))package={{ $package->id }}@endif" class="btn btn-success m-t-10">Оплатить {{$currency_symbol}}{{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->
