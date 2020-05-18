@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            @if($orders->status != 11 and $orders->status != 0)
+            @if(is_null($orders) or $orders->status != 11 or $orders->status != 0)
             <div class="row">
                 <div class="col-12">
                     <div class="card-columns text">
