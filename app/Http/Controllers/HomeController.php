@@ -128,7 +128,7 @@ class HomeController extends Controller
         $all = Balance::getIncomeBalance(Auth::user()->id);;
         $out = Balance::getBalanceOut(Auth::user()->id);
         $week = Balance::getWeekBalance(Auth::user()->id);
-        $activation = Hierarchy::activationCheck();
+        //$activation = Hierarchy::activationCheck();
 
 
         if(isset($request->weeks)){
@@ -139,14 +139,14 @@ class HomeController extends Controller
             array_push($weeks, $dateToString);
             $weeks = array_reverse($weeks);
 
-            return view('profile.processing.weeks', compact('weeks','balance', 'all', 'out','week','activation'));
+            return view('profile.processing.weeks', compact('weeks','balance', 'all', 'out','week'));
         }
 
 
-        $list = Processing::whereUserId(Auth::user()->id)->where('pv','!=','0')->orderBy('created_at','desc')->paginate(100);
+        $list = Processing::whereUserId(Auth::user()->id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
 
 
-        return view('profile.processing.processing', compact('list', 'balance', 'all', 'out','week','activation'));
+        return view('profile.processing.processing', compact('list', 'balance', 'all', 'out','week'));
     }
 
     public function profile()

@@ -61,7 +61,7 @@
 
             @if(!is_null($package))
             <div class="row">
-                <div class="col-6">
+                <div class="col-md-6 col-xs-12">
                     <div class="card">
                         <div class="card-block timer">
                             <h5>Бонус быстрого старта, до следующего зачисление  осталось:</h5>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-md-6 col-xs-12">
                     <div class="card">
                         <div class="card-block timer">
                             <h5>Повторная покупка, до следующего списание осталось:</h5>

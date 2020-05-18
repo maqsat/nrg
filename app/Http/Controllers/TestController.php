@@ -26,9 +26,13 @@ class TestController extends Controller
 
     public function tester()
     {
-        $user  = User::find(2317);
+        $users = User::join('user_programs','users.id','=','user_programs.user_id')
+            ->where('users.inviter_id',$item->user_id)
+            ->where('users.status',1)
+            ->whereBetween('users.created_at', [Carbon::now()->subDay(7), Carbon::now()])
+            ->get();
 
-        event(new Activation($user = $user));
+        dd($users);
     }
 
 
