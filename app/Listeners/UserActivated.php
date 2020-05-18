@@ -44,11 +44,11 @@ class UserActivated
         $inviter = User::find($event->user->inviter_id);
 
         /*start check*/
-        /*if(is_null($this_user)) dd("Пользователь не найден");
+        if(is_null($this_user)) dd("Пользователь не найден");
         $check_user_program = UserProgram::where('program_id', $program->id)
             ->where('user_id',$id)
             ->count();
-        if($check_user_program != 0) dd("Пользователь уже активирован -> $id");*/
+        if($check_user_program != 0) dd("Пользователь уже активирован -> $id");
         /*end check*/
 
         /*start init and activate*/
@@ -343,7 +343,7 @@ class UserActivated
 
                                     $check_user_processing = Processing::where('user_id',$inviter_item)->where('status','turnover_bonus')->first();
 
-                                    if(!is_null($check_user_processing)){
+                                    if(true){//!is_null($check_user_processing)
                                         $inviter_user_program = UserProgram::where('user_id',$inviter_item)->first();
                                         if(!is_null($inviter_user_program) && $inviter_user_program->package_id != 1){
                                             $list_inviter_status = Status::find($inviter_user_program->status_id);
