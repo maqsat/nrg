@@ -31,6 +31,7 @@
                         <div class="card-block">
                             <div id="accordion2" role="tablist" class="minimal-faq" aria-multiselectable="true">
                                 @foreach($weeks as $key =>$item)
+
                                     @if(isset($weeks[$key+1]))
                                         <div class="card m-b-0">
                                             <div class="card-header" role="tab" id="headingOne{{$key}}">

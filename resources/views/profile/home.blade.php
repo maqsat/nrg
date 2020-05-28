@@ -64,7 +64,8 @@
                 <div class="col-md-6 col-xs-12">
                     <div class="card">
                         <div class="card-block timer">
-                            <h5>Бонус быстрого старта, до следующего зачисление  осталось:</h5>
+                            <h5>Бонус быстрого старта, до следующего зачисление  осталось: </h5>
+                            <p>{{ $quickstart_date }}</p>
                             <ul>
                                 <li><span id="days"></span>День</li>
                                 <li><span id="hours"></span>Час</li>

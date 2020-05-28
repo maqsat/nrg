@@ -85,6 +85,7 @@ class HomeController extends Controller
             $not_cash_bonuses = DB::table('not_cash_bonuses')->where('user_id', $user->id)->where('status',0)->get();
 
             $registered_week_day = $user_program->created_at->weekday();
+
             $today_week_day =  Carbon::now()->weekday();
             if($today_week_day < $registered_week_day){
                 $quickstart_date = Carbon::now()->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
