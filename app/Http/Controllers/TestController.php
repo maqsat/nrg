@@ -26,13 +26,22 @@ class TestController extends Controller
 
     public function tester()
     {
+        Hierarchy::setQS();
+    }
+
+    public function tester2()
+    {
         $users = User::join('user_programs','users.id','=','user_programs.user_id')
-            ->where('users.inviter_id',$item->user_id)
             ->where('users.status',1)
-            ->whereBetween('users.created_at', [Carbon::now()->subDay(7), Carbon::now()])
             ->get();
 
-        dd($users);
+        foreach ($users as $item){
+            $package_title = 'Без пакета';
+
+            if($item->package_id != 0)  $package_title = Package::find($item->package_id)->title;
+
+            echo $item->name.','.$item->number.','.$package_title.','.$item->created_at."<br>";
+        }
     }
 
 
