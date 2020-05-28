@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Upgrade;
 use App\Facades\Balance;
 use App\Facades\Hierarchy;
 use App\Models\UserProgram;
@@ -383,6 +384,11 @@ class PayController extends Controller
 
                             return "<h2>Заказ успешно одобрена!</h2>";
                         }
+                    }
+                    elseif($uuid_order->type == 'upgrade'){
+
+                        event(new Upgrade($order = $order));
+                        return "<h2>Success upgraded!</h2>";
                     }
                     else{
                         if($user->status == 1) {
