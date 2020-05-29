@@ -20,6 +20,8 @@
     Отменено
 @elseif($item->status == 'revitalization')
     Автоматическая покупка
+@elseif($item->status == 'revitalization-shop')
+    Покупка с баланса(повторная)
 @else
     Не определено
 @endif
