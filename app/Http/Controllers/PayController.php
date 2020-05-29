@@ -189,7 +189,6 @@ class PayController extends Controller
                 dd("Что то пошло не так, уведовимте администратора сайта");
             }
         }
-        if($request->type == "robokassa"){}
         if($request->type == "payeer"){
 
             $m_shop = '1014438338';
@@ -206,13 +205,12 @@ class PayController extends Controller
 
             return view('processing.payeer', compact('m_shop','m_orderid','m_amount','m_curr','m_desc','m_key','sign','message','cost'));
         }
-        if($request->type == "paybox"){}
         if($request->type == "indigo"){
 
             $body = json_encode([
                 'operator_id' => config('pay.indigo_operator_id'),
                 'order_id' => $order_id,
-                'amount' => intval($cost),
+                'amount' => intval($cost)*env('DOLLAR_COURSE'),
                 'expiration_date' => date("Y-m-d H:i:s", time() + 3600 * 240000),
                 'description' => $message,
                 'success_url' => 'https://nrg-max.kz/home?success=1',
@@ -320,7 +318,7 @@ class PayController extends Controller
 
             return redirect()->back()->with('status', 'Вышла ошибка при оплате квитанции');
         }
-        if($order->payment == 'indigo'){
+        if($order->payment == 'indigo') {
 
             $body = $request->body;
             $signature = $request->signature;
@@ -337,8 +335,50 @@ class PayController extends Controller
             $order->status = 4;
             $order->save();
 
-            $user  = User::find($user_id);
-            event(new Activation($user = $user));
+            $uuid_order = Order::find($id);
+            if ($uuid_order->type == 'shop') {
+                Basket::whereId($uuid_order->basket_id)->update(['status' => 1]);
+                $basket = Basket::find($uuid_order->basket_id);
+
+                $order_pv = Order::join('baskets', 'baskets.id', '=', 'orders.basket_id')
+                    ->join('basket_good', 'basket_good.basket_id', '=', 'baskets.id')
+                    ->join('products', 'basket_good.good_id', '=', 'products.id')
+                    ->where('orders.type', 'shop')
+                    ->where('orders.basket_id', $basket->id)
+                    ->where('orders.not_original', null)
+                    ->groupBy('basket_good.good_id')
+                    ->select([DB::raw('basket_good.quantity * products.pv as sum')])
+                    ->get();
+
+                $sum_pv = 0;
+                foreach ($order_pv as $pv) {
+                    $sum_pv += $pv->sum;
+                }
+
+                if ($sum_pv > 0) {
+                    $data = [];
+                    $data['pv'] = $sum_pv;
+                    $data['user_id'] = $basket->user_id;
+
+                    event(new ShopTurnover($data = $data));
+
+                    return "<h2>Заказ успешно одобрена!</h2>";
+                }
+            } elseif ($uuid_order->type == 'upgrade') {
+
+                event(new Upgrade($order = $order));
+                return "<h2>Success upgraded!</h2>";
+            } else {
+                $user = User::find($uuid_order->user_id);
+
+                if ($user->status == 1) {
+                    Storage::disk('local')->prepend('/paypost_logs/' . date('Y-m-d'), "Пользователь уже активирован: $user->id");
+                } else {
+                    User::whereId($user->id)->update(['status' => 1]);
+                    event(new Activation($user = $user));
+                    Storage::disk('local')->prepend('/paypost_logs/' . date('Y-m-d'), "Пользователь успешно активирован: $user->id");
+                }
+            }
         }
         if($order->payment == 'paypost'){
             $check = PayPost::checkStatusPay("$order->uuid");
@@ -449,15 +489,49 @@ class PayController extends Controller
                 Order::where('id',$_POST['m_orderid'])->update([
                     'status' => 1,
                 ]);
-                $user = User::find($order->user_id);
 
-                if($user->status == 1) {
-                    Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь уже активирован: $user->id");
-                }
-                else{
-                    User::whereId($user->id)->update(['status' => 1]);
-                    event(new Activation($user = $user));
-                    Storage::disk('local')->prepend('/paypost_logs/'.date('Y-m-d'),"Пользователь успешно активирован: $user->id");
+                if ($order->type == 'shop') {
+                    Basket::whereId($order->basket_id)->update(['status' => 1]);
+                    $basket = Basket::find($order->basket_id);
+
+                    $order_pv = Order::join('baskets', 'baskets.id', '=', 'orders.basket_id')
+                        ->join('basket_good', 'basket_good.basket_id', '=', 'baskets.id')
+                        ->join('products', 'basket_good.good_id', '=', 'products.id')
+                        ->where('orders.type', 'shop')
+                        ->where('orders.basket_id', $basket->id)
+                        ->where('orders.not_original', null)
+                        ->groupBy('basket_good.good_id')
+                        ->select([DB::raw('basket_good.quantity * products.pv as sum')])
+                        ->get();
+
+                    $sum_pv = 0;
+                    foreach ($order_pv as $pv) {
+                        $sum_pv += $pv->sum;
+                    }
+
+                    if ($sum_pv > 0) {
+                        $data = [];
+                        $data['pv'] = $sum_pv;
+                        $data['user_id'] = $basket->user_id;
+
+                        event(new ShopTurnover($data = $data));
+
+                        return "<h2>Заказ успешно одобрена!</h2>";
+                    }
+                } elseif ($order->type == 'upgrade') {
+
+                    event(new Upgrade($order = $order));
+                    return "<h2>Success upgraded!</h2>";
+                } else {
+                    $user = User::find($order->user_id);
+
+                    if ($user->status == 1) {
+                        Storage::disk('local')->prepend('/paypost_logs/' . date('Y-m-d'), "Пользователь уже активирован: $user->id");
+                    } else {
+                        User::whereId($user->id)->update(['status' => 1]);
+                        event(new Activation($user = $user));
+                        Storage::disk('local')->prepend('/paypost_logs/' . date('Y-m-d'), "Пользователь успешно активирован: $user->id");
+                    }
                 }
                 ob_end_clean(); exit($_POST['m_orderid'].'|success');
             }

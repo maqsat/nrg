@@ -73,7 +73,7 @@
                                                 <b>Наставник</b>: {{ is_null($sponsor) ? '' : $sponsor->name }}<br>
                                                 <b>Спонсор</b>: {{ is_null($inviter) ? '' : $inviter->name }}
                                             </td>
-                                            <td>@if($item->position == 1) Слева @else Справа @endif</td>
+                                            <td>  @if($item->status == 1) @if($item->position == 1) Слева @else Справа @endif  @endif</td>
                                             @if($item->status == 1)
                                                 <td class="actions"><a class="btn btn-xs btn-info"><i class="mdi mdi-account-check"></i></a></td>
                                             @else

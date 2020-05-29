@@ -104,7 +104,7 @@
                                     </div>
                                     <!-- Card -->
                                 </div>
-                                <div class="col-lg-2 col-md-6  img-responsive">
+                                {{--<div class="col-lg-2 col-md-6  img-responsive">
                                     <!-- Card -->
                                     <div class="card">
                                         <img class="card-img-top img-responsive" src="https://opencartforum.com/screenshots/monthly_2018_11/robokassa.thumb.png.b405b854136ced060d31d9a19ad41189.png" alt="Card image cap">
@@ -115,7 +115,7 @@
                                         </div>
                                     </div>
                                     <!-- Card -->
-                                </div>
+                                </div>--}}
                                 <div class="col-lg-2 col-md-6  img-responsive">
                                     <!-- Card -->
                                     <div class="card">
@@ -128,7 +128,7 @@
                                     </div>
                                     <!-- Card -->
                                 </div>
-                                <div class="col-lg-2 col-md-6  img-responsive">
+                                {{--<div class="col-lg-2 col-md-6  img-responsive">
                                     <!-- Card -->
                                     <div class="card">
                                         <img class="card-img-top img-responsive" src="/nrg/paybox.png" alt="Card image cap">
@@ -139,7 +139,7 @@
                                         </div>
                                     </div>
                                     <!-- Card -->
-                                </div>
+                                </div>--}}
                                 <div class="col-lg-2 col-md-6  img-responsive">
                                     <!-- Card -->
                                     <div class="card">
