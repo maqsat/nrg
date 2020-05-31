@@ -26,7 +26,9 @@ class TestController extends Controller
 
     public function tester()
     {
-        Hierarchy::setQS();
+        $user  = User::find(2534);
+
+        event(new Activation($user = $user));
     }
 
     public function tester2()

@@ -44,11 +44,11 @@ class UserActivated
         $inviter = User::find($event->user->inviter_id);
 
         /*start check*/
-        if(is_null($this_user)) dd("Пользователь не найден");
+        /*if(is_null($this_user)) dd("Пользователь не найден");
         $check_user_program = UserProgram::where('program_id', $program->id)
             ->where('user_id',$id)
             ->count();
-        if($check_user_program != 0) dd("Пользователь уже активирован -> $id");
+        if($check_user_program != 0) dd("Пользователь уже активирован -> $id");*/
         /*end check*/
 
         /*start init and activate*/

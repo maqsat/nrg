@@ -62,7 +62,7 @@ class BasketController extends Controller
             'user_id' => $request->user_id,
             'status' => 0
         ]);
-        $basket_good=BasketGood::where(['basket_id'=>$basket->id ,'good_id'=>$request->good_id])->first();
+        $basket_good=BasketGood::firstOrCreate(['basket_id'=>$basket->id ,'good_id'=>$request->good_id]);
 
         /*Удалить товар из корзины*/
         if($request->is_delete=="true"){
