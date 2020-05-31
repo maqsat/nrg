@@ -68,10 +68,15 @@ class UserUpgraded
         User::whereId($id)->update(['package_id' => $new_package->id]);
         UserProgram::whereUserId($id)->update(['package_id' => $new_package->id,'status_id' => $status_id]);
 
+        if (Auth::check())
+            $author_id = Auth::user()->id;
+        else
+            $author_id = 0;
+
         Notification::create([
-            'user_id' => $id,
-            'type' => 'user_upgraded',
-            'author_id' => Auth::user()->id
+            'user_id' => $event->user->id,
+            'type' => 'user_activated',
+            'author_id' => $author_id
         ]);
 
         $list = $this_user->list;
