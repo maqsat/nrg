@@ -49,6 +49,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        if(Auth::user()->role_id == 2) return redirect('processing?status=request');
+
         if(isset($request->s)){
             $list = User::whereNotNull('program_id')->where('name','like','%'.$request->s.'%')
                 ->orWhere('id','like','%'.$request->s.'%')

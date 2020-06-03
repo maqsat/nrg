@@ -36,9 +36,9 @@ class AdminController extends Controller
     }
 
 
-    public function notCashBonuses(Request$request)
+    public function notCashBonuses(Request $request)
     {
-        $not_cash_bonuses = DB::table('not_cash_bonuses')->get();
+        $not_cash_bonuses = DB::table('not_cash_bonuses')->where('type',$request->type)->get();
         return  view('admin.travel', compact('not_cash_bonuses'));
     }
 

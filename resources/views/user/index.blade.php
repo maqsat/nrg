@@ -97,7 +97,9 @@
                                                 <a href="/user/{{ $item->id }}/processing" target="_blank" class="btn  btn-xs btn-info"  title="Финансы"><i class="mdi mdi-cash-multiple"></i></a>
                                                 <a href="/user/{{ $item->id }}/program" target="_blank" class="btn  btn-xs btn-success"  title="Пакет, статус, офис"><i class="mdi mdi-account-settings-variant"></i></a>
                                                 <a href="/user/{{ $item->id }}/transfer" target="_blank" class="btn  btn-xs btn-warning"  title="Перевод"><i class="mdi mdi-sitemap"></i></a>
+                                                @if(Auth::user()->role_id != 3)
                                                 <a href="/user/{{ $item->id }}" target="_blank" class="btn  btn-xs btn-info"   title="Зайти под"><i class="mdi mdi-eye"></i></a>
+                                                @endif
                                                 <a href="/user/{{ $item->id }}/edit" class="btn  btn-xs btn-success"  title="Изменить"><i class="mdi mdi-grease-pencil" ></i></a>
                                                 <form action="{{url('user', [$item->id])}}" method="POST">
                                                     {{ method_field('DELETE') }}

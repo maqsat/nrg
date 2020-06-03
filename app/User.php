@@ -9,6 +9,16 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+
+    /**
+     *
+     * 1 - Администратор
+     * 2 - Бухгалтер
+     * 3 - Менеджер
+     * 4 - Руководитель
+     *
+     */
+
     use Notifiable;
 
     /**
