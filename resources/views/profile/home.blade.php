@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-xs-12">
+                {{--<div class="col-md-6 col-xs-12">
                     <div class="card">
                         <div class="card-block timer">
                             <h5>Повторная покупка, до следующего списание осталось:</h5>
@@ -87,7 +87,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div>--}}
             </div>
 
 
