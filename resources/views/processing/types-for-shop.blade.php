@@ -104,7 +104,7 @@
                                         <div class="card-block">
                                             <h4 class="card-title">indigo24</h4>
                                             <p class="card-text">Отечественный электронный кашелек</p>
-                                            <a href="/pay-prepare?type=indigo&@if(!is_null($basket))package={{ $basket->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
+                                            <a href="/pay-prepare?type=indigo&@if(!is_null($basket))basket={{ $basket->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
                                     <!-- Card -->

@@ -364,11 +364,13 @@ class PayController extends Controller
 
                     return "<h2>Заказ успешно одобрена!</h2>";
                 }
-            } elseif ($uuid_order->type == 'upgrade') {
+            }
+            elseif ($uuid_order->type == 'upgrade') {
 
                 event(new Upgrade($order = $order));
                 return "<h2>Success upgraded!</h2>";
-            } else {
+            }
+            else {
                 $user = User::find($uuid_order->user_id);
 
                 if ($user->status == 1) {
@@ -426,7 +428,7 @@ class PayController extends Controller
                         }
                     }
                     elseif($uuid_order->type == 'upgrade'){
-
+  
                         event(new Upgrade($order = $order));
                         return "<h2>Success upgraded!</h2>";
                     }

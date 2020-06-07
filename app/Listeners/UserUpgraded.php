@@ -74,7 +74,7 @@ class UserUpgraded
             $author_id = 0;
 
         Notification::create([
-            'user_id' => $event->user->id,
+            'user_id' => $id,
             'type' => 'user_activated',
             'author_id' => $author_id
         ]);
