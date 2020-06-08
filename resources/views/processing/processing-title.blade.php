@@ -22,6 +22,8 @@
     Автоматическая покупка
 @elseif($item->status == 'revitalization-shop')
     Покупка с баланса(повторная)
+@elseif($item->status == 'upgrade')
+    Апгрейд
 @else
     Не определено
 @endif
