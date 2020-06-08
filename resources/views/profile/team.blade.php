@@ -26,14 +26,19 @@
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="col-md-12">
+
+                        @if(isset($_GET['upgrade']))
+                            <input type="hidden" value="1" name="upgrade">
+                        @endif
+
                         <label class="m-t-10">Дата фильтрации:</label>
                         <div class="input-group">
-                            <input type="date" name="date" class="form-control form-control-line">
+                            <input type="date" name="date" class="form-control form-control-line" required>
                         </div>
 
                         <label  class="m-t-10" for="position">Статус  фильтрации:</label>
                         <div class="input-group">
-                            <select class="custom-select form-control required" id="status_id" name="status_id">
+                            <select class="custom-select form-control required" id="status_id" name="status_id" required>
                                 <option>Не указан</option>
                                 <option value="1">Участник</option>
                                 <option value="2">Партнер</option>
@@ -82,7 +87,14 @@
                                             <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->number }}</span></td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->email }}</span></td>
-                                            <td>{{ date('d-m-Y', strtotime(\App\User::find($item->user_id)->created_at)) }}</td>
+                                            <td>
+                                                @if(isset($_GET['upgrade']))
+                                                    {{ date('d-m-Y', strtotime($item->created_at)) }}
+                                                @else
+                                                    {{ date('d-m-Y', strtotime(\App\User::find($item->user_id)->created_at)) }}
+                                                @endif
+
+                                            </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

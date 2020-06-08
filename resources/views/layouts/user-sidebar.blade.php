@@ -29,6 +29,7 @@
                             <li><a href="/tree/{{ Auth::user()->id }}">Мое дерево</a></li>
                             <li><a href="/hierarchy" target="_blank">Иерархия</a></li>
                             <li><a href="/team">Моя команда</a></li>
+                            <li><a href="/team?upgrade=1">Апгрейд команды</a></li>
                             <li><a href="/team?own=1">Моя команда(без перелива)</a></li>
                         </ul>
                     </li>
