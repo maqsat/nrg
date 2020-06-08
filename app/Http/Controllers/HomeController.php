@@ -274,6 +274,22 @@ class HomeController extends Controller
 
             $list = $list->select(['user_programs.*','notifications.created_at as created_at'])->paginate(30);
         }
+        elseif(isset($request->move)){
+            $list = UserProgram::where('inviter_list','like','%,'.Auth::user()->id.',%')
+                ->join('notifications','user_programs.user_id','=','notifications.user_id')
+                ->where('notifications.type','move_status');
+
+
+            if (isset($request->status_id)){
+                $list = $list->where('user_programs.status_id',$request->status_id);
+            }
+
+            if (isset($request->date)){
+                $list = $list->where('notifications.created_at','>=',$request->date);
+            }
+
+            $list = $list->select(['user_programs.*','notifications.created_at as created_at'])->paginate(30);
+        }
         else{
             $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%');
 

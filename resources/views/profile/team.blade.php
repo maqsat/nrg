@@ -31,6 +31,10 @@
                             <input type="hidden" value="1" name="upgrade">
                         @endif
 
+                        @if(isset($_GET['move']))
+                            <input type="hidden" value="1" name="move">
+                        @endif
+
                         <label class="m-t-10">Дата фильтрации:</label>
                         <div class="input-group">
                             <input type="date" name="date" class="form-control form-control-line" required>
@@ -88,7 +92,7 @@
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->number }}</span></td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->email }}</span></td>
                                             <td>
-                                                @if(isset($_GET['upgrade']))
+                                                @if(isset($_GET['upgrade']) or isset($_GET['move']))
                                                     {{ date('d-m-Y', strtotime($item->created_at)) }}
                                                 @else
                                                     {{ date('d-m-Y', strtotime(\App\User::find($item->user_id)->created_at)) }}
@@ -103,12 +107,14 @@
 
                             @if(isset($_GET['own']))
                                 {{ $list->appends(['own' => $_GET['own']])->links() }}
-                            @elseif(isset($_GET['status_id']) and isset($_GET['date']))
-                                {{ $list->appends(['status_id' => $_GET['status_id']])->appends(['date' => $_GET['date']])->links() }}
-                            @elseif(isset($_GET['status_id']))
-                                {{ $list->appends(['status_id' => $_GET['status_id']])->links() }}
-                            @elseif(isset($_GET['date']))
-                                {{ $list->appends(['date' => $_GET['date']])->links() }}
+                            @elseif(isset($_GET['status_id']) and isset($_GET['date']) and isset($_GET['move']))
+                                {{ $list->appends(['status_id' => $_GET['status_id']])->appends(['date' => $_GET['date']])->appends(['move' => $_GET['move']])->links() }}
+                            @elseif(isset($_GET['status_id']) and isset($_GET['date']) and isset($_GET['upgrade']))
+                                {{ $list->appends(['status_id' => $_GET['status_id']])->appends(['date' => $_GET['date']])->appends(['upgrade' => $_GET['upgrade']])->links() }}
+                            @elseif(isset($_GET['upgrade']))
+                                {{ $list->appends(['upgrade' => $_GET['upgrade']])->links() }}
+                            @elseif(isset($_GET['move']))
+                                {{ $list->appends(['move' => $_GET['move']])->links() }}
                             @else
                                 {{ $list->links() }}
                             @endif
