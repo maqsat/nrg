@@ -85,16 +85,30 @@ class HomeController extends Controller
 
             $not_cash_bonuses = DB::table('not_cash_bonuses')->where('user_id', $user->id)->where('status',0)->get();
 
+            /*$date = new \DateTime();
+            $date->setDate(2020, 5, 31);
+            $dt = Carbon::create($date->format('Y'), $date->format('m'), $date->format('d'), 1, 0, 0, 'Asia/Almaty');
+
             $registered_week_day = $user_program->created_at->weekday();
+            $today_week_day =  $dt->weekday();
 
+            if($today_week_day <= $registered_week_day){
+                $quickstart_date = $dt->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
+            }
+            else{
+                $quickstart_date = $dt->addDays(7)->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
+            }*/
 
+            $registered_week_day = $user_program->created_at->weekday();
             $today_week_day =  Carbon::now()->weekday();
+
             if($today_week_day < $registered_week_day){
                 $quickstart_date = Carbon::now()->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
             }
             else{
                 $quickstart_date = Carbon::now()->addDays(7)->weekday($registered_week_day)->format('M d, Y')." 00:00:00";
             }
+
             $display_day    = new \DateTime($quickstart_date);
             $display_day = $display_day->format('l');
 

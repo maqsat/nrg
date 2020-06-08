@@ -26,6 +26,7 @@ class TestController extends Controller
 
     public function tester()
     {
+        dd(Carbon::now()->subDay(7));
         $user  = User::find(2534);
 
         event(new Activation($user = $user));
