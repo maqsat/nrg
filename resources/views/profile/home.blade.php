@@ -65,7 +65,7 @@
                     <div class="card">
                         <div class="card-block timer">
                             <h5>Бонус быстрого старта, до следующего зачисление  осталось: </h5>
-                            <p>{{ $quickstart_date }}, {{ trans('app.Wednesday') }}</p>
+                            <p>{{ $quickstart_date }}, {{ trans('app.'.$display_day) }}</p>
                             <ul>
                                 <li><span id="days"></span>День</li>
                                 <li><span id="hours"></span>Час</li>
