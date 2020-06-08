@@ -259,7 +259,17 @@ class HomeController extends Controller
             $list = UserProgram::where('inviter_list','like','%,'.Auth::user()->id.',%')->paginate(30);
         }
         else{
-            $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%')->paginate(30);
+            $list = UserProgram::where('list','like','%,'.Auth::user()->id.',%');
+
+            if (isset($request->status_id)){
+                $list = $list->where('status_id',$request->status_id);
+            }
+
+            if (isset($request->date)){
+                $list = $list->where('created_at','<=',$request->date);
+            }
+
+            $list = $list->paginate(30);
         }
 
 
