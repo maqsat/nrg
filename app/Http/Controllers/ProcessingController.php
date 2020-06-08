@@ -114,7 +114,7 @@ class ProcessingController extends Controller
                     'status' => 'out',
                 ]);
 
-                return redirect()->back()->with('status', 'Деньги успечно списаны!');
+                return redirect()->back()->with('status', 'Деньги успешно списаны!');
             }
             else{
                 return redirect()->back()->with('status', $result->ResponseInfo->ResponseText);
@@ -209,7 +209,7 @@ class ProcessingController extends Controller
 
         //$user->email
         Mail::to(Auth::user()->email)->send(new ProcessingEmail($data));
-        return redirect()->back()->with('status', 'Запрос успечно отправлен. Проверьте почту!');
+        return redirect()->back()->with('status', 'Запрос успешно отправлен. Проверьте почту!');
     }
 
     public function transferAnswer(Request $request, $status, $processing_id)
@@ -238,7 +238,7 @@ class ProcessingController extends Controller
             }
         }
 
-        return redirect('/')->with('status', 'Успешно обработано!');
+        return redirect('/')->with('status', 'Успешно обработан!');
 
     }
 
@@ -267,6 +267,6 @@ class ProcessingController extends Controller
         Balance::changeBalance(Auth::user()->id,$request->sum,'request',0,$request->program_id,0,0,$pv,0,0,$request->login);
 
 
-        return redirect()->back()->with('status', 'Запрос успечно отправлен админу!');
+        return redirect()->back()->with('status', 'Запрос успешно отправлен админу!');
     }
 }

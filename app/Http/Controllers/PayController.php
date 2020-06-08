@@ -313,7 +313,7 @@ class PayController extends Controller
                         ]
                     );
 
-                return redirect('/home')->with('status', 'Квитанция успечно отправлено');
+                return redirect('/home')->with('status', 'Квитанция успешно отправлено');
             }
 
             return redirect()->back()->with('status', 'Вышла ошибка при оплате квитанции');
@@ -362,7 +362,7 @@ class PayController extends Controller
 
                     event(new ShopTurnover($data = $data));
 
-                    return "<h2>Заказ успешно одобрена!</h2>";
+                    return "<h2>Заказ успешно одобрен!</h2>";
                 }
             }
             elseif ($uuid_order->type == 'upgrade') {
@@ -424,11 +424,11 @@ class PayController extends Controller
 
                             event(new ShopTurnover($data = $data));
 
-                            return "<h2>Заказ успешно одобрена!</h2>";
+                            return "<h2>Заказ успешно одобрен!</h2>";
                         }
                     }
                     elseif($uuid_order->type == 'upgrade'){
-  
+
                         event(new Upgrade($order = $order));
                         return "<h2>Success upgraded!</h2>";
                     }
@@ -518,7 +518,7 @@ class PayController extends Controller
 
                         event(new ShopTurnover($data = $data));
 
-                        return "<h2>Заказ успешно одобрена!</h2>";
+                        return "<h2>Заказ успешно одобрен!</h2>";
                     }
                 } elseif ($order->type == 'upgrade') {
 

@@ -299,7 +299,7 @@ class UserController extends Controller
 
         event(new Activation($user = $user));
 
-        return "<h2>Пользователь успешно активирован!</h2>";
+        return "<h2>Пользователь успешно  активирован!</h2>";
     }
 
     public function deactivation($user_id)
@@ -382,7 +382,7 @@ class UserController extends Controller
 
             event(new ShopTurnover($data = $data));
 
-            return "<h2>Заказ успешно одобрена!</h2>";
+            return "<h2>Заказ успешно одобрен!</h2>";
         }
 
         return "<h2>Нет достаточного количестов PV!</h2>";
