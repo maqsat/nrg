@@ -212,7 +212,7 @@
                         $("#total_sum_tg").html(parseInt($("#total_sum_tg").text()) - parseInt(data["product_total_sum"]) * 385);
                     }
                     /*Itogo*/
-                    $("#itogo").html(parseInt($("#total_sum").text()) + 8);
+                    $("#itogo").html(parseInt($("#total_sum").text()));
 
                     $(".minusButton").attr("disabled", false);
 
