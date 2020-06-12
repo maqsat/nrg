@@ -334,8 +334,10 @@ class UserController extends Controller
     {
         $order = Order::where( 'type','shop')
             ->where('basket_id',$basket_id)
+            ->where('payment','manual')
             ->where('status' ,1)
             ->first();
+        
         if(!is_null($order) and $order->status == 1) dd("Ссылка не активна");
 
         Order::where( 'type','shop')
