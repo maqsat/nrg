@@ -79,6 +79,7 @@
                                         <th>Пакет</th>
                                         <th>Номер</th>
                                         <th>Почта</th>
+                                        <th>Структура</th>
                                         <th>Дат/рег</th>
                                     </tr>
                                     </thead>
@@ -91,6 +92,27 @@
                                             <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->number }}</span></td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->email }}</span></td>
+                                            <td>
+                                                <?php
+                                                    $user_changes = \DB::table('user_changes')->where('user_id',$item->user_id)->get();
+                                                ?>
+
+                                                @if(count($user_changes) > 0)
+                                                    @foreach($user_changes as $change)
+                                                        @if($change->type == 6)
+                                                                Позиция изменена с @if($change->old == 1) <b>Левая ветка</b> @else <b>Правая ветка</b> @endif на @if($change->new == 1) <b>Левая ветка</b> @else <b>Правая ветка</b><br> @endif
+                                                        @endif
+
+                                                        @if($change->type == 5)
+                                                            Наставник изменен с @if(!is_null(\App\User::find($change->old))) <b>{{ \App\User::find($change->old)->name }}</b> @endif на @if(!is_null(\App\User::find($change->new))) <b>{{ \App\User::find($change->new)->name }}</b><br> @endif
+                                                        @endif
+
+                                                        @if($change->type == 4)
+                                                            Спонсор изменен с @if(!is_null(\App\User::find($change->old))) <b>{{ \App\User::find($change->old)->name }}</b> @endif на @if(!is_null(\App\User::find($change->new))) <b>{{ \App\User::find($change->new)->name }}</b><br> @endif
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if(isset($_GET['upgrade']) or isset($_GET['move']))
                                                     {{ date('d-m-Y', strtotime($item->created_at)) }}

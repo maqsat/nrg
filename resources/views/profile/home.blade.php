@@ -96,7 +96,7 @@
                     <div class="card">
                         <div class="card-block">
                             <h4 class="card-title">Реферальная ссылка</h4>
-                            <h6 class="card-subtitle">Партнеры будут распологаться в структуре по выбранному <code>типу размещение</code></h6>
+                            <h6 class="card-subtitle">Партнеры будут располагаться в структуре по выбранному <code>типу размещение</code></h6>
                             <div class="button-group">
                                 <a href="/home?default_position=1">
                                     <button type="button" class="btn @if(Auth::user()->default_position == 1) btn-info @else btn-success @endif">@if(Auth::user()->default_position == 1) <i class="fa fa-check"></i> @endifСлева</button>

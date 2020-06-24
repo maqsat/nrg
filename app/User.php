@@ -19,6 +19,15 @@ class User extends Authenticatable implements JWTSubject
      *
      */
 
+    /**
+     *
+     * 6 - позиция изменена
+     * 5 - наставник изменен
+     * 4 - спонсор изменен
+     *
+     */
+
+
     use Notifiable;
 
     /**

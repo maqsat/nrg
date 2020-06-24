@@ -79,7 +79,7 @@
                                         <img class="card-img-top img-responsive" src="https://makoli.com/wp-content/uploads/payeer-logo.png" alt="Card image cap">
                                         <div class="card-block">
                                             <h4 class="card-title">Payeer</h4>
-                                            <p class="card-text">Оплачивайте через электронный кашелек</p>
+                                            <p class="card-text">Оплачивайте через электронный кошелёк</p>
                                             <a href="/pay-prepare?type=payeer&@if(!is_null($basket))basket={{ $basket->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                         <img class="card-img-top img-responsive" src="https://indigo24.com/img/logo.png" alt="Card image cap">
                                         <div class="card-block">
                                             <h4 class="card-title">indigo24</h4>
-                                            <p class="card-text">Отечественный электронный кашелек</p>
+                                            <p class="card-text">Отечественный электронный кошелёк</p>
                                             <a href="/pay-prepare?type=indigo&@if(!is_null($basket))basket={{ $basket->id }}@endif" class="btn btn-success m-t-10">Оплатить ${{ $all_cost }}</a>
                                         </div>
                                     </div>
