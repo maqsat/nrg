@@ -12,6 +12,7 @@ use App\Models\Status;
 use App\Models\Basket;
 use App\Facades\Balance;
 use App\Facades\Hierarchy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Mail\ProcessingEmail;
 use Illuminate\Support\Facades\Mail;
@@ -30,18 +31,48 @@ class ProcessingController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->status == 'request')
+        if(!Gate::allows('admin_processing_view')) {
+            abort('401');
+        }
+
+        if($request->status == 'request') {
+            if(!Gate::allows('admin_processing_status_request')) {
+                abort('401');
+            }
             $list = Processing::orderBy('created_at','desc')->whereStatus('request')->paginate(30);
+        }
         elseif($request->status == 'out')
+        {
+            if(!Gate::allows('admin_processing_status_out')) {
+                abort('401');
+            }
             $list = Processing::orderBy('created_at','desc')->whereStatus('out')->paginate(30);
+        }
         elseif($request->status == 'cancel')
+        {
+            if(!Gate::allows('admin_processing_status_cancel')) {
+                abort('401');
+            }
             $list = Processing::orderBy('created_at','desc')->whereStatus('cancel')->paginate(30);
+        }
         elseif($request->status == 'in')
+        {
+            if(!Gate::allows('admin_processing_status_in')) {
+                abort('401');
+            }
             $list = Processing::orderBy('created_at','desc')->whereStatus('in')->paginate(30);
+        }
         elseif($request->status == 'transfered_in')
+        {
+            if(!Gate::allows('admin_processing_status_transfered_in')) {
+                abort('401');
+            }
             $list = Processing::orderBy('created_at','desc')->whereStatus('transfered_in')->paginate(30);
+        }
         else
+        {
             $list = Processing::orderBy('created_at','desc')->paginate(30);
+        }
 
         $in = Processing::whereStatus('in')->sum('sum');
         $all = Processing::sum('sum');
@@ -57,6 +88,9 @@ class ProcessingController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_processing_create')) {
+            abort('401');
+        }
         //
     }
 
@@ -136,6 +170,9 @@ class ProcessingController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('admin_processing_view')) {
+            abort('401');
+        }
         //
     }
 
@@ -147,6 +184,9 @@ class ProcessingController extends Controller
      */
     public function edit($id)
     {
+        if(!Gate::allows('admin_processing_edit')) {
+            abort('401');
+        }
         //
     }
 
@@ -159,6 +199,9 @@ class ProcessingController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('admin_processing_status_update')) {
+            abort('401');
+        }
         Processing::where('id',$id)->update([
             'status' => $request->status
         ]);
@@ -174,6 +217,9 @@ class ProcessingController extends Controller
      */
     public function destroy($id)
     {
+        if(!Gate::allows('admin_processing_destroy')) {
+            abort('401');
+        }
         //
     }
 
@@ -244,6 +290,10 @@ class ProcessingController extends Controller
 
     public function overview()
     {
+        if(!Gate::allows('admin_overview_access')) {
+            abort('401');
+        }
+
         $register = Processing::where('status', 'register')->sum('sum');
         $upgrade = Processing::where('status', 'upgrade')->sum('sum');
         $commission = Balance::getBalanceAllUsers();
@@ -264,7 +314,7 @@ class ProcessingController extends Controller
         if(Balance::getBalance(Auth::user()->id) < $request->sum) return redirect()->back()->with('status', 'У вас недостаточно средств!');
         $pv = $request->sum/env('COURSE');
 
-        Balance::changeBalance(Auth::user()->id,$request->sum,'request',0,$request->program_id,0,0,$pv,0,0,$request->login);
+        Balance::changeBalance(Auth::user()->id,$request->sum,'request',0,$request->program_id,0,0,$pv,0,0,$request->login,'',$request->withdrawal_method);
 
 
         return redirect()->back()->with('status', 'Запрос успешно отправлен админу!');

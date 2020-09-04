@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Package;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PackageController extends Controller
 {
@@ -14,6 +15,10 @@ class PackageController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_package_view')) {
+            abort('401');
+        }
+
         $package = Package::all();
         return view('package.index', compact('package'));
     }
@@ -25,6 +30,10 @@ class PackageController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_package_create')) {
+            abort('401');
+        }
+
         return view('package.create');
     }
 
@@ -36,6 +45,10 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_package_create')) {
+            abort('401');
+        }
+
         $request->validate([
             "title"     => 'required',
             "cost"      => 'required',
@@ -67,6 +80,10 @@ class PackageController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('admin_package_view')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -78,6 +95,10 @@ class PackageController extends Controller
      */
     public function edit($id)
     {
+        if(!Gate::allows('admin_package_edit')) {
+            abort('401');
+        }
+
         $package = Package::find($id);
         return view('package.edit', compact('package'));
     }
@@ -91,6 +112,10 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('admin_package_edit')) {
+            abort('401');
+        }
+
         $request->validate([
             "title"     => 'required',
             "cost"      => 'required',
@@ -122,6 +147,10 @@ class PackageController extends Controller
      */
     public function destroy($id)
     {
+        if(!Gate::allows('admin_package_destroy')) {
+            abort('401');
+        }
+
         //
     }
 }

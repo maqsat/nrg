@@ -31,7 +31,7 @@
                                     <address>
                                         <h4 class="font-bold">Kazpost</h4>
                                         <p class="m-t-30"><b>Дата заказа:</b> <i class="fa fa-calendar"></i> {{ date('Y-m-d') }}</p>
-                                        <p><b>Даставим до:</b> <i class="fa fa-calendar"></i> {{ date('Y-m-d', time() + 86400*14) }}</p>
+                                        <p><b>Доставим до:</b> <i class="fa fa-calendar"></i> {{ date('Y-m-d', time() + 86400*14) }}</p>
                                     </address>
                                 </div>
                             </div>

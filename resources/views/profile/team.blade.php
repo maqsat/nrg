@@ -79,7 +79,9 @@
                                         <th>Пакет</th>
                                         <th>Номер</th>
                                         <th>Почта</th>
+                                        @if(Auth::user()->admin == 1)
                                         <th>Структура</th>
+                                        @endif
                                         <th>Дат/рег</th>
                                     </tr>
                                     </thead>
@@ -92,6 +94,8 @@
                                             <td class="txt-oflo">@if($item->package_id != 0)  {{ \App\Models\Package::find($item->package_id)->title }} @else Без пакета @endif</td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->number }}</span></td>
                                             <td><span class="text-success">{{ \App\User::find($item->user_id)->email }}</span></td>
+
+                                            @if(Auth::user()->admin == 1)
                                             <td>
                                                 <?php
                                                     $user_changes = \DB::table('user_changes')->where('user_id',$item->user_id)->get();
@@ -113,6 +117,7 @@
                                                     @endforeach
                                                 @endif
                                             </td>
+                                            @endif
                                             <td>
                                                 @if(isset($_GET['upgrade']) or isset($_GET['move']))
                                                     {{ date('d-m-Y', strtotime($item->created_at)) }}

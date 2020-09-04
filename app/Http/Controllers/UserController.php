@@ -5,13 +5,21 @@ namespace App\Http\Controllers;
 use App\Events\ShopTurnover;
 use App\Facades\Hierarchy;
 use App\Models\Basket;
+use App\Models\Notification;
 use App\Models\Office;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Role;
 use App\Models\Status;
 use DB;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Facades\Balance;
 use App\Models\Processing;
@@ -19,7 +27,6 @@ use App\Models\Counter;
 use App\Models\UserProgram;
 use App\Models\MobileApp\UserView;
 use App\Models\MobileApp\Like;
-use Auth;
 use Illuminate\Validation\Rule;
 use App\Models\Program;
 use App\Models\MobileApp\Course;
@@ -45,11 +52,16 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function index(Request $request)
     {
-        if(Auth::user()->role_id == 2) return redirect('processing?status=request');
+        if(!Gate::allows('admin_user_view')) {
+            abort('401');
+            //return redirect('processing?status=request');
+        }
+
+        //if(Auth::user()->role_id == 2) return redirect('processing?status=request');
 
         if(isset($request->s)){
             $list = User::whereNotNull('program_id')->where('name','like','%'.$request->s.'%')
@@ -83,10 +95,14 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+
         $users = \App\User::whereStatus(1)->get();
         return view('user.create', compact('users'));
     }
@@ -95,10 +111,14 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+
         $request->validate([
             'name'          => 'required',
             'number'        => 'required',
@@ -172,6 +192,12 @@ class UserController extends Controller
 
         event(new Activation($user = $user));
 
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_register_user',
+            'message'   => 'Зарегистрировал пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
+
         return redirect('/user');
     }
 
@@ -179,10 +205,14 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
+        if(!Gate::allows('admin_user_view')) {
+            abort('401');
+        }
+
         Auth::loginUsingId($id);
         return redirect('home');
     }
@@ -191,12 +221,17 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
+        if(!Gate::allows('admin_user_edit')) {
+            abort('401');
+        }
+
         $user = User::find($id);
-        return view('user.edit', compact('user'));
+        $roles = Role::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
@@ -204,10 +239,14 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('admin_user_edit')) {
+            abort('401');
+        }
+
         $request->validate([
             'name'          => 'required',
             'number'        => 'required',
@@ -240,6 +279,20 @@ class UserController extends Controller
                 'user_id' => $id,
             ]);
         }
+
+        $date = $user->created_at;
+        if ($request->created_at && $request->created_at !== $user->created_at) {
+            $date = date('Y-m-d H:i:s', strtotime($request->created_at));
+            $processing = Processing::where([
+                'status'  => 'register',
+                'user_id' => $user->id,
+            ])->get();
+            if(count($processing) && $processing = $processing[0]) {
+                $processing->created_at = $date;
+                $processing->save();
+            }
+        }
+
         if ( $request->password !== null & $request->password !== "" ){
             $password = bcrypt($request->password);
         }
@@ -247,18 +300,23 @@ class UserController extends Controller
             $password = $user->password;
         }
 
+        $role = Role::find($request->role);
+
         User::whereId($id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'number' => $request->number,
-            'birthday' => $request->birthday,
-            'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
-            'address' => $request->address,
-            'password' => $password,//change
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'number'        => $request->number,
+            'birthday'      => $request->birthday,
+            'country_id'    => $request->country_id,
+            'city_id'       => $request->city_id,
+            'admin'         => $role ? $role->admin : 0,
+            'role_id'       => $role ? $role->role_id : 0,
+            'address'       => $request->address,
+            'password'      => $password,//change
             'card'          => $request->card,//hostory
-            'gender'        =>  $request->gender,
-            'bank'          =>  $request->bank,
+            'gender'        => $request->gender,
+            'bank'          => $request->bank,
+            'created_at'    => $date,
         ]);
 
         return redirect()->back()->with('status', 'Успешно изменено');
@@ -268,10 +326,14 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
+        if(!Gate::allows('admin_user_destroy')) {
+            abort('401');
+        }
+
         $result_sponsor = User::whereSponsorId($id);
         $result_inviter = User::whereInviterId($id);
 
@@ -293,17 +355,205 @@ class UserController extends Controller
 
     }
 
+    public function addBonus($id)
+    {
+        if(!Gate::allows('admin_user_add_bonus')) {
+            abort('401');
+        }
+
+        $user = User::find($id);
+        $array_ids_children = explode(',', trim(Hierarchy::getFollowersList($id, ''), ','));
+        //$array_ids_parents = explode(',', trim(Hierarchy::getSponsorsList($id, ''), ','));
+        $users = User::find(array_merge($array_ids_children/*, $array_ids_parents*/, [$id]));
+        return view('user.add_bonus', compact('user', 'users'));
+    }
+
+    public function addBonusUser(Request $request, $id)
+    {
+        if(!Gate::allows('admin_user_add_bonus')) {
+            abort('401');
+        }
+
+        $user = User::find($id);
+
+        if($request->position) {
+            $validator = Validator::make($request->all(), [
+                'description'   => 'required',
+                'pv'           => 'required|integer',
+            ]);
+
+            if ($validator->fails())
+            {
+                return redirect()->back()->with('status', 'Данные указаны не верно!<br />Поля обязательны для заполнения!');
+            }
+
+            $position_user = $request->position;
+
+            Balance::changeBalance($id,0,'admin_add',$id,$user->program_id,$user->package_id,$user->status_id,$request->pv * -1,0,0,0,$request->description);
+            if($request->pv > 0) {
+                Balance::setQV($id,$request->pv * -1,$id,$user->package_id,$position_user,is_null($user->status_id) ? 0 : $user->status_id);
+            }
+
+        } else {
+            $validator = Validator::make($request->all(), [
+                'description'   => 'required',
+                'sum'           => 'required|regex:/^[0-9]*\.?,?[0-9]*$/',
+                'pv'           => 'required|integer',
+                'in_user'           => 'required|integer',
+            ]);
+
+            if ($validator->fails())
+            {
+                return redirect()->back()->with('status', 'Поля не прошли валидацию!<br />Поля обязательны для заполнения!');
+            }
+
+            $in_user = User::find($request->in_user);
+            $position_user = $in_user->position;
+
+            $in_user_program_list = explode(',', trim(UserProgram::where('user_id', $request->in_user)->first()->list, ','));
+            for ($i = 0; $i < count($in_user_program_list); $i++) {
+                if($in_user_program_list[$i] === $id && $i - 1 >= 0) {
+                    $position_user = User::find($in_user_program_list[$i - 1])->position;
+                }
+            }
+
+            Balance::changeBalance($id,str_replace(',', '.', $request->sum),'admin_add',$request->in_user,$in_user->program_id,$in_user->package_id,$user->status_id,$request->pv,0,0,0,$request->description);
+            if($request->pv > 0) {
+                Balance::setQV($id,$request->pv,$request->in_user,$in_user->package_id,$position_user,is_null($user->status_id) ? 0 : $user->status_id );
+            }
+        }
+
+
+        return redirect()->back()->with('status', 'Успешно выполнено!');//view('user.add_bonus', compact('user'));
+    }
+
     public function activation($user_id)
     {
+        if(!Gate::allows('admin_user_activation')) {
+            abort('401');
+        }
+
         $user  = User::find($user_id);
 
         event(new Activation($user = $user));
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_activated_user',
+            'message'   => 'Активировал пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
+
+        return "<h2>Пользователь успешно  активирован!</h2>";
+    }
+
+    public function activationWithoutBonus($user_id)
+    {
+        if(!Gate::allows('admin_user_activation')) {
+            abort('401');
+        }
+
+        $id = $user_id;
+        $this_user = User::find($id);
+        $program = Program::find($this_user->program_id);
+        $inviter = User::find($this_user->inviter_id);
+
+        /*start check*/
+        if(is_null($this_user)) {
+            dd("Пользователь не найден");
+        }
+        $check_user_program = UserProgram::where('program_id', $program->id)
+            ->where('user_id',$id)
+            ->count();
+        if($check_user_program != 0) {
+            dd("Пользователь уже активирован -> $id");
+        }
+        /*end check*/
+
+        /*start init and activate*/
+        if ($this_user->package_id == 0){
+            $package_id = 0;
+            $status_id = 1;
+            $package_cost = env('REGISTRATION_FEE');
+        }
+        else{
+            $package = Package::find($this_user->package_id);
+            $package_id = $package->id;
+            $status_id = $package->rank;
+            $package_cost = $package->cost + env('REGISTRATION_FEE');
+        }
+
+
+        if(is_null($this_user->sponsor_id)){
+            $sponsor_data = Hierarchy::getSponsorId($inviter->id);
+            $sponsor_id = $sponsor_data[0];
+            $position_data = $sponsor_data[1];
+
+            $checker = User::where('sponsor_id',$sponsor_id)->where('position',$position_data)->count();
+            if($checker > 0) {
+                dd('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+            }
+            else{
+                User::find($id)->update([
+                    'sponsor_id' => $sponsor_id,
+                    'position' => $position_data,
+                    'package_id' => $package_id,
+                ]);
+                $this_user = User::find($id);
+            }
+        }
+
+        if(!is_null($this_user->status_id) && $this_user->status_id != 0  && $status_id < $this_user->status_id){
+            $status_id = $this_user->status_id;
+        }
+
+        $list = Hierarchy::getSponsorsList($this_user->id,'').',';
+        $inviter_list = Hierarchy::getInviterList($this_user->id,'').',';
+
+        User::whereId($this_user->id)->update(['status' => 1]);
+
+        /*set register sum */
+        Balance::changeBalance($id,$package_cost,'register',$this_user->id,$this_user->program_id,$package_id,0);
+
+        UserProgram::insert(
+            [
+                'user_id' => $this_user->id,
+                'list' => $list,
+                'status_id' => $status_id,
+                'inviter_list' => $inviter_list,
+                'program_id' => $this_user->program_id,
+                'package_id' => $package_id,
+            ]
+        );
+
+        if (Auth::check()){
+            $author_id = Auth::user()->id;
+        }
+        else {
+            $author_id = 0;
+        }
+
+        Notification::create([
+            'user_id' => $this_user->id,
+            'type' => 'user_activated',
+            'author_id' => $author_id
+        ]);
+        /*end init and activate*/
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_activated_user',
+            'message'   => 'Активировал пользователя ' . $this_user->name . ' ( ' . $this_user->id . ' ) без бонусов',
+        ]);
 
         return "<h2>Пользователь успешно  активирован!</h2>";
     }
 
     public function deactivation($user_id)
     {
+        if(!Gate::allows('admin_user_deactivation')) {
+            abort('401');
+        }
+
         if (isset($_GET['upgrade'])){
             $order =  Order::where( 'type','upgrade')
                 ->where('user_id',$user_id)
@@ -313,6 +563,14 @@ class UserController extends Controller
                         'status' => 12,
                     ]
                 );
+
+            $user = User::find($user_id);
+
+            Notification::create([
+                'user_id'   => Auth::user()->id,
+                'type'      => 'admin_activated_user',
+                'message'   => 'Отклонил квитанцию пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+            ]);
 
             return "<h2>Квитанция успешно отклонена!</h2>";
         }else{
@@ -325,6 +583,14 @@ class UserController extends Controller
                     ]
                 );
 
+            $user = User::find($user_id);
+
+            Notification::create([
+                'user_id'   => Auth::user()->id,
+                'type'      => 'admin_activated_user',
+                'message'   => 'Деактивировал пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+            ]);
+
             return "<h2>Пользователь успешно деактивирован!</h2>";
         }
 
@@ -332,12 +598,16 @@ class UserController extends Controller
 
     public function successBasket($basket_id)
     {
+        if(!Gate::allows('admin_user_success_basket')) {
+            abort('401');
+        }
+
         $order = Order::where( 'type','shop')
             ->where('basket_id',$basket_id)
             ->where('payment','manual')
             ->where('status' ,1)
             ->first();
-        
+
         if(!is_null($order) and $order->status == 1) dd("Ссылка не активна");
 
         Order::where( 'type','shop')
@@ -377,12 +647,20 @@ class UserController extends Controller
 
         Balance::changeBalance($basket->user_id,$order->amount*0.2,'cashback',$basket->user_id,1,$user_program->package_id,$user_program->status_id,$sum_pv);
 
-        if($sum_pv > 0){
+        if($sum_pv > 0) {
             $data = [];
             $data['pv'] = $sum_pv;
             $data['user_id'] = $basket->user_id;
 
             event(new ShopTurnover($data = $data));
+
+            $user = User::find($basket->user_id);
+
+            Notification::create([
+                'user_id'   => Auth::user()->id,
+                'type'      => 'admin_buy_user',
+                'message'   => 'Подтверждение покупки пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+            ]);
 
             return "<h2>Заказ успешно одобрен!</h2>";
         }
@@ -392,14 +670,26 @@ class UserController extends Controller
 
     public function cancelBasket($basket_id)
     {
-        $order =  Order::where( 'type','shop')
+        if(!Gate::allows('admin_user_cancel_basket')) {
+            abort('401');
+        }
+
+        $order =  tap(Order::where( 'type','shop')
             ->where('basket_id',$basket_id)
-            ->where('status' ,11)
+            ->where('status' ,11)->first())
             ->update(
                 [
                     'status' => 12,
                 ]
             );
+
+        $user = User::find($order->user_id);
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_buy_user',
+            'message'   => 'Отклонил покупку пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
 
         return "<h2>Квитанция успешно отклонена!</h2>";
 
@@ -408,10 +698,14 @@ class UserController extends Controller
 
     public function activationUpgrade($order_id)
     {
+        if(!Gate::allows('admin_user_upgrade')) {
+            abort('401');
+        }
+
         $order = Order::find($order_id);
 
         if(true){
-            Order::where( 'id',$order_id)
+            tap(Order::where( 'id',$order_id))
                 ->update(
                     [
                         'status' => 4,
@@ -419,6 +713,14 @@ class UserController extends Controller
                 );
 
             event(new Upgrade($order = $order));
+
+            $user = User::find($order->user_id);
+
+            Notification::create([
+                'user_id'   => Auth::user()->id,
+                'type'      => 'admin_upgrade_user',
+                'message'   => 'Апгрейд пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+            ]);
             return "<h2>Success upgraded!</h2>";
         }
         return "<h2>Already upgraded!</h2>";
@@ -426,12 +728,24 @@ class UserController extends Controller
 
     public function deactivationUpgrade($order_id)
     {
-        $order =  Order::where( 'id',$order_id)
+        if(!Gate::allows('admin_user_deactivation_upgrade')) {
+            abort('401');
+        }
+
+        $order =  tap(Order::where( 'id',$order_id))
             ->update(
                 [
                     'status' => 12,
                 ]
             );
+
+        $user = User::find($order->first()->user_id);
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_upgrade_user',
+            'message'   => 'Отклонена квитанция пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
 
         return "<h2>Квитанция успешно отклонена!</h2>";
 
@@ -564,6 +878,10 @@ class UserController extends Controller
 
     public function transfer($id)
     {
+        if(!Gate::allows('admin_user_transfer')) {
+            abort('401');
+        }
+
         $users = User::whereStatus(1)->get();
 
         $user = User::find($id);
@@ -592,6 +910,10 @@ class UserController extends Controller
 
     public function transferStore(Request $request)
     {
+        if(!Gate::allows('admin_user_transfer')) {
+            abort('401');
+        }
+
         $request->validate([
             'user_id'    => 'required',
             'inviter_id' => 'required',
@@ -625,15 +947,18 @@ class UserController extends Controller
             $user->inviter_id = $request->inviter_id;
             $user->save();
 
-            $followers = Hierarchy::inviterList($request->user_id);
+            $inviter_followers = ',' . $request->user_id . Hierarchy::getInviterFollowerList($request->user_id, '') . ',';
+            $inviter_followers = explode(',', trim($inviter_followers, ','));
 
-            foreach ($followers as $item){
-                $user_program = UserProgram::where('id',$item->id)->first();
+            foreach ($inviter_followers as $item){
+                $user_program = UserProgram::where('user_id', $item)->first();
 
-                $inviter_list = str_replace(",$user->inviter_id,", ",$request->inviter_id,", $user_program->inviter_list);
+                if($user_program) {
+                    $inviter_list = Hierarchy::getInviterList($item, '') . ',';
 
-                $user_program->inviter_list = $inviter_list;
-                $user_program->save();
+                    $user_program->inviter_list = $inviter_list;
+                    $user_program->save();
+                }
             }
         }
 
@@ -648,15 +973,18 @@ class UserController extends Controller
             $user->sponsor_id = $request->sponsor_id;
             $user->save();
 
-            $followers = Hierarchy::followersList($request->user_id);
+            $followers = ',' . $request->user_id . Hierarchy::getFollowersList($request->user_id, '') . ',';
+            $followers = explode(',', trim($followers, ','));
 
             foreach ($followers as $item){
-                $user_program = UserProgram::where('id',$item->id)->first();
+                $user_program = UserProgram::where('user_id', $item)->first();
 
-                $list = str_replace(",$user->sponsor_id,", ",$request->sponsor_id,", $user_program->list);
+                if($user_program) {
+                    $sponsor_list = Hierarchy::getSponsorsList($item, '') . ',';
 
-                $user_program->list = $list;
-                $user_program->save();
+                    $user_program->list = $sponsor_list;
+                    $user_program->save();
+                }
             }
         }
 
@@ -677,6 +1005,10 @@ class UserController extends Controller
 
     public function program($id)
     {
+        if(!Gate::allows('admin_user_program')) {
+            abort('401');
+        }
+
         $user = User::find($id);
         $user_program = UserProgram::whereUserId($id)->first();
         $offices = Office::all();
@@ -685,6 +1017,10 @@ class UserController extends Controller
 
     public function programStore(Request $request,$id)
     {
+        if(!Gate::allows('admin_user_program')) {
+            abort('401');
+        }
+
         $request->validate([
             'package_id'    => 'required',
             'office_id'     => 'required',
@@ -763,19 +1099,30 @@ class UserController extends Controller
 
     public function processing($id)
     {
+        if(!Gate::allows('admin_user_processing')) {
+            abort('401');
+        }
+
         $user  = User::find($id);
         $balance = Balance::getBalance($id);
         $all = Balance::getIncomeBalance($id);
         $out = Balance::getBalanceOut($id);
         $week = Balance::getWeekBalance($id);
 
-        $list = Processing::whereUserId($id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
+        $list = Processing::whereUserId($id)->where(function ($query) {
+            $query
+                ->where('sum','!=','0')
+                ->orWhere('pv', '!=', '0');
+        })->orderBy('created_at','desc')->paginate(100);
 
         return view('user.processing', compact('list', 'balance', 'all', 'out','week','user'));
     }
 
     public function processingStore(Request $request)
     {
+        if(!Gate::allows('admin_user_processing')) {
+            abort('401');
+        }
 
         $request->validate([
             'sum' => ['required', 'numeric', 'min:0'],

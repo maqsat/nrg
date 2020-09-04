@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\City;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -25,6 +26,10 @@ class CityController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_city_view')) {
+            abort('401');
+        }
+
         $cities = City::all();
         return view('city.index',compact('cities'));
     }
@@ -36,6 +41,10 @@ class CityController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_city_create')) {
+            abort('401');
+        }
+
         $countries = Country::all();
         return view('city.create',compact('countries'));
     }
@@ -48,6 +57,10 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_city_create')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
             'country_id'          => 'required',
@@ -71,6 +84,10 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
+        if(!Gate::allows('admin_city_view')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -82,6 +99,10 @@ class CityController extends Controller
      */
     public function edit(City $city)
     {
+        if(!Gate::allows('admin_city_edit')) {
+            abort('401');
+        }
+
         $countries = Country::all();
         return view('city.edit',compact('countries','city'));
     }
@@ -95,6 +116,10 @@ class CityController extends Controller
      */
     public function update(Request $request, City $city)
     {
+        if(!Gate::allows('admin_city_update')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
             'country_id'          => 'required',
@@ -119,6 +144,10 @@ class CityController extends Controller
      */
     public function destroy(City $city)
     {
+        if(!Gate::allows('admin_city_destroy')) {
+            abort('401');
+        }
+
         //
     }
 }

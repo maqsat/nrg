@@ -19,6 +19,7 @@ use App\Models\Processing;
 use App\Models\Notification;
 use App\Models\UserProgram;
 use App\Models\UserSubscriber;
+use Illuminate\Support\Facades\Storage;
 
 class Hierarchy {
 
@@ -166,6 +167,68 @@ class Hierarchy {
         return $str;//substr($str, 1,-1);
     }
 
+    public function getFollowersList($user_id, $str)
+    {
+        $users = User::where('sponsor_id', $user_id)->get();
+
+        if($users->count())
+        {
+            foreach ($users as $user) {
+                if(!is_null($user->id))
+                {
+                    $str .= ",$user->id";
+                    $str = Hierarchy::getFollowersList($user->id,$str);
+                }
+            }
+        }
+
+        return $str;
+    }
+
+    public function getInviterFollowerList($user_id, $str)
+    {
+        $users = User::where('inviter_id', $user_id)->get();
+
+        if($users->count())
+        {
+            foreach ($users as $user) {
+                if(!is_null($user->id))
+                {
+                    $str .= ",$user->id";
+                    $str = Hierarchy::getInviterFollowerList($user->id,$str);
+                }
+            }
+        }
+
+        return $str;
+    }
+
+    public function followersList($user_id)
+    {
+        $count =  DB::table('user_programs')
+            ->where('list', 'like', '%,' . $user_id . ',%')
+            ->orWhere('list', 'like', '%,' . $user_id)
+            ->orWhere('list', 'like', $user_id . ',%')
+            ->orWhere('user_id', $user_id)
+            ->groupBy('user_id')
+            ->get();
+
+        return $count;
+    }
+
+    public function inviterList($user_id)
+    {
+        $count =  DB::table('user_programs')
+            ->where('inviter_list', 'like', '%,' . $user_id . ',%')
+            ->orWhere('inviter_list', 'like', '%,' . $user_id)
+            ->orWhere('inviter_list', 'like', $user_id . ',%')
+            ->orWhere('user_id', $user_id)
+            ->groupBy('user_id')
+            ->get();
+
+        return $count;
+    }
+
     /**
      * @param $id
      * @return string
@@ -222,7 +285,7 @@ class Hierarchy {
      */
     public function setQS()
     {
-        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),date('N')-1)->get();
+        $user_programs = UserProgram::where(DB::raw("WEEKDAY(user_programs.created_at)"),Carbon::now()->format('N')-1)->get();
 
         foreach ($user_programs as $item){
 
@@ -303,7 +366,7 @@ class Hierarchy {
 
        $user_programs = User::whereDay('created_at', '=', date('d'))->get();
 
-       foreach ($user_programs as $item){
+       foreach ($user_programs as $item) {
 
            $balance = Balance::getWeekBalanceByRange($item->id,$start,$end);
            if($balance >= 200){
@@ -401,32 +464,6 @@ class Hierarchy {
             ->sum(DB::raw('basket_good.quantity * products.pv'));
 
         return $order_pv;
-    }
-
-    public function followersList($user_id)
-    {
-        $count =  DB::table('user_programs')
-            ->where('list', 'like', '%,' . $user_id . ',%')
-            ->orWhere('list', 'like', '%,' . $user_id)
-            ->orWhere('list', 'like', $user_id . ',%')
-            ->orWhere('user_id', $user_id)
-            ->groupBy('user_id')
-            ->get();
-
-        return $count;
-    }
-
-    public function inviterList($user_id)
-    {
-        $count =  DB::table('user_programs')
-            ->where('inviter_list', 'like', '%,' . $user_id . ',%')
-            ->orWhere('inviter_list', 'like', '%,' . $user_id)
-            ->orWhere('inviter_list', 'like', $user_id . ',%')
-            ->orWhere('user_id', $user_id)
-            ->groupBy('user_id')
-            ->get();
-
-        return $count;
     }
 
     public function userCount($user_id,$position)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Models\News;
 use Session;
@@ -10,15 +11,27 @@ class NewsController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('admin_news_view')) {
+            abort('401');
+        }
+
         $news=News::all();
         return view('news.news',compact('news'));
     }
     public function create()
     {
+        if(!Gate::allows('admin_news_create')) {
+            abort('401');
+        }
+
         return view('news.news-create');
     }
     public function store(Request $request ,News $news)
     {
+        if(!Gate::allows('admin_news_create')) {
+            abort('401');
+        }
+
         $validatedData = $request->validate([
             'news_name' => 'required|max:150',
             'news_text' => 'required|max:2000',
@@ -52,14 +65,26 @@ class NewsController extends Controller
     }
     public function show($id)
     {
+        if(!Gate::allows('admin_news_view')) {
+            abort('401');
+        }
+
         //
     }
     public function edit(News $news)
     {
+        if(!Gate::allows('admin_news_edit')) {
+            abort('401');
+        }
+
         return view('news.news-edit',compact('news'));
     }
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('admin_news_edit')) {
+            abort('401');
+        }
+
         $validatedData = $request->validate([
             'news_name' => 'required|max:150',
             'news_text' => 'required|max:2000',
@@ -98,6 +123,10 @@ class NewsController extends Controller
     }
     public function destroy(News $news)
     {
+        if(!Gate::allows('admin_news_destroy')) {
+            abort('401');
+        }
+
         $news->delete();
         return redirect('/news');
     }

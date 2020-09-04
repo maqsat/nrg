@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Upgrade;
+use App\Exceptions\PayPostExceptionGenerateUrl;
 use App\Facades\Balance;
 use App\Facades\Hierarchy;
 use App\Models\UserProgram;
@@ -162,17 +163,21 @@ class PayController extends Controller
             return view('processing.manual', compact('order', 'cost'));
         }
         if($request->type == "paypost"){
-            $payment_webhook = "http://nrg-max.kz/pay-processing/$order_id/";
+            $payment_webhook = env('APP_URL', false) . "/pay-processing/$order_id/";
 
-            $payPost = PayPost::generateUrl([
-                'amount' => $cost*env('DOLLAR_COURSE'),
-                //'amount' => 10,
-                'email' => Auth::user()->email,
-                'language' => 'ru',
-                'currency' => 'KZT',
-                'type' => 'card',
-                'payment_webhook' => $payment_webhook
-            ]);
+            try {
+                $payPost = PayPost::generateUrl([
+                    'amount' => $cost*env('DOLLAR_COURSE'),
+                    //'amount' => 10,
+                    'email' => Auth::user()->email,
+                    'language' => 'ru',
+                    'currency' => 'KZT',
+                    'type' => 'card',
+                    'payment_webhook' => $payment_webhook
+                ]);
+            } catch (\Exception $exception) {
+                throw new PayPostExceptionGenerateUrl($exception->getMessage());
+            }
 
             if ($payPost->success) {
                 // todo white success instructions
@@ -213,9 +218,9 @@ class PayController extends Controller
                 'amount' => intval($cost)*env('DOLLAR_COURSE'),
                 'expiration_date' => date("Y-m-d H:i:s", time() + 3600 * 240000),
                 'description' => $message,
-                'success_url' => 'https://nrg-max.kz/home?success=1',
-                'fail_url' => 'https://nrg-max.kz/home?fail=1',
-                'result_url' => "https://nrg-max.kz/pay-processing/$order_id",
+                'success_url' => env('APP_URL', false) . '/home?success=1', //http://nrg-max.local
+                'fail_url' => env('APP_URL', false) . '/home?fail=1',
+                'result_url' => env('APP_URL', false) . "/pay-processing/$order_id",
             ]);
 
             $signature = md5($body . config('pay.indigo_key'));
@@ -254,15 +259,21 @@ class PayController extends Controller
                     ]
                 );
             Basket::whereId($order->basket_id)->update(['status' => 1]);
+            $basket = Basket::find($order->basket_id);
 
-            $order_pv = Hierarchy::orderPv($order_id, Auth::user()->id);
+            $sum_pv = 0;
+            foreach ($basket->basket_goods as $bg){
+                $sum_pv += $bg->product->pv * $bg->quantity;
+            }
+
+            Balance::changeBalance(Auth::user()->id,$order->amount,'shop',Auth::user()->id,1,0,0);
+            Balance::changeBalance(Auth::user()->id,$order->amount*0.2,'cashback',Auth::user()->id,1,1,1,$sum_pv);
 
             $data = [];
-            $data['pv'] = $order_pv;
+            $data['pv'] = $sum_pv;
             $data['user_id'] = Auth::user()->id;
-            Balance::changeBalance(Auth::user()->id,$order->amount,'shop',Auth::user()->id,1,0,0);
 
-            event(new ShopTurnover($data = $data));
+            event(new ShopTurnover($data));
 
             return redirect('/story-store');
         }
@@ -278,15 +289,27 @@ class PayController extends Controller
                     ]
                 );
             Basket::whereId($order->basket_id)->update(['status' => 1]);
+            $basket = Basket::find($order->basket_id);
 
             $order_pv = Hierarchy::orderPv($order_id, Auth::user()->id);
 
             $data = [];
             $data['pv'] = $order_pv;
             $data['user_id'] = Auth::user()->id;
-            Balance::changeBalance(Auth::user()->id,$order->amount,'revitalization-shop',Auth::user()->id,1,0,0);
 
-            event(new ShopTurnover($data = $data));
+            Balance::changeBalance(Auth::user()->id,$order->amount,'revitalization-shop',Auth::user()->id,1,0,0);
+            Balance::changeBalance(Auth::user()->id,$order->amount*0.2,'cashback',Auth::user()->id,1,1,1,0);
+
+            if(!$data['pv']) {
+                $sum_pv = 0;
+                foreach ($basket->basket_goods as $bg){
+                    $sum_pv += $bg->product->pv * $bg->quantity;
+                }
+                $data['pv'] = $sum_pv;
+                $data['pv_0'] = true;
+            }
+
+            event(new ShopTurnover($data));
 
             return redirect('/story-store');
         }
@@ -300,8 +323,9 @@ class PayController extends Controller
 
         if($order->payment == 'manual'){
             if ($request->hasFile('scan')) {
+                $extension = $request->file('scan')->extension();
                 $dir = 'public/scan/'.date('Y-m-d');
-                $name = $id.'.jpg';
+                $name = $id . '.' . $extension;
                 $request->scan->storeAs($dir, $name);
                 $path = "storage/scan/".date('Y-m-d').'/'.$name;
 
@@ -387,7 +411,9 @@ class PayController extends Controller
 
             if($check->success){
 
-                Order::where('uuid',$check->result->id)
+                $order = Order::where('uuid',$check->result->id)->first();
+                $order_status = $order->status;
+                $order
                     ->update([
                         'status' => $check->result->status,
                     ]);
@@ -396,9 +422,8 @@ class PayController extends Controller
 
                 $user = User::find($uuid_order->user_id);
 
-                if($check->result->status == 4 or $check->result->status == 6){
-
-                    if($uuid_order->type == 'shop'){
+                if(($check->result->status == 4 or $check->result->status == 6) && !in_array($order_status, [4,6])) {
+                    if($uuid_order->type == 'shop') {
                         Basket::whereId($uuid_order->basket_id)->update(['status' => 1]);
                         $basket = Basket::find($uuid_order->basket_id);
 
@@ -417,7 +442,10 @@ class PayController extends Controller
                             $sum_pv +=$pv->sum;
                         }
 
-                        if($sum_pv > 0){
+                        Balance::changeBalance($basket->user_id,$order->amount*0.2,'cashback',$basket->user_id,1,1,1,$sum_pv);
+
+                        if($sum_pv > 0) {
+
                             $data = [];
                             $data['pv'] = $sum_pv;
                             $data['user_id'] = $basket->user_id;

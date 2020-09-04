@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use App\Models\Office;
+use App\Models\Review;
 use DB;
 use App\User;
+use Illuminate\Support\Facades\Gate;
 use PayPost;
 use Storage;
 use Validator;
@@ -38,16 +42,19 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function index(Request $request)
     {
+        if (Auth::user()->admin == 1 && Auth::user()->role_id != 0) {
+            return redirect('/user');
+        }
         //check KazPost order status
         $orders = Order::where('user_id',Auth::user()->id)->where('status',0)->where('uuid','!=',null)->where('uuid','!=',0)->get();
 
         foreach ($orders as $item){
             $order_id = $item->id;
-            $payment_webhook = "http://nrg-max.kz/pay-processing/$order_id/";
+            $payment_webhook = env('APP_URL', false) . "/pay-processing/$order_id/";
             return redirect($payment_webhook);
         }
         //end check KazPost order status
@@ -141,6 +148,273 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
+     */
+    public function partner()
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+
+        $users = \App\User::whereStatus(1)->get();
+        return view('user.partner', compact('users'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function partnerStore(Request $request)
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+
+        $request->validate([
+            'name'          => 'required',
+            'number'        => 'required',
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            //gender'        => 'required',
+            //'birthday'      => 'required',
+            'country_id'    => 'required',
+            //'address'       => 'required',
+            'password'      => [ 'required', 'string', 'min:6'],
+            'created_at'    => 'required',
+            'city_id'       => 'required',
+            'inviter_id'    => ['required', "sponsor_in_program:1", 'exists:users,id'],
+            'sponsor_id'    => 'required',
+            'position'      => 'required',
+            'package_id'    => 'required',
+            'office_id'    => 'required',
+        ]);
+
+        $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+
+        $package = Package::find($request->package_id);
+        if (is_null($package))   $status_id = 1;
+        else   $status_id = $package->rank;
+
+
+
+        if ($status_id < $request->status_id){
+            $status_id = $request->status_id;
+        }
+
+
+        $user = User::create([
+            'name'          => $request->name,
+            'number'        => $request->number,
+            'email'         => $request->email,
+            'gender'        => $request->gender,
+            'birthday'      => $request->birthday,
+            'address'       => $request->address,
+            'password'      => bcrypt($request->password),
+            'created_at'    => $request->created_at,
+            'country_id'    => $request->country_id,
+            'city_id'       => $request->city_id,
+            'inviter_id'    => $request->inviter_id,
+            'sponsor_id'    => $request->sponsor_id,
+            'position'      => $request->position,
+            'package_id'    => $request->package_id,
+            'status_id'     => $status_id,
+            'office_id'     => $request->office_id,
+            'program_id'     =>  1,
+        ]);
+
+
+        if($request->package_id != 0){
+            $package = Package::find($request->package_id);
+            $cost = $package->cost + env('REGISTRATION_FEE');
+            $package_id  = $package->id;
+        }
+        else $cost = env('REGISTRATION_FEE');
+
+        $order =  Order::updateOrCreate(
+            [
+                'type' => 'register',
+                'status' => 0,
+                'payment' => 'manual',
+                'uuid' => 0,
+                'user_id' => $user->id,
+            ],
+            ['amount' => $cost, 'package_id' => $request->package_id]
+        );
+
+        event(new Activation($user = $user));
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_register_user',
+            'message'   => 'Зарегистрировал пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
+
+        return redirect('/home')->with('success', 'Действие выполнено успешно!');
+    }
+
+    public function partnerSponsorUsers(Request $request)
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+        $request->validate([
+            'inviter_id' => 'required', 'integer'
+        ]);
+
+        $sponsor_users = Hierarchy::followersList($request->inviter_id);
+        $text = '';
+
+        foreach ($sponsor_users  as $item){
+
+            $left_user = User::whereSponsorId($item->user_id)->wherePosition(1)->whereStatus(1)->first();
+            $right_user = User::whereSponsorId($item->user_id)->wherePosition(2)->whereStatus(1)->first();
+
+            if(is_null($left_user) or is_null($right_user)){
+                $name = User::find($item->user_id)->name;
+                $tmt_text = '<option value='.$item->user_id.'>'.$name.'</option>';
+                $text .= $tmt_text;
+            }
+
+        }
+
+        return $text;
+    }
+
+    public function partnerSponsorPositions(Request $request)
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+        $request->validate([
+            'sponsor_id' => 'required', 'integer'
+        ]);
+
+        $text = '';
+        $left_user = User::whereSponsorId($request->sponsor_id)->wherePosition(1)->whereStatus(1)->first();
+        $right_user = User::whereSponsorId($request->sponsor_id)->wherePosition(2)->whereStatus(1)->first();
+
+        if(is_null($left_user))   $text .= '<option value=1>Слева</option>';
+        if(is_null($right_user))   $text .= '<option value=2>Справа</option>';
+
+
+        return $text;
+    }
+
+    public function partnerUserOffices(Request $request)
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+        $request->validate([
+            'city_id' => 'required', 'integer'
+        ]);
+
+        $text = '<option>Не указан</option>';
+
+        $offices = Office::where('city_id',$request->city_id)->get();
+
+        foreach ($offices  as $item){
+            $tmt_text = '<option value='.$item->id.'>'.$item->title.'</option>';
+            $text .= $tmt_text;
+        }
+
+
+        return $text;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(Request $request)
+    {
+        if(!Gate::allows('admin_user_create')) {
+            abort('401');
+        }
+
+        $request->validate([
+            'name'          => 'required',
+            'number'        => 'required',
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            //gender'        => 'required',
+            //'birthday'      => 'required',
+            'country_id'    => 'required',
+            //'address'       => 'required',
+            'password'      => [ 'required', 'string', 'min:6'],
+            'created_at'    => 'required',
+            'city_id'       => 'required',
+            'inviter_id'    => ['required', "sponsor_in_program:1", 'exists:users,id'],
+            'sponsor_id'    => 'required',
+            'position'      => 'required',
+            'package_id'    => 'required',
+            'office_id'    => 'required',
+        ]);
+
+        $checker = User::where('sponsor_id',$request->sponsor_id)->where('position',$request->position)->count();
+        if($checker > 0) return  redirect()->back()->with('status', 'Позиция занята, проверьте, есть не активированный партнер в этой позиции');
+
+        $package = Package::find($request->package_id);
+        if (is_null($package))   $status_id = 1;
+        else   $status_id = $package->rank;
+
+
+
+        if ($status_id < $request->status_id){
+            $status_id = $request->status_id;
+        }
+
+
+        $user = User::create([
+            'name'          => $request->name,
+            'number'        => $request->number,
+            'email'         => $request->email,
+            'gender'        => $request->gender,
+            'birthday'      => $request->birthday,
+            'address'       => $request->address,
+            'password'      => bcrypt($request->password),
+            'created_at'    => $request->created_at,
+            'country_id'    => $request->country_id,
+            'city_id'       => $request->city_id,
+            'inviter_id'    => $request->inviter_id,
+            'sponsor_id'    => $request->sponsor_id,
+            'position'      => $request->position,
+            'package_id'    => $request->package_id,
+            'status_id'     => $status_id,
+            'office_id'     => $request->office_id,
+            'program_id'     =>  1,
+        ]);
+
+
+        if($request->package_id != 0){
+            $package = Package::find($request->package_id);
+            $cost = $package->cost + env('REGISTRATION_FEE');
+            $package_id  = $package->id;
+        }
+        else $cost = env('REGISTRATION_FEE');
+
+        $order =  Order::updateOrCreate(
+            [
+                'type' => 'register',
+                'status' => 0,
+                'payment' => 'manual',
+                'uuid' => 0,
+                'user_id' => $user->id,
+            ],
+            ['amount' => $cost, 'package_id' => $request->package_id]
+        );
+
+        event(new Activation($user = $user));
+
+        Notification::create([
+            'user_id'   => Auth::user()->id,
+            'type'      => 'admin_register_user',
+            'message'   => 'Зарегистрировал пользователя ' . $user->name . ' ( ' . $user->id . ' ) ',
+        ]);
+
+        return redirect('/user');
+    }
+
     public function processing(Request $request)
     {
         $balance = Balance::getBalance(Auth::user()->id);
@@ -162,7 +436,11 @@ class HomeController extends Controller
         }
 
 
-        $list = Processing::whereUserId(Auth::user()->id)->where('sum','!=','0')->orderBy('created_at','desc')->paginate(100);
+        $list = Processing::whereUserId(Auth::user()->id)->where(function ($query) {
+            $query
+                ->where('sum','!=','0')
+                ->orWhere('pv', '!=', '0');
+        })->orderBy('created_at','desc')->paginate(100);
 
 
         return view('profile.processing.processing', compact('list', 'balance', 'all', 'out','week'));
@@ -174,6 +452,112 @@ class HomeController extends Controller
         $list = User::whereSponsorId(Auth::user()->id)->get();
         $balance = Balance::getBalance(Auth::user()->id);
         return view('profile.profile', compact('list','balance','feed'));
+    }
+
+    public function review($id = 0)
+    {
+        $review = $id ? Review::find($id) : null;
+        if($review && $review->user()->first()->id !== Auth::user()->id) {
+            return redirect()->back();
+        }
+        $products = Product::all();
+        return view('profile.review', compact('review','products'));
+    }
+
+    public function commentAdd(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required'
+        ],[
+            'message.required' => 'Это поле обязательное!'
+        ]);
+
+        $review = Review::find($id);
+        $comment = Comment::find($request->item_id);
+
+        if($request->item_id && $comment && Auth::user()->id === $comment->user->id) {
+            $comment->comment = $request->message;
+            $comment->save();
+        } else {
+            $review->comments()->create([
+                'comment' => $request->message,
+                'user_id' => Auth::user()->id,
+                'comment_id' => $request->comment_id,
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function my_reviews()
+    {
+        $user = Auth::user();
+        $reviews = $user->reviews()->paginate(30);
+        return view('review.my_reviews', compact('reviews', 'user'));
+    }
+
+    public function reviewsLike(Request $request)
+    {
+        $user = Auth::user();
+        $review = Review::find($request->id);
+        $review->user_likes()->toggle($user);
+        $count = $review->user_likes()->count();
+        return json_encode([
+            'count' => $count
+        ]);
+    }
+
+    public function commentsLike(Request $request)
+    {
+        $user = Auth::user();
+        $comment = Comment::find($request->id);
+        $comment->user_likes()->toggle($user);
+        $count = $comment->user_likes()->count();
+        return json_encode([
+            'count' => $count
+        ]);
+    }
+
+    public function updateReview(Request $request)
+    {
+        $request->validate( [
+            'link'  => ['required', 'regex:/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)/'],
+            //'description'   => 'required',
+        ], [
+            'link.regex' => 'Поле ссылка на youtube указана не верно!<br>Для примера: https://www.youtube.com/watch?v=yZkAv2RrXDw'
+        ]);
+
+        $reviews = $request->user_id ? User::find($request->user_id)->reviews() : Auth::user()->reviews();
+
+        $review = $reviews->find($request->review_id);
+        if(!$review)
+            $review = $reviews->create();
+
+        $review->update([
+            'link_youtube' => $request->link,
+            'description' => $request->description,
+            'product_id' => $request->product_id,
+            'approved' => $request->user_id ? $review->approved : NULL,
+        ]);
+
+        return redirect()->route($request->user_id ? 'admin_review_edit' : 'review_edit', ['id' => $review->id])->with('status', 'Успешно изменено');
+
+    }
+
+    public function updateReviewImage(Request $request){
+        $reviews = $request->user_id ? User::find($request->user_id)->reviews() : Auth::user()->reviews();
+
+        $review = $reviews->find($request->review_id);
+        if(!$review)
+            $review = $reviews->create();
+
+        $tmp_path = date('Y') . "/" . date('m') . "/" . date('d') . "/" . time()  . '_' . $request->avatar->getFilename() . '.' . $request->avatar->getClientOriginalExtension();
+        $path = $request->avatar->storeAs('public/images', $tmp_path);
+        $request->avatar = str_replace("public/", "", $path);
+        $review->image = $request->avatar;
+        $review->save();
+
+        return redirect()->route($request->user_id ? 'admin_review_edit' : 'review_edit', ['id' => $review->id])->with('status', 'Успешно изменено');
     }
 
     public function marketing()
@@ -249,8 +633,8 @@ class HomeController extends Controller
     public function hierarchy()
     {
         /* old*/
-        $tree = Hierarchy::getTree(Auth::user()->id);
-        return view('profile.hierarchy', compact('tree'));
+        /*$tree = Hierarchy::getTree(Auth::user()->id);
+        return view('profile.hierarchy', compact('tree'));*/
 
         /* new*/
 
@@ -409,7 +793,7 @@ class HomeController extends Controller
             $in[] = $item->user_id;
         }
 
-        $all = Notification::whereIn('user_id',$in)->paginate(30);
+        $all = Notification::whereIn('user_id',$in)->where('type', 'NOT LIKE', 'admin_%')->paginate(30);
         return view('profile.notifications', compact('all'));
     }
 

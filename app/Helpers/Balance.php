@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Counter;
+use App\Models\Log;
 use App\Models\UserProgram;
 use App\User;
 use App\Models\UserSubscriber;
@@ -14,9 +15,9 @@ use App\Models\Processing;
 
 class Balance {
 
-    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id=0,$status_id=0,$pv = 0,$limited_sum = 0,$matching_line = 0,$card_number = 0)
+    public function changeBalance($user_id,$sum,$status,$in_user,$program_id,$package_id=0,$status_id=0,$pv = 0,$limited_sum = 0,$matching_line = 0,$card_number = 0,$message = '', $withdrawal_method = null)
     {
-        Processing::insert(
+        $processing = new Processing(
             [
                 'user_id' => $user_id,
                 'sum' => $sum,
@@ -29,12 +30,16 @@ class Balance {
                 'card_number' => $card_number,
                 'matching_line' => $matching_line,
                 'limited_sum' => $limited_sum,
+                'message' => $message,
+                'withdrawal_method' => $withdrawal_method,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ]
         );
+        $processing->save();
+        return $processing->id;
     }
 
-    public function setQV($user_id,$sum,$in_user,$package_id,$position,$status_id)
+    public function setQV($user_id,$sum,$in_user,$package_id,$position,$status_id, $alias = null)
     {
         Counter::insert(
             [
@@ -44,6 +49,7 @@ class Balance {
                 'package_id' => $package_id,
                 'position' => $position,
                 'status_id' => $status_id,
+                'alias' => $alias,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 //'created_at' => '2019-07-13 07:55:45',
             ]
@@ -65,7 +71,7 @@ class Balance {
 
     public function getIncomeBalance($user_id)
     {
-        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum');
+        $sum =  Processing::whereUserId($user_id)->whereIn('status', ['admin_add', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum');
         return round($sum, 2);
     }
 
@@ -100,7 +106,7 @@ class Balance {
 
     public function revitalizationBalance($user_id)
     {
-        $sum1 = Processing::whereUserId($user_id)->whereIn('status', ['revitalization', 'cashback'])->sum('sum');
+        $sum1 = Processing::whereUserId($user_id)->whereIn('status', ['cashback'])->sum('sum');
         $sum2 = Processing::whereUserId($user_id)->whereIn('status', ['revitalization-shop'])->sum('sum');
 
         return round($sum1-$sum2, 2);
@@ -110,7 +116,7 @@ class Balance {
 
     public function getBalanceAllUsers()
     {
-        $sum = Processing::whereIn('status', ['turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum') - Processing::whereStatus('out')->sum('sum');
+        $sum = Processing::whereIn('status', ['admin_add', 'turnover_bonus', 'status_bonus', 'invite_bonus','quickstart_bonus','matching_bonus'])->sum('sum') - Processing::whereStatus('out')->sum('sum');
         return round($sum, 2);
     }
 

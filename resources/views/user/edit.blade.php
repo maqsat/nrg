@@ -68,12 +68,23 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">{{ __('app.birthday') }}</label>
+                                    <label class="col-md-12">{{ __('app.register_day') }}</label>
                                     <div class="col-md-12">
                                         <input type="text" value="{{ old('birthday',$user->birthday) }}" name="birthday" class="form-control form-control-line">
                                         @if ($errors->has('birthday'))
                                             <span class="text-danger"><small>{{ $errors->first('birthday') }}</small></span>
                                         @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">{{ __('app.roles') }}</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control form-control-line" name="role">
+                                            <option value="">{{ __('app.selected_role') }}</option>
+                                            @foreach($roles as $item)
+                                                <option value="{{ $item->id }}" @if($user->admin == $item->admin && $user->role_id == $item->role_id) selected @endif>{{ $item->title }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -131,6 +142,15 @@
                                         <input type="text" value="" name="password" class="form-control form-control-line">
                                         @if ($errors->has('password'))
                                             <span class="text-danger"><small>{{ $errors->first('password') }}</small></span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-12">{{ __('app.register_day') }}</label>
+                                    <div class="col-md-12">
+                                        <input type="datetime-local" id="register_day" value="{{ date('Y-m-d\TH:i', strtotime(old('created_at',$user->created_at))) }}" name="created_at" class="form-control form-control-line">
+                                        @if ($errors->has('created_at'))
+                                            <span class="text-danger"><small>{{ $errors->first('created_at') }}</small></span>
                                         @endif
                                     </div>
                                 </div>

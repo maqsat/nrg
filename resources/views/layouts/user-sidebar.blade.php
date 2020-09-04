@@ -77,8 +77,11 @@
                         <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Дополнительно</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/profile">{{ __('app.profile') }}</a></li>
-                            <li><a href="/notifications">Уведомлении</a></li>
+                            <li><a href="/notifications">Уведомления</a></li>
                             <li><a href="/faq-profile">База знаний</a></li>
+                            @if(Gate::allows('admin_user_create'))
+                                <li><a href="{{ route('partner_create') }}">{{ __('app.add_partner') }}</a></li>
+                            @endif
                         </ul>
                     </li>
                     {{--<li>
@@ -87,7 +90,15 @@
                             <span class="hide-menu">{{ __('app.marketing') }}</span>
                         </a>
                     </li>--}}
-                    @if(Auth::user()->admin == 1)
+                    <li>
+                        <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-star"></i><span class="hide-menu">{{ __('app.reviews') }}</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="{{ route('reviews') }}">{{ __('app.all_reviews') }}</a></li>
+                            <li><a href="{{ route('my_reviews') }}">{{ __('app.my_reviews') }}</a></li>
+                            <li><a href="{{ route('review_add') }}">{{ __('app.add_video_review') }}</a></li>
+                        </ul>
+                    </li>
+                    @if(Gate::allows('admin_access'))
                         <li>
                             <a href="/user" aria-expanded="false">
                                 <i class="mdi mdi-bank"></i>

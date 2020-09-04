@@ -54,6 +54,9 @@ class Handler extends ExceptionHandler
         else if ($exception instanceof  Tymon\JWTAuth\Exceptions\JWTException) {
             return response()->json(['token_absent'], $exception->getStatusCode());
         }
+        else if ($exception instanceof PayPostExceptionGenerateUrl) {
+            return response()->view('errors.500-paypost', [], 500);
+        }
 
         return parent::render($request, $exception);
     }

@@ -96,7 +96,7 @@
                     <div class="card">
                         <div class="card-block">
                             <h4 class="card-title">Реферальная ссылка</h4>
-                            <h6 class="card-subtitle">Партнеры будут располагаться в структуре по выбранному <code>типу размещение</code></h6>
+                            <h6 class="card-subtitle">Партнеры будут располагаться в структуре по выбранному <code>типу размещения</code></h6>
                             <div class="button-group">
                                 <a href="/home?default_position=1">
                                     <button type="button" class="btn @if(Auth::user()->default_position == 1) btn-info @else btn-success @endif">@if(Auth::user()->default_position == 1) <i class="fa fa-check"></i> @endifСлева</button>
@@ -109,7 +109,7 @@
                                 </a>
                             </div>
                             <div class="input-group m-t-15">
-                                <input  class="form-control form-control-line" id="post-shortlink" value="https://nrg-max.kz/register?inviter_id={{ Auth::user()->id }}">
+                                <input  class="form-control form-control-line" id="post-shortlink" value="{{env('APP_URL', false)}}/register?inviter_id={{ Auth::user()->id }}">
                                 <span class="input-group-btn">
                                     <button type="button" id="copy-button" data-clipboard-target="#post-shortlink" class="btn waves-effect waves-light btn-success">Копировать</button>
                                 </span>
@@ -258,11 +258,12 @@
     <script src="/monster_admin/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
     <script src="/monster_admin/main/js/dashboard1.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
-    @if (session('status'))
+    @if (session('status') || session('success'))
 
         <script src="/monster_admin/main/js/toastr.js"></script>
         <script src="/monster_admin/assets/plugins/toast-master/js/jquery.toast.js"></script>
         <script>
+            @if(session('status'))
             $.toast({
                 heading: 'Результат запроса',
                 text: '{{ session('status') }}',
@@ -272,6 +273,17 @@
                 hideAfter: 60000,
                 stack: 6
             });
+            @elseif(session('success'))
+            $.toast({
+                heading: 'Результат запроса',
+                text: '{{ session('success') }}',
+                position: 'top-right',
+                loaderBg:'#ffffff',
+                icon: 'success',
+                hideAfter: 60000,
+                stack: 6
+            });
+            @endif
         </script>
     @endif
 

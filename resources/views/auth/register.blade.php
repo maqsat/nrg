@@ -63,17 +63,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="birthday">День рождение :</label>
+                                                    <label for="birthday">Дата рождения:</label>
                                                     <input type="text" class="form-control required" id="birthday" name="birthday">
                                                     <div class="error-message"></div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="password">Пароль :</label>
+                                                    <label for="password">Пароль:</label>
                                                     <input type="password" class="form-control required" id="password" name="password">
                                                     <div class="error-message"></div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="password_confirmation">Повторите пароль :</label>
+                                                    <label for="password_confirmation">Повторите пароль:</label>
                                                     <input type="password" class="form-control required" id="password_confirmation" name="password_confirmation">
                                                     <div class="error-message"></div>
                                                 </div>

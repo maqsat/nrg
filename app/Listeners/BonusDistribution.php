@@ -40,8 +40,10 @@ class BonusDistribution
 
         $id = $event->data['user_id'];
         $this_user = UserProgram::whereUserId($id)->first();
+        $current_user = User::find($id);
         $program = Program::find($this_user->program_id);
         $upgrade_pv = $event->data['pv'];
+        $pv_0 = $event->data['pv_0'] ?? false;
         $package_id = $this_user->package_id;
 
         $list = $this_user->list;
@@ -58,22 +60,54 @@ class BonusDistribution
 
                 /*set own pv and change status*/
 
-                $counter = Counter::where('user_id',$item)->where('inner_user_id',$id)->first();
+                $counter = Counter::where('user_id',$item)->first(); //->where('inner_user_id',$id)
                 if(!is_null($counter)){
-                    $position = $counter->position;
+                    $counter = Counter::where('user_id',$item)->where('inner_user_id',$id)->first();
+                    if(!is_null($counter)) {
+                        $position = $counter->position;
+                    }
+                    else{
+                        $position = 0;
 
-                    Balance::setQV($item,$upgrade_pv,$id,$package_id,$position,$item_status->id);
+                        if((count($sponsors_list) == 1 && $item == 1) || $key == 0){
+                            $position = $current_user->position;
+                        }
+                        elseif(count($sponsors_list) == 2 && $item == 1){
+                            $position = User::where('id',$sponsors_list[0])->where('status',1)->first()->position;
+                        }else{
+
+                            $current_user_first = User::where('id',$sponsors_list[$key-1])->where('position',1)->first();
+                            $current_user_second =  User::where('id',$sponsors_list[$key-1])->where('position',2)->first();
+
+                            if(!is_null($current_user_first) && strpos($list, ','.$current_user_first->id.',') !== false) $position = 1;
+                            if(!is_null($current_user_second) && strpos($list, ','.$current_user_second->id.',') !== false) $position = 2;
+
+                        }
+                    }
+                    if(!$pv_0) {
+                        Balance::setQV($item,$upgrade_pv,$id,$package_id,$position,$item_status->id);
+                    }
                     //start check small branch definition
                     $left_user = User::whereSponsorId($item)->wherePosition(1)->whereStatus(1)->first();
                     $right_user = User::whereSponsorId($item)->wherePosition(2)->whereStatus(1)->first();
                     $left_pv = Hierarchy::pvCounter($item,1);
                     $right_pv = Hierarchy::pvCounter($item,2);
+
+                    if($pv_0 && $position === 1) {
+                        $left_pv += $upgrade_pv;
+                    } else if($pv_0 && $position === 2) {
+                        $right_pv += $upgrade_pv;
+                    }
+
                     if($left_pv > $right_pv) $small_branch_position = 2;
                     else $small_branch_position = 1;
                     //end check small branch definition
 
                     //start check next status conditions and move
                     $pv = Hierarchy::pvCounterAll($item);
+                    if($pv_0) {
+                        $pv += $upgrade_pv;
+                    }
                     if($item_user_program->package_id == 3) $pv =  $pv + 500;
                     if($item_user_program->package_id == 4) $pv =  $pv + 2500 + 500;
 
@@ -236,7 +270,8 @@ class BonusDistribution
                         else
                             $to_enrollment_pv = $right_pv - $credited_pv;
 
-                        $sum = $to_enrollment_pv*$item_status->turnover_bonus/100*env('COURSE');
+                        $sum = $item_status->turnover_bonus/100*env('COURSE');
+                        $sum = $to_enrollment_pv*$sum;
 
                         if($credited_sum < $item_status->week_sum_limit){
                             $temp_sum = 0;
@@ -245,8 +280,7 @@ class BonusDistribution
                                 $temp_sum = $sum - $temp_sum;
                                 $sum = $sum - $temp_sum;
                             }
-
-                            Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package_id,$item_status->id,$to_enrollment_pv,$temp_sum);
+                            Balance::changeBalance($item,$sum,'turnover_bonus',$id,$program->id,$package_id,$item_status->id,$pv_0 ? 0 : $to_enrollment_pv,$temp_sum);
 
 
                             /*start set  matching_bonus  */
@@ -264,7 +298,7 @@ class BonusDistribution
                                         if(!is_null($inviter_user_program) && $inviter_user_program->package_id != 1){
                                             $list_inviter_status = Status::find($inviter_user_program->status_id);
                                             if($list_inviter_status->depth_line >= $inviter_key+1){
-                                                Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package_id,$list_inviter_status->id,$to_enrollment_pv,0,$inviter_key+1);
+                                                Balance::changeBalance($inviter_item,$sum*$list_inviter_status->matching_bonus/100,'matching_bonus',$item_user_program->user_id,$program->id,$package_id,$list_inviter_status->id,$pv_0 ? 0 : $to_enrollment_pv,0,$inviter_key+1);
                                             }
                                         }
                                     }
@@ -273,7 +307,7 @@ class BonusDistribution
                             /*end  set  matching_bonus  */
                         }
                         else {
-                            Balance::changeBalance($item,0,'turnover_bonus',$id,$program->id,$package_id,$item_status->id,$to_enrollment_pv,$sum);
+                            Balance::changeBalance($item,0,'turnover_bonus',$id,$program->id,$package_id,$item_status->id,$pv_0 ? 0 : $to_enrollment_pv,$sum);
                         }
 
                         /*end set  turnover_bonus  */

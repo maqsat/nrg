@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
@@ -24,6 +25,10 @@ class CountryController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_country_view')) {
+            abort('401');
+        }
+
         $countries = Country::all();
         return view('country.index',compact('countries'));
     }
@@ -35,6 +40,10 @@ class CountryController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_country_create')) {
+            abort('401');
+        }
+
         return view('country.create');
     }
 
@@ -46,6 +55,10 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_country_create')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
         ]);
@@ -65,6 +78,10 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
+        if(!Gate::allows('admin_country_view')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -76,6 +93,10 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
+        if(!Gate::allows('admin_country_edit')) {
+            abort('401');
+        }
+
         return view('country.edit',compact('country'));
     }
 
@@ -88,6 +109,10 @@ class CountryController extends Controller
      */
     public function update(Request $request, Country $country)
     {
+        if(!Gate::allows('admin_country_edit')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
         ]);
@@ -107,6 +132,10 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
+        if(!Gate::allows('admin_country_destroy')) {
+            abort('401');
+        }
+
         //
     }
 }

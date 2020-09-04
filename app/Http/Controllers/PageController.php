@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Faq;
@@ -16,6 +17,10 @@ class PageController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_page_view')) {
+            abort('401');
+        }
+
         $list = Page::orderBy('created_at','desc')->paginate(30);
 
         return view('page.index', compact('list'));
@@ -28,6 +33,10 @@ class PageController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_page_create')) {
+            abort('401');
+        }
+
         return view('page.create');
     }
 
@@ -39,6 +48,10 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_page_create')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -50,6 +63,10 @@ class PageController extends Controller
      */
     public function show(Page $page)
     {
+        if(!Gate::allows('admin_page_view')) {
+            abort('401');
+        }
+
         return view('page.show',compact('page'));
     }
 
@@ -61,6 +78,10 @@ class PageController extends Controller
      */
     public function edit(Page $page)
     {
+        if(!Gate::allows('admin_page_edit')) {
+            abort('401');
+        }
+
         return view('page.edit', compact('page'));
     }
 
@@ -73,6 +94,10 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
+        if(!Gate::allows('admin_page_edit')) {
+            abort('401');
+        }
+
         Page::where('id',$page->id)->update([
             'title' => $request->title,
             //'content' => $request->content,
@@ -89,6 +114,10 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
+        if(!Gate::allows('admin_page_destroy')) {
+            abort('401');
+        }
+
         //
     }
 }

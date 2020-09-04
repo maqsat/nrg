@@ -177,6 +177,7 @@
                                         <th>От кого</th>
                                         <th>Отправитель</th>
                                         <th>Номер карты</th>
+                                        <th>Метод вывода</th>
                                         <th>Дата</th>
                                         <th>Действие</th>
                                     </tr>
@@ -212,6 +213,7 @@
                                             <td class="txt-oflo">@if(!is_null($user_id)) {{ $user_id->name }} @else Не найден @endif </td>
                                             <td class="txt-oflo">@if(!is_null($in_user)) {{ $in_user->name }} @else {{ $item->in_user }} @endif @if($item->status == 'matching_bonus') <i>{{ $item->matching_line }} линия</i> @endif  </td>
                                             <td>{{ $item->card_number }}</td>
+                                            <td>@if($item->withdrawal_method === 'checking-account') Расчётный счёт @endif</td>
                                             <td class="txt-oflo">{{ $item->created_at }}</td>
                                             <td class="actions">
                                                 <a href="/user/{{ $user_id->id }}/processing" target="_blank" class="btn  btn-xs btn-success"  title="Финансы"><i class="mdi mdi-cash-multiple"></i></a>

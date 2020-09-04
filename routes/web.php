@@ -14,6 +14,15 @@
 /*
 ************************ Auth Elements ***********************
  */
+
+use App\Facades\Hierarchy;
+use App\Models\Counter;
+use App\Models\Processing;
+use App\Models\UserProgram;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+
 Auth::routes();
 Route::post('register-validate', 'UserController@registerValidate')->name('validate');
 
@@ -26,11 +35,10 @@ Route::get('products', 'WebController@products');
 Route::get('cert', 'WebController@cert');
 Route::get('faq', 'WebController@faq');
 
-
 /*
 ************************ Profile ***********************
  */
-Route::get('home', 'HomeController@index')->name('home');
+//Route::get('home', 'HomeController@index')->name('home');
 Route::get('invitations', 'HomeController@invitations')->name('invitations');
 Route::get('hierarchy', 'HomeController@hierarchy')->name('hierarchy');
 Route::get('hierarchy/{id}', 'HomeController@hierarchyTree')->name('hierarchyTree');
@@ -40,6 +48,16 @@ Route::get('user_processing', 'HomeController@processing')->name('processing');/
 Route::get('programs' , 'HomeController@programs')->name('programs');
 Route::get('notifications', 'HomeController@notifications')->name('notifications');
 Route::get('profile', 'HomeController@profile')->name('profile');
+Route::get('reviews', 'WebController@reviews')->name('reviews');
+Route::get('review/{id}/view', 'WebController@review')->name('review_id');
+Route::get('my_reviews', 'HomeController@my_reviews')->name('my_reviews');
+Route::post('reviews/like', 'HomeController@reviewsLike')->name('reviews_like');
+Route::post('comments/like', 'HomeController@commentsLike')->name('comments_like');
+Route::get('review/{id}/edit', 'HomeController@review')->name('review_edit');
+Route::get('review/add', 'HomeController@review')->name('review_add');
+Route::post('review/{id}/view', 'HomeController@commentAdd')->name('comment_add');
+Route::post('review', 'HomeController@updateReview')->name('review');
+Route::post('update_review_image', 'HomeController@updateReviewImage')->name('updateReviewImage');
 Route::get('faq-profile','FaqController@index');
 Route::post('updateProfile', 'HomeController@updateProfile')->name('updateProfile');
 Route::post('updateAvatar', 'HomeController@updateAvatar')->name('updateAvatar');
@@ -50,6 +68,11 @@ Route::get('rang-history', 'UserController@rangHistory')->middleware("activation
 Route::post('/transfer', 'ProcessingController@transfer')->name('transfer');
 Route::post('/request', 'ProcessingController@request')->name('request');
 Route::get('/transfer/{status}/{processing_id}', 'ProcessingController@transferAnswer');
+Route::get('partner/create', 'HomeController@partner')->name('partner_create');
+Route::post('partner/create', 'HomeController@partnerStore')->name('partner_store');
+Route::get('partner/sponsor/users', 'HomeController@partnerSponsorUsers')->name("partner_sponsor_users");
+Route::get('partner/sponsor/positions', 'HomeController@partnerSponsorPositions')->name("partner_sponsor_positions");
+Route::get('partner/user/offices', 'HomeController@partnerUserOffices')->name("partner_user_offices");
 
 /*
 ************************ Shop ***********************
@@ -73,6 +96,7 @@ Route::get('payeer', 'PayController@payeer')->name('payeer');
 ************************ Admin Control ***********************
  */
 Route::get('activation/{user_id}', 'UserController@activation')->middleware('admin');
+Route::get('activation/{user_id}/without_bonus', 'UserController@activationWithoutBonus')->name('activation_without_bonus')->middleware('admin');
 Route::get('deactivation/{user_id}', 'UserController@deactivation')->middleware('admin');
 Route::get('upgrade-activation/{order_id}', 'UserController@activationUpgrade')->middleware('admin');
 Route::get('upgrade-deactivation/{order_id}', 'UserController@deactivationUpgrade')->middleware('admin');
@@ -91,14 +115,24 @@ Route::get('user/{id}/program','UserController@program');
 Route::post('user/{id}/program','UserController@programStore');
 Route::get('user/{id}/processing','UserController@processing');
 Route::post('user/processing','UserController@processingStore');
+Route::get('user/{id}/add_bonus','UserController@addBonus')->middleware("admin");
+Route::post('user/{id}/add_bonus','UserController@addBonusUser')->middleware("admin");
+Route::get('admin/notifications', 'AdminController@notifications')->name('admin_notifications')->middleware("admin");
 Route::get('order', 'ProductController@orders');
 Route::get('overview-money', 'ProcessingController@overview')->name('overview');
+Route::get('admin/reviews', 'AdminController@reviews')->name('admin_reviews')->middleware('admin');
+Route::get('admin/comments', 'AdminController@comments')->name('admin_comments')->middleware('admin');
+Route::get('admin/comment/{id}/{status}', 'AdminController@commentStatus')->name('admin_comment_status')->middleware('admin');
+Route::get('admin/reviews/{id}/edit', 'AdminController@reviewEdit')->name('admin_review_edit')->middleware('admin');
+Route::get('admin/reviews/{id}/add', 'AdminController@reviewAdd')->name('admin_review_add')->middleware('admin');
+Route::get('admin/review/{id}/{status}', 'AdminController@reviewStatus')->name('admin_review_status')->middleware('admin');
 
 /*
 ************************ Resource ***********************
  */
 Route::resource('user', 'UserController')->middleware("admin");
 Route::resource('package', 'PackageController')->middleware("admin");
+Route::resource('role', 'RoleController')->middleware("admin");
 Route::resource('office', 'OfficeController')->middleware("admin");
 Route::resource('city', 'CityController')->middleware("admin");
 Route::resource('country', 'CountryController')->middleware("admin");

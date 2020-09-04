@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Models\Office;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class OfficeController extends Controller
@@ -15,6 +16,10 @@ class OfficeController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_office_view')) {
+            abort('401');
+        }
+
         $office = Office::all();
         return view('office.index',compact('office'));
     }
@@ -26,6 +31,10 @@ class OfficeController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_office_create')) {
+            abort('401');
+        }
+
         $users = User::whereStatus(1)->get();
         return view('office.create',compact('users'));
     }
@@ -38,6 +47,10 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_office_create')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
             'city_id'          => 'required',
@@ -72,6 +85,10 @@ class OfficeController extends Controller
      */
     public function show(Office $office)
     {
+        if(!Gate::allows('admin_office_view')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -83,6 +100,10 @@ class OfficeController extends Controller
      */
     public function edit(Office $office)
     {
+        if(!Gate::allows('admin_office_edit')) {
+            abort('401');
+        }
+
         $lider = User::where('is_office_lider',$office->id)->first();
         if(!is_null($lider)){
             $user_id = $lider->id;
@@ -102,6 +123,10 @@ class OfficeController extends Controller
      */
     public function update(Request $request, Office $office)
     {
+        if(!Gate::allows('admin_office_edit')) {
+            abort('401');
+        }
+
         $request->validate([
             'title'            => 'required',
             'city_id'          => 'required',
@@ -152,6 +177,10 @@ class OfficeController extends Controller
      */
     public function destroy(Office $office)
     {
+        if(!Gate::allows('admin_office_destroy')) {
+            abort('401');
+        }
+
         //
     }
 }

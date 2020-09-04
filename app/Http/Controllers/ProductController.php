@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Basket;
 use App\Models\Order;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -18,6 +19,10 @@ class ProductController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('admin_product_view')) {
+            abort('401');
+        }
+
         $list = Product::orderBy('created_at','desc')->paginate();
         return view('product.index', compact('list'));
     }
@@ -29,6 +34,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('admin_product_create')) {
+            abort('401');
+        }
+
         $tags=Tag::all();
         return view('product.create' , compact('tags'));
     }
@@ -41,6 +50,10 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('admin_product_create')) {
+            abort('401');
+        }
+
         if($request->has('tags')){
             $vowels = array("{", "}", "\"", ":", "[", "]");
             $onlyconsonants = str_replace($vowels, "", $request->tags);
@@ -112,6 +125,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        if(!Gate::allows('admin_product_view')) {
+            abort('401');
+        }
+
         //
     }
 
@@ -123,6 +140,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product, $id)
     {
+        if(!Gate::allows('admin_product_edit')) {
+            abort('401');
+        }
+
         $product = $product->find($id);
         return view('product.edit', compact('product'));
     }
@@ -136,6 +157,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product,$id)
     {
+        if(!Gate::allows('admin_product_edit')) {
+            abort('401');
+        }
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',
@@ -190,9 +215,16 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if(!Gate::allows('admin_product_destroy')) {
+            abort('401');
+        }
+
         //
     }
     public function orders(Request $request){
+        if(!Gate::allows('admin_orders_access')) {
+            abort('401');
+        }
 
         $orders_query = Order::orderBy('updated_at' , 'desc')->where('type','shop')->where('status',11);
 

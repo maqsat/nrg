@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\Review;
+use App\Models\Comment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -107,6 +109,21 @@ class User extends Authenticatable implements JWTSubject
     public function status()
     {
         return $this->hasOne('App\Models\Status','status_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class,'user_id');
+    }
+
+    public function review_likes()
+    {
+        return $this->belongsToMany(Review::class, 'user_like_review', 'user_id', 'review_id');
+    }
+
+    public function comment_likes()
+    {
+        return $this->belongsToMany(Comment::class, 'user_like_comment', 'user_id', 'comment_id');
     }
 
     /**
